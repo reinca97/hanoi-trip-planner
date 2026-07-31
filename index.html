@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>하노이 · 하롱베이 가족여행</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;800&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f7f1e6; --paper2:#fffaf0; --ink:#23252b; --ink2:#6b675e;
+  --line:#e2d9c8; --orange:#e8630f; --orange-soft:#fdeadb;
+  --shadow:0 2px 10px rgba(60,45,20,.09);
+  --d1:#e05d2c; --d2:#0f7b6c; --d3:#3b6fc9; --d4:#b13a86; --d5:#c98a12; --d6:#5b57c7; --d7:#2a8f4e; --d8:#8a5a3b;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html,body{height:100%}
+body{
+  font-family:'IBM Plex Sans KR',sans-serif; color:var(--ink);
+  background:var(--paper);
+  background-image:radial-gradient(rgba(160,130,80,.07) 1px, transparent 1px);
+  background-size:22px 22px;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+button{font-family:inherit; cursor:pointer}
+input,select,textarea{font-family:inherit; font-size:13px; color:var(--ink)}
+
+/* ---------- header ---------- */
+header{
+  flex:0 0 auto; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:10px 18px; background:var(--paper2); border-bottom:2px solid var(--ink);
+}
+header h1{font-family:'Hahmlet',serif; font-weight:800; font-size:21px; letter-spacing:-.5px; white-space:nowrap}
+header h1 em{color:var(--orange); font-style:normal}
+.hgroup{display:flex; align-items:center; gap:6px; background:#fff; border:1.5px solid var(--line);
+  border-radius:10px; padding:5px 10px}
+.hgroup label{font-size:11px; font-weight:700; color:var(--ink2); white-space:nowrap}
+.hgroup input,.hgroup select{border:none; outline:none; background:transparent; font-weight:600}
+.hgroup input[type=date]{width:118px}
+.hgroup input[type=time]{width:96px}
+.stepper{display:flex; align-items:center; gap:2px}
+.stepper button{width:22px; height:22px; border:1.5px solid var(--ink); border-radius:6px; background:#fff; font-weight:800; line-height:1}
+.stepper b{min-width:44px; text-align:center; font-size:14px}
+.hbtns{margin-left:auto; display:flex; gap:8px}
+.hbtns button{border:1.5px solid var(--ink); background:#fff; border-radius:10px; padding:6px 12px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink); transition:.12s}
+.hbtns button:hover{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink)}
+.hbtns button.primary{background:var(--orange); color:#fff}
+#hotelSelect{max-width:190px}
+
+/* ---------- layout ---------- */
+main{flex:1 1 auto; display:grid; grid-template-columns:295px minmax(370px,1fr) minmax(340px,1.1fr); min-height:0}
+@media(max-width:1100px) and (min-width:901px){ main{grid-template-columns:240px 1fr 1fr} }
+
+/* ---------- sidebar (library) ---------- */
+#library{border-right:2px solid var(--ink); background:var(--paper2); display:flex; flex-direction:column; min-height:0}
+#library .libhead{padding:12px 14px 8px}
+#library h2{font-family:'Hahmlet',serif; font-size:15px; font-weight:800}
+#library .sub{font-size:11px; color:var(--ink2); margin-top:2px}
+#libSearch{width:100%; margin-top:8px; border:1.5px solid var(--line); border-radius:8px; padding:6px 10px; background:#fff; outline:none}
+#libSearch:focus{border-color:var(--orange)}
+.cattabs{display:flex; flex-wrap:wrap; gap:4px; padding:8px 14px 8px}
+.cattabs button{font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px; border:1.5px solid var(--line); background:#fff; color:var(--ink2)}
+.cattabs button.on{background:var(--ink); color:#fff; border-color:var(--ink)}
+#libList{flex:1; overflow-y:auto; padding:4px 14px 20px; min-height:0}
+.libitem{
+  background:#fff; border:1.5px solid var(--line); border-radius:10px;
+  padding:8px 10px; margin-bottom:7px; cursor:grab; position:relative; transition:border-color .12s;
+}
+.libitem:hover{border-color:var(--orange)}
+.libitem .nm{font-weight:700; font-size:13px; line-height:1.3}
+.libitem .zh{font-size:11px; color:var(--ink2)}
+.libitem .cat{position:absolute; top:8px; right:9px; font-size:10px; font-weight:700; color:var(--orange)}
+.libitem .addbtn{position:absolute; bottom:7px; right:8px; width:22px; height:22px; border-radius:7px; border:1.5px solid var(--ink);
+  background:var(--orange-soft); font-weight:800; font-size:14px; line-height:1; display:none}
+.libitem:hover .addbtn{display:block}
+.libnote{font-size:11px; color:var(--ink2); padding:2px 2px 8px}
+#customBox{border-top:2px dashed var(--line); padding:10px 14px 14px; background:#fdf8ee}
+#customBox h3{font-size:12px; font-weight:800; margin-bottom:6px}
+#customBox .row{display:flex; gap:6px; margin-bottom:6px}
+#customBox input{flex:1; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; background:#fff; outline:none}
+#customBox button{border:1.5px solid var(--ink); border-radius:8px; background:#fff; font-size:11px; font-weight:700; padding:5px 9px}
+#customBox button.on{background:var(--orange); color:#fff}
+#searchResults{max-height:130px; overflow-y:auto}
+#searchResults .sr{font-size:11.5px; padding:5px 8px; background:#fff; border:1px solid var(--line); border-radius:7px; margin-bottom:4px; cursor:pointer}
+#searchResults .sr:hover{border-color:var(--orange)}
+
+/* ---------- board ---------- */
+#board{display:flex; flex-direction:column; min-height:0; min-width:0}
+#dayTabs{display:flex; gap:0; overflow-x:auto; flex:0 0 auto; border-bottom:2px solid var(--ink); background:var(--paper);}
+#dayTabs button{
+  flex:0 0 auto; border:none; background:transparent; padding:10px 16px 8px; font-size:12.5px; font-weight:700;
+  color:var(--ink2); border-right:1.5px dashed var(--line); position:relative;
+}
+#dayTabs button .dt{display:block; font-size:10px; font-weight:500}
+#dayTabs button.on{color:#fff; background:var(--tabclr,var(--ink));}
+#dayList{flex:1; overflow-y:auto; padding:16px 20px 60px; min-height:0}
+.anchor{
+  display:flex; align-items:center; gap:10px; background:var(--ink); color:#fff;
+  border-radius:12px; padding:10px 14px; font-size:13px; font-weight:600;
+}
+.anchor .ic{font-size:17px}
+.anchor small{opacity:.75; font-weight:400; display:block; font-size:11px}
+.anchor.hotel{background:#fff; color:var(--ink); border:1.5px dashed var(--ink)}
+.dayitems{min-height:30px; padding:2px 0}
+.seg{
+  display:flex; align-items:center; gap:8px; padding:3px 0 3px 17px; font-size:11.5px; color:var(--ink2);
+}
+.seg .dotline{width:2px; height:26px; background:repeating-linear-gradient(var(--ink2) 0 3px, transparent 3px 7px); opacity:.5}
+.seg b{color:var(--ink); font-weight:700}
+.card{
+  background:#fff; border:1.5px solid var(--ink); border-radius:13px; box-shadow:var(--shadow);
+  padding:9px 12px 9px 10px; display:flex; gap:9px; align-items:flex-start; position:relative;
+}
+.card.ghosting{opacity:.4}
+.card .badge{
+  flex:0 0 auto; width:26px; height:26px; border-radius:50%; background:var(--dayclr,var(--orange));
+  color:#fff; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; margin-top:2px;
+  cursor:grab; font-family:'Hahmlet',serif;
+}
+.card .bodyc{flex:1; min-width:0}
+.card .l1{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
+.card .l1 input.tm{border:none; outline:none; background:var(--orange-soft); border-radius:6px; padding:1px 5px; font-weight:700; font-size:12px; width:104px}
+.card .l1 .nm{font-weight:700; font-size:14px}
+.card .l1 .editnm{border:none; background:none; font-size:11px; opacity:.4; padding:0 2px; line-height:1}
+.card .l1 .editnm:hover{opacity:1}
+.card .l1 .zh{font-size:11px; color:var(--ink2)}
+.card .quick{font-size:11.5px; color:var(--ink2); margin-top:2px; line-height:1.45; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.card.open .quick{display:block; -webkit-line-clamp:unset}
+.card .links{display:flex; gap:6px; margin-top:6px; flex-wrap:wrap}
+.card .links a,.card .links button{
+  font-size:10.5px; font-weight:700; text-decoration:none; color:var(--ink);
+  border:1px solid var(--line); border-radius:6px; padding:2px 7px; background:var(--paper2);
+}
+.card .links a:hover{border-color:var(--orange); color:var(--orange)}
+.card .memo{width:100%; margin-top:6px; border:1.5px dashed var(--line); border-radius:8px; padding:5px 8px; font-size:12px; background:#fffdf5; resize:vertical; min-height:34px; display:none; outline:none}
+.card.open .memo{display:block}
+.card .del{position:absolute; top:7px; right:8px; border:none; background:none; color:#c33; font-size:13px; font-weight:800; opacity:.35}
+.card .del:hover{opacity:1}
+.card .toggle{position:absolute; bottom:7px; right:8px; border:none; background:none; font-size:11px; color:var(--ink2)}
+.dayfoot{margin-top:14px; font-size:12px; color:var(--ink2); text-align:center}
+.dayfoot b{color:var(--ink)}
+.empty-hint{border:2px dashed var(--line); border-radius:12px; padding:22px; text-align:center; color:var(--ink2); font-size:12.5px; margin:8px 0}
+
+/* ---------- map ---------- */
+#mapPane{border-left:2px solid var(--ink); position:relative; min-height:0}
+#map{position:absolute; inset:0}
+#mapCtl{position:absolute; z-index:800; top:10px; right:10px; display:flex; gap:6px}
+#mapCtl button{border:1.5px solid var(--ink); background:#fff; border-radius:8px; font-size:11px; font-weight:700; padding:5px 9px; box-shadow:2px 2px 0 rgba(0,0,0,.25)}
+#mapCtl button.on{background:var(--ink); color:#fff}
+#mapMsg{position:absolute; z-index:800; bottom:12px; left:50%; transform:translateX(-50%); background:rgba(35,37,43,.88); color:#fff; font-size:11.5px; padding:5px 12px; border-radius:99px; display:none; white-space:nowrap}
+.numpin{
+  width:26px; height:26px; border-radius:50% 50% 50% 4px; transform:rotate(-45deg);
+  border:2px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.4);
+  display:flex; align-items:center; justify-content:center;
+}
+.numpin span{transform:rotate(45deg); color:#fff; font-weight:800; font-size:12px; font-family:'Hahmlet',serif}
+.iconpin{font-size:22px; text-shadow:0 1px 3px rgba(0,0,0,.4)}
+.leaflet-popup-content{font-family:'IBM Plex Sans KR',sans-serif; font-size:12.5px}
+.leaflet-popup-content b{font-size:13.5px}
+
+/* drag ghost */
+.sortable-ghost{opacity:.35}
+.sortable-drag{opacity:.95}
+
+/* ---------- mobile ---------- */
+#settingsToggle{display:none; margin-left:auto; border:1.5px solid var(--ink); background:#fff; border-radius:8px; padding:5px 11px; font-weight:700; font-size:12px; box-shadow:2px 2px 0 var(--ink)}
+#mobileNav{display:none; flex:0 0 auto; border-top:2px solid var(--ink); background:var(--paper2); padding-bottom:env(safe-area-inset-bottom)}
+#mobileNav button{flex:1; padding:8px 0 6px; border:none; background:transparent; font-size:11px; font-weight:700; color:var(--ink2)}
+#mobileNav button span{display:block; font-size:19px; line-height:1.2}
+#mobileNav button.on{color:var(--orange)}
+@media(pointer:coarse){ .libitem .addbtn{display:block} }
+@media(max-width:900px){
+  body{height:100dvh}
+  header{gap:8px; padding:8px 12px}
+  header h1{font-size:18px}
+  header .hgroup, header .hbtns{display:none}
+  header.open .hgroup{display:flex}
+  header.open .hbtns{display:flex; margin-left:0; width:100%; justify-content:flex-end}
+  #settingsToggle{display:block}
+  #mobileNav{display:flex}
+  main{display:flex; min-height:0}
+  /* 설정창·키보드로 세로 공간이 줄어도 리스트가 0으로 찌부러지지 않게 */
+  #libList{min-height:150px}
+  body.v-lib #library{overflow-y:auto}
+  #library,#board,#mapPane{display:none; width:100%; min-width:0; border:none}
+  body.v-lib #library{display:flex}
+  body.v-plan #board{display:flex}
+  body.v-map #mapPane{display:block; flex:1}
+  #dayList{padding:14px 12px 40px}
+  #dayTabs button{padding:9px 13px 7px}
+  .card .l1 input.tm{width:96px; font-size:11.5px}
+  dialog{width:92vw}
+}
+
+dialog{border:2px solid var(--ink); border-radius:14px; padding:20px; max-width:420px; box-shadow:6px 6px 0 rgba(35,37,43,.25); background:var(--paper2)}
+dialog::backdrop{background:rgba(35,37,43,.45)}
+dialog h3{font-family:'Hahmlet',serif; margin-bottom:10px}
+dialog textarea{width:100%; height:180px; border:1.5px solid var(--line); border-radius:8px; padding:8px; font-size:11px; background:#fff}
+dialog .btns{display:flex; gap:8px; margin-top:12px; justify-content:flex-end}
+dialog button{border:1.5px solid var(--ink); background:#fff; border-radius:8px; padding:6px 14px; font-weight:700; font-size:12px}
+dialog button.primary{background:var(--orange); color:#fff}
+
+/* ---------- cloud share ---------- */
+#btnCloud,#btnInfo{border:1.5px solid var(--ink); background:#fff; border-radius:10px; padding:6px 12px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink); transition:.12s}
+#btnCloud:hover,#btnInfo:hover{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink)}
+@media(max-width:900px){ #btnCloud,#btnInfo{padding:5px 9px} }
+#infoDialog{max-width:600px; width:min(94vw,600px)}
+#infoDialog .ibody{max-height:62vh; overflow-y:auto; font-size:13px; line-height:1.65; padding-right:4px}
+#infoDialog h4{font-family:'Hahmlet',serif; font-size:14px; margin:14px 0 5px; color:var(--orange)}
+#infoDialog h4:first-child{margin-top:0}
+#infoDialog ul{padding-left:18px; margin:4px 0}
+#infoDialog li{margin-bottom:3px}
+#infoDialog table{border-collapse:collapse; width:100%; font-size:12px; margin:6px 0}
+#infoDialog th,#infoDialog td{border:1px solid var(--line); padding:5px 7px; text-align:left; vertical-align:top}
+#infoDialog th{background:var(--orange-soft)}
+#infoDialog a{color:var(--orange); font-weight:700}
+#infoDialog .warn{background:#fdeaea; border:1.5px solid #d88; border-radius:8px; padding:7px 10px; margin:6px 0}
+#cloudDialog .cfield{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+#cloudDialog .cfield label{flex:0 0 64px; font-size:12px; font-weight:700; color:var(--ink2)}
+#cloudDialog .cfield input{flex:1; min-width:0; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; background:#fff; outline:none}
+#cloudDialog .cfield input:focus{border-color:var(--orange)}
+#cSlots{max-height:180px; overflow-y:auto; margin-top:8px}
+#cloudDialog .slot{display:flex; align-items:center; justify-content:space-between; gap:8px; background:#fff; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; margin-top:6px; font-size:12px}
+#cloudDialog .slot .slotbtns{display:flex; gap:5px; flex:0 0 auto}
+#cloudDialog .slot button{padding:3px 8px; font-size:11px}
+#cMsg{font-size:12px; color:var(--ink2); margin-top:10px; min-height:16px}
+</style>
+</head>
+<body class="v-plan">
+
+<header>
+  <h1>하노이 <em>·</em> 하롱베이 가족여행</h1>
+  <button id="btnCloud" title="가족과 일정 공유">☁️ 공유</button>
+  <button id="btnInfo" title="여행 실용 정보">ℹ️ 정보</button>
+  <button id="settingsToggle">⚙️ 설정</button>
+  <div class="hgroup"><label>출발일</label><input type="date" id="startDate"></div>
+  <div class="hgroup"><label>기간</label>
+    <div class="stepper"><button id="nMinus">−</button><b id="nightsLabel">5박 6일</b><button id="nPlus">＋</button></div>
+  </div>
+  <div class="hgroup"><label>✈️ 도착</label><input type="time" id="arrTime"></div>
+  <div class="hgroup"><label>✈️ 출발</label><input type="time" id="depTime"></div>
+  <div class="hgroup"><label>🏨 숙소</label><select id="hotelSelect"></select></div>
+  <div class="hgroup"><label>경로에 숙소 포함</label><input type="checkbox" id="hotelInRoute"></div>
+  <div class="hbtns">
+    <button id="btnExport">내보내기</button>
+    <button id="btnImport">가져오기</button>
+    <button id="btnReset">초기화</button>
+  </div>
+</header>
+
+<main>
+  <!-- library -->
+  <aside id="library">
+    <div class="libhead">
+      <h2>장소 라이브러리</h2>
+      <div class="sub">가족 픽 장소 모음 · 드래그하거나 ＋로 일정에 추가</div>
+      <input id="libSearch" placeholder="장소 검색…">
+    </div>
+    <div class="cattabs" id="catTabs"></div>
+    <div id="libList"></div>
+    <div id="customBox">
+      <h3>➕ 새 장소 추가</h3>
+      <div class="row"><input id="cpName" placeholder="장소 이름 (예: OO카페)"></div>
+      <div class="row">
+        <button id="cpSearch">🔍 지도에서 검색</button>
+        <button id="cpPick">📍 지도 클릭으로 지정</button>
+      </div>
+      <div id="searchResults"></div>
+    </div>
+  </aside>
+
+  <!-- board -->
+  <section id="board">
+    <div id="dayTabs"></div>
+    <div id="dayList"></div>
+  </section>
+
+  <!-- map -->
+  <section id="mapPane">
+    <div id="map"></div>
+    <div id="mapCtl">
+      <button id="mapModeDay" class="on">이 날만</button>
+      <button id="mapModeAll">전체 보기</button>
+    </div>
+    <div id="mapMsg"></div>
+  </section>
+</main>
+
+<nav id="mobileNav">
+  <button data-view="plan" class="on"><span>📋</span>일정</button>
+  <button data-view="map"><span>🗺️</span>지도</button>
+  <button data-view="lib"><span>➕</span>장소</button>
+</nav>
+
+<dialog id="infoDialog">
+  <h3>ℹ️ 여행 실용 정보 <small style="font-weight:400;font-size:11px;color:var(--ink2)">2026년 7월 조사 기준 — 가격·스케줄은 변동될 수 있어요</small></h3>
+  <div class="ibody">
+    <h4>🌤️ 11월 중순 날씨 &amp; 옷차림</h4>
+    <ul>
+      <li>하노이: 낮 24~27℃ / 밤 17~21℃. 낮은 초가을, 아침저녁은 늦가을 느낌이에요.</li>
+      <li>하롱베이 선상은 아침저녁 16~19℃로 쌀쌀해요. 아이·부모님용 <b>바람막이나 얇은 패딩</b>을 꼭 챙기세요.</li>
+      <li>비는 적은 편이지만 한 번 오면 굵게 옵니다. 접이식 우산 1~2개 지참.</li>
+    </ul>
+    <h4>💱 환율 &amp; 환전</h4>
+    <ul>
+      <li><b>1만 동 ≈ 545원</b>. 어림셈: 동 가격에서 <b>0 하나 빼고 절반</b> (10만동 → 약 5,500원).</li>
+      <li>기본은 <b>트래블월렛·트래블로그 카드로 현지 ATM 출금</b>. 공항 환전은 첫날 쓸 소액만.</li>
+    </ul>
+    <div class="warn">⚠️ 2026년 2월부터 <b>무허가 환전 단속</b>이 시작됐어요. 예전에 유명하던 금은방 환전은 적발 시 현금 몰수까지 가능하니 이용하지 마세요. 은행·공식 환전소만 이용!</div>
+    <h4>🚕 공항 이동 &amp; 그랩</h4>
+    <ul>
+      <li>노이바이 공항 ↔ 호안끼엠: 약 40분, 그랩 25만~35만동(약 1.4만~2만원). 퇴근시간(16:30~)은 최대 2시간.</li>
+      <li>성인 4 + 아이 1이라 <b>GrabCar 7인승 필수</b> (일반 4인승엔 못 타요). 밤 도착이면 클룩 등에서 7인승 픽업 사전 예약 추천.</li>
+      <li>그랩은 한국에서 앱 설치 + 해외결제 카드 등록해두면 도착 직후부터 사용 가능. 탑승 전 차량 번호판 대조.</li>
+      <li>결제는 <b>카드 7 : 현금 3</b> 감각으로. 로컬 식당·시장·간식은 현금이 필요해요.</li>
+    </ul>
+    <h4>📶 이심/유심</h4>
+    <ul>
+      <li>국내 오픈마켓(쿠팡 등) <b>이심이 하루 약 4,000원</b>으로 가장 저렴 — 한국 번호 문자도 그대로 수신.</li>
+      <li>부모님 폰이 이심 미지원 구형이면 그 폰만 물리 유심(5일권 1만원 이하)을 사서 꽂아드리면 돼요.</li>
+    </ul>
+    <h4>✈️ 항공 (하노이 밤 출발 → 인천 아침 도착)</h4>
+    <ul>
+      <li>예: 베트남항공 VN416 — 23:40 하노이 출발 → 05:30 인천 도착. 대한항공·아시아나·비엣젯도 심야편 운항.</li>
+      <li>2026년 동계 스케줄은 10월 말 확정이라 <b>편명·시각은 예약 시 확인</b>.</li>
+    </ul>
+    <h4>🧒 아이·어르신 건강 수칙</h4>
+    <ul>
+      <li>생수만 마시고, <b>아이 양치도 생수로</b>. 로컬 식당 얼음·날음식(생채소 고명)은 아이·부모님은 피하기.</li>
+      <li>11월은 아직 뎅기(모기) 주의 구간 — <b>아이용 모기기피제(DEET 10~30% 또는 이카리딘)</b>를 한국에서 챙겨가고 아침저녁엔 긴옷.</li>
+      <li>여행자보험은 5인 모두 가입 추천. 병원 이용 시 <b>영문 진단서·영수증·처방전</b>을 꼭 받아오세요.</li>
+    </ul>
+    <h4>🆘 비상 연락처</h4>
+    <ul>
+      <li>주베트남 한국대사관 24시간 긴급: <a href="tel:+84904026126">+84-90-402-6126</a> / 영사콜센터: <a href="tel:+82232100404">+82-2-3210-0404</a></li>
+      <li>빈멕 국제병원(타임시티, 한국어): <a href="tel:+84903259068">+84-903-259-068</a> — 호안끼엠에서 그랩 15~20분</li>
+      <li>하노이 프렌치 호스피탈 응급(24시간, 영어): <a href="tel:+842435741111">024-3574-1111</a></li>
+    </ul>
+    <h4>🛂 입국</h4>
+    <ul>
+      <li>한국 여권 <b>45일 무비자</b> — 비자 준비 불필요. 단 <b>여권 유효기간 6개월 이상</b> 필수! 5인 전원(특히 아이·부모님) 만료일 미리 확인.</li>
+    </ul>
+    <h4>🚢 하롱베이 1박 2일 크루즈 비교 (미정 — 예약 전 참고)</h4>
+    <table>
+      <tr><th>선사</th><th>1인 가격대</th><th>가족 관점 특징</th></tr>
+      <tr><td>Ambassador II<br>(하롱베이)</td><td>약 40만~61만원</td><td>최대급 선체라 안 흔들리고 <b>엘리베이터 있음</b> — 부모님께 가장 편함. 한국 플랫폼 상품 많음</td></tr>
+      <tr><td>Stellar of the Seas<br>(란하베이)</td><td>약 55만~90만원</td><td>온수 수영장·패밀리 스위트 — <b>5살 아이 동반 인기 1위</b>. 한적한 란하베이 코스</td></tr>
+      <tr><td>Heritage Line Ylang<br>(란하베이)</td><td>약 50만~80만원</td><td>객실 적고 서비스 세심 — 조용한 럭셔리 선호 시. 키즈시설은 Stellar보다 적음</td></tr>
+      <tr><td>Paradise Grand/Elegance</td><td>약 30만~50만원</td><td>원조 브랜드 가성비. 예산 줄이려면 이 급 (La Regina Legend도 대안)</td></tr>
+    </table>
+    <ul>
+      <li>표준 일정: 08:00~08:30 호텔 픽업 → 12:30 승선·런치 → 티톱섬/카약 → 선셋·석식 → (2일차) 승솟동굴 → 10:30경 하선 → 14:30~15:30 하노이 복귀.</li>
+      <li>5살 아이: 대부분 선사에서 유료(성인의 60~75%, 침대 공유 기준). 예약 시 여권 생년월일 기재 필수.</li>
+      <li>5인 가족은 <b>프라이빗 리무진 밴 왕복(200~250달러)</b> 업그레이드가 어르신·아이에게 편해요.</li>
+    </ul>
+  </div>
+  <div class="btns"><button onclick="infoDialog.close()">닫기</button></div>
+</dialog>
+
+<dialog id="cloudDialog">
+  <h3>☁️ 친구와 일정 공유</h3>
+  <div class="cfield"><label>방 코드</label><input id="cRoom" placeholder="예: my-trip-01 (영문/숫자/-)"></div>
+  <div class="cfield"><label>비밀번호</label><input id="cPw" type="password" placeholder="친구와 약속한 비밀번호"></div>
+  <div class="cfield"><label>저장 이름</label><input id="cWho" placeholder="예: 제니의 계획"></div>
+  <div class="btns" style="justify-content:flex-start; margin-top:4px">
+    <button id="cSave" class="primary">지금 일정 저장</button>
+    <button id="cList">저장 목록 보기</button>
+  </div>
+  <div id="cSlots"></div>
+  <div id="cMsg">같은 방 코드로 저장하면 친구와 나의 저장본이 한 목록에 쌓여요. 방 코드와 비밀번호가 모두 맞아야 저장·삭제할 수 있어요.</div>
+  <div class="btns"><button onclick="cloudDialog.close()">닫기</button></div>
+</dialog>
+
+<dialog id="ioDialog">
+  <h3 id="ioTitle">일정 내보내기</h3>
+  <textarea id="ioText"></textarea>
+  <div class="btns">
+    <button id="ioCopy">복사</button>
+    <button id="ioApply" class="primary">적용</button>
+    <button onclick="ioDialog.close()">닫기</button>
+  </div>
+</dialog>
+
+<script>
+/* ============================================================
+   DATA — 2026-07 웹 조사 기반 하노이·하롱베이 장소 데이터
+   가격은 2025~2026 기준(1만동≈550원), 좌표는 근사값 — 핀 드래그로 보정 가능.
+   태그: 🧒 아이와 가기 좋음 / 👴 어르신 편함 / 🎫 예약 권장
+============================================================ */
+const PLACES = [
+ // ---- Day 1 (11/13 금) 도착 + 호안끼엠
+ {id:'pho10', name:'퍼 10 리꾸옥쓰', zh:'Phở 10 Lý Quốc Sư', cat:'food', lat:21.0299, lng:105.8494, def:[1,1,'12:30'], tip:'🧒👴 퍼 보 7만~9만동(약 3,900~5,000원). 매장 깔끔+에어컨이라 가족 첫 끼로 가장 무난. 06:00~22:00 영업. 튀김빵 꿔이(1만동) 곁들이기'},
+ {id:'checkin', name:'숙소 체크인', zh:'', cat:'etc', useHotel:true, def:[1,2,'14:00'], tip:'서머셋 그랜드 하노이. 얼리 체크인 가능 여부는 도착 전 문의. 짐 풀고 가볍게 출발!'},
+ {id:'hoankiem', name:'호안끼엠 호수 & 응옥썬 사당', zh:'Hồ Hoàn Kiếm / Đền Ngọc Sơn', cat:'tour', lat:21.0309, lng:105.8525, def:[1,3,'15:30'], tip:'🧒👴 사당 5만동(16세 미만 무료). 빨간 테훅 다리가 포토스팟. 평지 산책이라 어르신 부담 없고, 금~일 저녁엔 차 없는 거리로 바뀌어 아이가 뛰어놀기 좋아요'},
+ {id:'cong', name:'콩카페 (성당점)', zh:'Cộng Cà Phê, 27 Nhà Thờ', cat:'cafe', lat:21.0290, lng:105.8492, def:[1,4,'17:00'], tip:'🧒👴 코코넛 밀크커피 4.5만~6.5만동(약 2,500~3,600원). 아이는 논커피(코코넛 스무디) 가능. 시내 지점 30여 개라 붐비면 다른 지점으로'},
+ {id:'puppet', name:'탕롱 수상인형극', zh:'Múa rối nước Thăng Long, 57B Đinh Tiên Hoàng', cat:'tour', lat:21.0323, lng:105.8531, def:[1,5,'18:30'], tip:'🧒👴🎫 티켓 10만~20만동(약 5,500~11,000원), 50분 공연. 대사 없이 음악·인형이라 5살도 어르신도 확실히 즐기는 필수 코스. 매일 15:00~20:00 여러 회차, 성수기라 사전 예매 필수. 앞줄은 물 튐 주의'},
+ {id:'bunchata', name:'분짜 따', zh:'Bún Chả Ta, 21 Nguyễn Hữu Huân', cat:'food', lat:21.0334, lng:105.8534, def:[1,6,'19:45'], tip:'🧒👴 분짜 세트 9만~12만동(약 5,000~6,600원), 게살넴 추가 6만동. 에어컨+등받이 의자+영어 메뉴라 노포가 부담스러운 가족에게 최적'},
+ {id:'nightmarket', name:'하노이 주말 야시장', zh:'Chợ đêm phố cổ (금~일)', cat:'tour', lat:21.0345, lng:105.8508, def:[1,7,'21:00'], tip:'🧒 금~일 18:00~23:00, 항다오~동쑤언 3km 보행자거리. 먹거리 2만~5만동. 19~22시가 절정. 인파 많아 아이 손잡기 필수, 어르신은 초저녁 짧게. 소매치기 주의'},
+ // ---- Day 2 (11/14 토) 바딘·문묘 + 올드쿼터
+ {id:'mausoleum', name:'호치민 영묘', zh:'Lăng Chủ tịch Hồ Chí Minh', cat:'tour', lat:21.0369, lng:105.8347, def:[2,1,'08:00'], tip:'👴 무료. 동절기 오전만 개방(08:00~11:00), 월·금 휴관 → 이번 여행에선 14(토)·15(일)만 가능! 줄이 기니 아침 일찍. 반바지·민소매 불가, 내부 촬영·대화 금지'},
+ {id:'stilt', name:'주석궁 정원 & 호치민 생가', zh:'Phủ Chủ tịch / Nhà sàn Bác Hồ', cat:'tour', lat:21.0388, lng:105.8339, def:[2,2,'09:30'], tip:'🧒👴 4만동(약 2,200원). 영묘 동선에 이어서. 잉어 연못과 정원이 있어 아이도 지루해하지 않아요. 점심 휴장(11:00~13:30) 주의'},
+ {id:'onepillar', name:'한기둥 사원', zh:'Chùa Một Cột', cat:'tour', lat:21.0358, lng:105.8334, def:[2,3,'10:30'], tip:'👴 2.5만동. 5~10분이면 충분한 소규모 사원 — 영묘·생가와 묶어 반나절 코스'},
+ {id:'vanmieu', name:'문묘 (베트남 최초 대학)', zh:'Văn Miếu – Quốc Tử Giám', cat:'tour', lat:21.0293, lng:105.8356, def:[2,4,'11:15'], tip:'🧒👴 성인 7만동, 16세 미만 무료. 평지 정원 5개 마당이라 어르신 걷기 무난. 학업 성취 기원 명소라 가족사진 스팟. 거북비석은 만지지 말 것'},
+ {id:'ngon', name:'꽌 안 응온', zh:'Quán Ăn Ngon, 18 Phan Bội Châu', cat:'food', lat:21.0257, lng:105.8423, def:[2,5,'12:30'], tip:'🧒👴🎫 1인 10만~20만동(약 5,500~11,000원). 프렌치 빌라 정원+에어컨, 사진 메뉴판으로 베트남 전역 요리를 한 상에 — 5인 가족 나눠먹기 최적. 문묘에서 가까움. 저녁 피크는 웨이팅'},
+ {id:'rest', name:'숙소 낮잠·휴식', zh:'', cat:'etc', useHotel:true, def:[2,6,'14:00'], tip:'🧒👴 5살 낮잠 + 어르신 휴식 타임. 오후 일정을 위한 재충전 — 가족여행 필수 버퍼'},
+ {id:'cathedral', name:'성 요셉 성당', zh:'Nhà thờ Lớn Hà Nội', cat:'tour', lat:21.0287, lng:105.8489, def:[2,7,'16:30'], tip:'👴 무료. 호안끼엠 도보 5분. 외관만 봐도 충분, 앞 냐토 거리 카페들과 묶기 좋아요'},
+ {id:'collective', name:'콜렉티브 메모리 (소품샵)', zh:'Collective Memory, 12 Nhà Chung', cat:'shop', lat:21.0278, lng:105.8487, def:[2,8,'17:00'], tip:'👴 에코백·포스터·자수패치·라탄 5만~50만동. 성당 근처 하노이 작가 수공예 큐레이션숍. 10:00~18:30 영업. 매장이 아담해 아이 손조심. 콩카페 성당점과 같은 블록'},
+ {id:'chacathanglong', name:'짜까 탕롱', zh:'Chả Cá Thăng Long, 19-31 Đường Thành', cat:'food', lat:21.0334, lng:105.8460, def:[2,9,'18:30'], tip:'🧒👴🎫 미쉐린 빕구르망. 짜까(강황 생선구이+쌀국수) 1인 17만~18만동(약 9,500~10,000원). 직원이 테이블에서 구워주고 에어컨+정식 좌석이라 가족에게 가장 적합한 짜까집. 저녁 예약 권장'},
+ {id:'spa', name:'어반 오아시스 스파', zh:'Urban Oasis Spa, 39A Hàng Hành', cat:'etc', lat:21.0303, lng:105.8503, def:[2,10,'20:30'], tip:'👴 60분 전신 50만~70만동(약 2.8만~3.9만원)+팁 관례. 호안끼엠 도보 2분, 가족 동시 예약 가능 — 부모님 효도 코스. 아이 동반 가능 여부는 예약 시 확인. 대안: SF Spa(30 Cửa Đông)'},
+ // ---- Day 3 (11/15 일) 하롱베이 크루즈 1일차
+ {id:'cruise_pick', name:'크루즈 픽업 (호텔 로비)', zh:'셔틀 or 프라이빗 리무진', cat:'etc', useHotel:true, def:[3,1,'08:00'], tip:'보통 08:00~08:30 올드쿼터 픽업 → 고속도로 2~2.5시간(휴게소 1회). 5인 가족은 프라이빗 리무진 밴 업그레이드(왕복 200~250달러)가 어르신·아이에게 편해요'},
+ {id:'cruise_board', name:'하롱베이 크루즈 승선', zh:'하롱국제크루즈항 (선사별 상이)', cat:'tour', lat:20.9513, lng:107.0170, def:[3,2,'12:00'], tip:'🎫 12:30 웰컴 런치하며 출항. 승선 항구는 선사에 따라 하롱국제크루즈항/뚜언쩌우/곳피어(하이퐁·란하베이) — 크루즈 확정 후 이 핀을 드래그해서 보정하세요. 여권 실물 필수'},
+ {id:'titop', name:'티톱섬 전망대·해변', zh:'Đảo Ti Tốp', cat:'tour', lat:20.8557, lng:107.0810, def:[3,3,'15:00'], tip:'전망대까지 계단 약 400개 — 어르신은 무리 말고 해변 휴식, 아이는 모래놀이. 11월 물이 차니 수영은 오후에만'},
+ {id:'luon', name:'루언 동굴 카약·뱀부보트', zh:'Hang Luồn', cat:'tour', lat:20.8480, lng:107.0890, def:[3,4,'16:30'], tip:'🧒👴 석회암 아치 밑을 배로 통과. 아이·어르신은 사공이 노 젓는 뱀부보트 선택이 안전·편안. 원숭이 출몰 — 음식물 주의. 이후 17:30 선셋 해피아워 → 19:00 선상 석식·오징어낚시'},
+ // ---- Day 4 (11/16 월) 하선 → 하노이 → 심야 귀국
+ {id:'sungsot', name:'승솟 동굴', zh:'Hang Sửng Sốt', cat:'tour', lat:20.8264, lng:107.0936, def:[4,1,'07:30'], tip:'🧒 하롱베이 최대 종유석 동굴. 입구 계단 약 100개, 내부는 완만한 데크길이라 5살도 걸어서 관람 가능(40~50분). 아침이 한산. 이후 08:30 브런치·체크아웃'},
+ {id:'cruise_off', name:'크루즈 하선 → 하노이 복귀', zh:'10:15~11:00 하선, 14:30~15:30 시내 도착', cat:'etc', lat:20.9513, lng:107.0170, def:[4,2,'10:30'], tip:'버스에서 낮잠 타임. 시내 도착 후 남은 반나절 일정 시작'},
+ {id:'lottemall', name:'롯데몰 웨스트레이크 (기념품 쇼핑)', zh:'Lotte Mall West Lake, 272 Võ Chí Công', cat:'shop', lat:21.0723, lng:105.8117, def:[4,3,'15:30'], tip:'🧒👴 B1 롯데마트에서 G7커피(5만~10만동)·과자·건과일 등 귀국 선물 몰아 사기. 2023년 개장 최신몰이라 수유실·유아시설 완비, 한국 브랜드 많아 부모님도 편안. 시내에서 차 20~25분'},
+ {id:'luggage', name:'맡긴 짐 찾기 (서머셋)', zh:'', cat:'etc', useHotel:true, def:[4,4,'17:45'], tip:'체크아웃 때 맡긴 짐 픽업. 로비에서 잠시 정비 후 저녁 식사로'},
+ {id:'caugo', name:'꺼우고 레스토랑 (호수뷰 만찬)', zh:'Cau Go, 73 Cầu Gỗ 6층', cat:'food', lat:21.0330, lng:105.8525, def:[4,5,'18:15'], tip:'🧒👴🎫 1인 30만~50만동(약 1.7만~2.8만원). 호안끼엠 야경이 내려다보이는 6층+엘리베이터 — 부모님 모시는 마지막 만찬으로 딱. 창가는 예약 필수, 넴(스프링롤)이 시그니처'},
+ // ---- 추가 맛집
+ {id:'phogia', name:'퍼 자쭈옌 (밧단 쌀국수)', zh:'Phở Gia Truyền, 49 Bát Đàn', cat:'food', lat:21.0340, lng:105.8462, tip:'하노이 3대 퍼 노포. 퍼 보 6만~7.5만동(약 3,300~4,100원). 선불 주문+직접 받아오는 방식. 06:00~10:30/16:30~20:30(소진 시 마감). 간이 좌석·에어컨 없음 — 어르신은 7시 전 아침이 편해요'},
+ {id:'obama', name:'분짜 흐엉리엔 (오바마 분짜)', zh:'Bún Chả Hương Liên, 24 Lê Văn Hưu', cat:'food', lat:21.0163, lng:105.8540, tip:'🧒 오바마 콤보(분짜+게살넴+맥주) 12만~14만동(약 6,600~7,700원). 위층 에어컨 좌석 있음. 08:00~20:30. 숙소에서 도보 10~15분'},
+ {id:'dackim', name:'분짜 닥킴', zh:'Bún Chả Đắc Kim, 1 Hàng Mạnh', cat:'food', lat:21.0326, lng:105.8482, tip:'1966년 개업·미쉐린 등재. 분짜+게살넴 세트 12만동, 양이 많아 2인 1세트 가능. 2층 계단이 가파르니 어르신은 1층. 주문 전 가격 확인 안전'},
+ {id:'banhmi25', name:'반미 25', zh:'Bánh Mì 25, 25 Hàng Cá', cat:'food', lat:21.0361, lng:105.8486, tip:'🧒 반미 믹스 4만동 안팎(약 2,200원). 길 건너 자체 카페 좌석 있음. 맵지 않게 주문하면 아이도 잘 먹어요. 07:00~21:00(일요일 단축 가능 — 방문 전 확인)'},
+ {id:'photin', name:'퍼 틴 (로둑점)', zh:'Phở Thìn, 13 Lò Đúc', cat:'food', lat:21.0157, lng:105.8585, tip:'1979년부터 볶은 소고기 쌀국수 단일 메뉴. 7만~9만동. 기름지고 진해 호불호. 간이 좌석·에어컨 없음. 숙소 도보 10분'},
+ {id:'chacalavong', name:'짜까 라봉 (원조)', zh:'Chả Cá Lã Vọng, 14 Chả Cá', cat:'food', lat:21.0365, lng:105.8487, tip:'1871년 원조집이지만 시설이 낡고 계단 가파름. 1인 17만동 안팎. 어르신 동반이면 같은 메뉴의 짜까 탕롱 추천. 영업시간 11~14/17~21시 — 방문 전 확인'},
+ {id:'bunbo', name:'분보남보 박프엉', zh:'Bún Bò Nam Bộ Bách Phương, 67 Hàng Điệu', cat:'food', lat:21.0341, lng:105.8470, tip:'🧒 소고기 비빔쌀국수 6.5만동(약 3,600원) — 국물 없이 깔끔. 회전 빠름. 같은 이름 가게 많으니 주소(67 Hàng Điệu) 확인'},
+ {id:'xoiyen', name:'쏘이 옌 (찹쌀밥)', zh:'Xôi Yến, 35B Nguyễn Hữu Huân', cat:'food', lat:21.0344, lng:105.8535, tip:'🧒 강황 찹쌀밥+닭·계란 토핑 3만~5만동(약 1,700~2,800원). 쌀국수에 지쳤을 때 밥 메뉴 대안. 새벽까지 영업(방문 전 확인)'},
+ {id:'banhcuon', name:'반꾸온 타인번 (쌀피롤)', zh:'Bánh Cuốn Thanh Vân, 14 Hàng Gà', cat:'food', lat:21.0364, lng:105.8469, tip:'🧒👴 돼지고기·버섯 쌀피롤 4만~7만동. 부드럽고 순한 맛이라 아이·어르신 아침에 최고. 간이형 로컬 좌석'},
+ {id:'gojumong', name:'고주몽 (롯데센터 한식)', zh:'Gojumong, Lotte Center 54 Liễu Giai', cat:'food', lat:21.0321, lng:105.8145, tip:'🧒👴🎫 한식 BBQ·찌개 1인 20만~40만동(약 1.1만~2.2만원). 현지식이 안 맞을 때 비상용. 롯데센터(전망대·마트)와 묶기 좋음. 점심 만석 잦아 예약 권장'},
+ {id:'homehanoi', name:'홈 하노이 (파인다이닝)', zh:'HOME Hanoi, 34 Châu Long', cat:'food', lat:21.0444, lng:105.8436, tip:'👴🎫 프렌치 빌라 개조 모던 베트남 요리, 1인 40만~70만동(약 2.2만~3.9만원). 조용하고 좌석 편해 부모님 만찬 대안. 저녁 예약 필수'},
+ {id:'duongs', name:'즈엉스 레스토랑', zh:"Duong's Restaurant, 27 Ngõ Huyện", cat:'food', lat:21.0296, lng:105.8482, tip:'👴🎫 마스터셰프 출신 미쉐린 셀렉티드. 코스 45만~65만동(약 2.5만~3.6만원). 성당 근처 골목, 에어컨·아늑한 실내. 저녁 예약 필수'},
+ // ---- 추가 카페·디저트
+ {id:'giang', name:'카페 지앙 (에그커피 원조)', zh:'Cà Phê Giảng, 39 Nguyễn Hữu Huân', cat:'cafe', lat:21.0339, lng:105.8551, tip:'🧒👴 1946년 원조 에그커피 3만~3.5만동(약 1,700~1,900원). 좁은 골목 안, 낮은 의자라 어르신은 안쪽 테이블석. 아이는 에그 코코아'},
+ {id:'dinh', name:'카페 딘 (호수뷰 에그커피)', zh:'Cà Phê Đinh, 13 Đinh Tiên Hoàng 2층', cat:'cafe', lat:21.0317, lng:105.8536, tip:'에그커피 2.5만동 — 지앙 창업자 딸의 가게. 1층 가방집 통과해 계단으로. 발코니에서 호안끼엠 뷰. 계단이 가파라 아이 손잡기, 거동 불편한 어르신은 비추'},
+ {id:'phoco', name:'카페 포 꼬 (루프탑 호수뷰)', zh:'Cafe Phố Cổ, 11 Hàng Gai 4층', cat:'cafe', lat:21.0322, lng:105.8510, tip:'에그커피 4만~5.5만동. 실크가게 안 통로→안뜰→루프탑, 호안끼엠이 한눈에. 마지막 층 계단 주의, 난간 근처 아이 조심'},
+ {id:'maison', name:'메종 드 뗏 데코르 (서호 브런치)', zh:'Maison de Tet Decor, 156 Từ Hoa', cat:'cafe', lat:21.0590, lng:105.8320, tip:'🧒👴 서호 내려다보이는 빌라 카페. 커피 6만~9만동, 브런치·케이크 12만~25만동. 좌석 넓고 조용해 부모님 브런치에 최적. 숙소에서 차 15분'},
+ {id:'laviet', name:'라 비엣 커피 (로스터리)', zh:'Là Việt Coffee, 7B Vọng Đức', cat:'cafe', lat:21.0222, lng:105.8530, tip:'🧒👴 달랏 유명 로스터리. 커피 5.5만~8.5만동, 원두·드립백 선물 12만~25만동. 숙소 도보 5분이라 아침 커피 코스. 넓고 에어컨 완비'},
+ {id:'kem', name:'쩡띠엔 아이스크림 (노포)', zh:'Kem Tràng Tiền, 35 Tràng Tiền', cat:'cafe', lat:21.0245, lng:105.8548, tip:'🧒 1958년 국민 아이스크림 1만~2만동(약 550~1,100원). 서서 먹는 스탠드. 코코넛·그린라이스맛 추천. 호수 산책 후 간식'},
+ // ---- 추가 관광
+ {id:'badinh', name:'바딘 광장', zh:'Quảng trường Ba Đình', cat:'tour', lat:21.0366, lng:105.8345, tip:'🧒👴 무료. 매일 06:00 국기 게양식·21:00 하강식. 잔디 진입 통제 구역 주의'},
+ {id:'citadel', name:'탕롱 황성 (유네스코)', zh:'Hoàng thành Thăng Long', cat:'tour', lat:21.0341, lng:105.8372, tip:'👴 성인 10만동, 16세 미만 무료. 단문 누각 위 전경이 하이라이트. 부지가 넓어 중심부만 1시간 코스로. 월요일 휴관(11/16 주의)'},
+ {id:'tranquoc', name:'쩐꾸옥 사원', zh:'Chùa Trấn Quốc', cat:'tour', lat:21.0481, lng:105.8366, tip:'👴 무료(자율 시주). 서호 물 위에 뜬 하노이 최고(最古) 사원, 해질녘이 예뻐요. 20~30분 관람. 무릎·어깨 가리는 복장'},
+ {id:'westlake', name:'서호 산책', zh:'Hồ Tây (West Lake)', cat:'tour', lat:21.0583, lng:105.8232, tip:'🧒👴 무료. 아이는 오리배(10만~15만동/시간), 어르신은 호반 산책. 쩐꾸옥 사원+호숫가 카페와 묶어 일몰 시간대 추천'},
+ {id:'cyclo', name:'올드쿼터 씨클로 투어', zh:'Xích lô Phố Cổ', cat:'tour', lat:21.0338, lng:105.8500, tip:'🧒👴 1시간 대당 10만~15만동(약 5,500~8,300원)이 적정가. 타기 전 대당·시간당 가격을 숫자로 확정! 5명이면 4~5대, 아이는 어른과 합승 가능. 걷기 힘든 어르신에게 최고의 올드쿼터 관람법'},
+ {id:'hoalo', name:'호아로 수용소 박물관', zh:'Nhà tù Hỏa Lò', cat:'tour', lat:21.0254, lng:105.8465, tip:'👴 5만동. 전시가 어둡고 무거워 5살에겐 비추 — 어른들끼리 교대 관람 or 생략 가능. 1시간'},
+ {id:'ethnology', name:'베트남 민족학 박물관', zh:'Bảo tàng Dân tộc học', cat:'tour', lat:21.0407, lng:105.7988, tip:'🧒👴 성인 4만동·어린이 1.5만동. 야외 실물 소수민족 가옥을 아이가 오르내리며 놀기 좋아요. 비 오는 날 대체 일정. 월요일 휴관. 시내에서 차 15~20분'},
+ {id:'trainstreet', name:'기찻길 마을 (트레인 스트리트)', zh:'Train Street (Trần Phú~Phùng Hưng)', cat:'tour', lat:21.0311, lng:105.8415, tip:'2026년 현재 공식 통제 구간 — 선로변 카페 손님으로만 입장 가능하고 당일 거절될 수 있음(방문 전 확인). 음료 4만~6만동 주문 조건. 아이 반드시 손잡고 카페 안쪽에'},
+ // ---- 추가 쇼핑
+ {id:'indigo', name:'인디고 스토어 (천연염색)', zh:'Indigo Store, 33A Văn Miếu', cat:'shop', lat:21.0281, lng:105.8366, tip:'👴 쪽염색 리넨 의류·스카프 20만~80만동(약 1.1만~4.4만원). 문묘 앞이라 관람과 묶기 좋음. 부모님 선물(스카프) 강추. 08:00~19:00'},
+ {id:'tanmy', name:'탄미 디자인 (실크 거리)', zh:'Tanmy Design, 61 Hàng Gai', cat:'shop', lat:21.0320, lng:105.8500, tip:'👴 4대째 자수·실크 전문, 스카프 30만동~. 1,000㎡ 규모라 구경만도 볼만. 정찰제라 흥정 부담 없음. 항가이 거리 전체가 실크 상점가'},
+ {id:'trangtien', name:'짱띠엔 플라자', zh:'Tràng Tiền Plaza', cat:'shop', lat:21.0245, lng:105.8531, tip:'🧒👴 명품 위주지만 프렌치 콜로니얼 건물 구경+에어컨 휴식용으로. 숙소 도보 5분. 근처 쩡띠엔 아이스크림과 묶기'},
+ {id:'dongxuan', name:'동쑤언 시장', zh:'Chợ Đồng Xuân', cat:'shop', lat:21.0380, lng:105.8497, tip:'2,000여 점포 대형 재래시장, 기념품 2만~10만동 흥정 필수. 통로가 좁아 유모차 불가·아이 손잡기. 오전이 쾌적. 현지 분위기 구경 위주로'},
+];
+
+const AIRPORT = {name:'노이바이 공항', zh:'Sân bay Nội Bài', lat:21.2212, lng:105.8072};
+const DAY_COLORS = ['#e05d2c','#0f7b6c','#3b6fc9','#b13a86','#c98a12','#5b57c7','#2a8f4e','#8a5a3b','#c74b5e','#3c8f9e'];
+const CATS = [['all','전체'],['tour','🏛️ 관광'],['food','🥢 맛집'],['cafe','🧁 카페'],['shop','🛍️ 쇼핑'],['etc','📌 기타'],['custom','⭐ 내 장소']];
+const CATLABEL = {tour:'관광',food:'맛집',cafe:'카페',shop:'쇼핑',etc:'기타',custom:'내 장소'};
+
+/* ============================================================ state ============================================================ */
+const LS_KEY = 'hanoi-trip-v1';
+let state = null;
+let uidSeq = 1;
+const uid = () => 'i' + (uidSeq++) + '_' + Math.random().toString(36).slice(2,6);
+
+function defaultState(){
+  const days = [];
+  for(let d=1; d<=4; d++){
+    const items = PLACES.filter(p=>p.def && p.def[0]===d)
+      .sort((a,b)=>a.def[1]-b.def[1])
+      .map(p=>({uid:uid(), pid:p.id, time:p.def[2], memo:''}));
+    days.push(items);
+  }
+  return {
+    settings:{ startDate:'2026-11-13', nights:3, arrTime:'10:30', depTime:'23:00', hotel:'h_somerset', hotelInRoute:true },
+    days, activeDay:0, custom:[], coordFix:{}, mapMode:'day'
+  };
+}
+function nextMonth(){ const d=new Date(); d.setDate(d.getDate()+30); return d.toISOString().slice(0,10); }
+
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function load(){
+  try{ const s = JSON.parse(localStorage.getItem(LS_KEY)); if(s && s.days) return s; }catch(e){}
+  return null;
+}
+
+/* place lookup (built-in + custom), 좌표 보정 반영 */
+function getPlace(pid){
+  let p = PLACES.find(x=>x.id===pid) || state.custom.find(x=>x.id===pid);
+  if(!p) return null;
+  const out = Object.assign({}, p);
+  if(p.useHotel){ const h = getHotel(); out.lat=h.lat; out.lng=h.lng; out.zh = h.name; }
+  const fix = state.coordFix[pid];
+  if(fix){ out.lat=fix[0]; out.lng=fix[1]; }
+  return out;
+}
+function getHotel(){
+  const h = HOTELS.find(x=>x.id===state.settings.hotel) || state.custom.find(x=>x.id===state.settings.hotel) || HOTELS[0];
+  const fix = state.coordFix[h.id];
+  return fix ? Object.assign({},h,{lat:fix[0],lng:fix[1]}) : h;
+}
+const numDays = () => state.settings.nights + 1;
+
+/* ============================================================ header controls ============================================================ */
+const $ = s => document.querySelector(s);
+
+function initHeader(){
+  const st = state.settings;
+  $('#startDate').value = st.startDate;
+  $('#arrTime').value = st.arrTime;
+  $('#depTime').value = st.depTime;
+  $('#hotelInRoute').checked = st.hotelInRoute;
+  const sel = $('#hotelSelect');
+  sel.innerHTML='';
+  HOTELS.concat(state.custom.filter(c=>c.isHotel)).forEach(h=>{
+    const o=document.createElement('option'); o.value=h.id; o.textContent=h.name; sel.appendChild(o);
+  });
+  const oc=document.createElement('option'); oc.value='__custom'; oc.textContent='＋ 직접 지정 (지도 클릭)'; sel.appendChild(oc);
+  sel.value = st.hotel;
+  $('#nightsLabel').textContent = `${st.nights}박 ${st.nights+1}일`;
+
+  $('#startDate').onchange = e=>{ st.startDate=e.target.value; refresh(); };
+  $('#arrTime').onchange = e=>{ st.arrTime=e.target.value; refresh(); };
+  $('#depTime').onchange = e=>{ st.depTime=e.target.value; refresh(); };
+  $('#hotelInRoute').onchange = e=>{ st.hotelInRoute=e.target.checked; refresh(); };
+  sel.onchange = e=>{
+    if(e.target.value==='__custom'){ startHotelPick(); sel.value=st.hotel; return; }
+    st.hotel=e.target.value; refresh();
+  };
+  $('#nMinus').onclick = ()=> changeNights(-1);
+  $('#nPlus').onclick = ()=> changeNights(1);
+  $('#btnExport').onclick = ()=> openIO('export');
+  $('#btnImport').onclick = ()=> openIO('import');
+  $('#btnReset').onclick = ()=>{
+    if(confirm('일정을 기본 3박 5일 코스로 초기화할까요? 내 장소·메모도 사라집니다.')){
+      localStorage.removeItem(LS_KEY); state = defaultState(); initAll();
+    }
+  };
+}
+function changeNights(delta){
+  const st=state.settings;
+  const n = Math.min(9, Math.max(1, st.nights+delta));
+  if(n===st.nights) return;
+  if(n < st.nights){
+    // 줄어드는 날의 일정은 마지막 남는 날 뒤로 합치지 않고 경고 후 삭제 대신 마지막 날로 이동
+    const removed = state.days.slice(n+1).flat();
+    state.days = state.days.slice(0, n+1);
+    if(removed.length){ state.days[state.days.length-1].push(...removed); }
+  }else{
+    while(state.days.length < n+1) state.days.push([]);
+  }
+  st.nights = n;
+  if(state.activeDay >= numDays()) state.activeDay = numDays()-1;
+  $('#nightsLabel').textContent = `${n}박 ${n+1}일`;
+  refresh();
+}
+
+/* ============================================================ library ============================================================ */
+let libCat = 'all';
+function renderCatTabs(){
+  const box = $('#catTabs'); box.innerHTML='';
+  CATS.forEach(([k,label])=>{
+    const b=document.createElement('button'); b.textContent=label;
+    if(k===libCat) b.classList.add('on');
+    b.onclick=()=>{ libCat=k; renderCatTabs(); renderLibrary(); };
+    box.appendChild(b);
+  });
+}
+function renderLibrary(){
+  const q = $('#libSearch').value.trim().toLowerCase();
+  const box = $('#libList'); box.innerHTML='';
+  const inTrip = new Set(state.days.flat().map(i=>i.pid));
+  let list = PLACES.concat(state.custom.filter(c=>!c.isHotel));
+  if(libCat==='custom') list = state.custom.filter(c=>!c.isHotel);
+  else if(libCat!=='all') list = list.filter(p=>p.cat===libCat);
+  if(q) list = list.filter(p=> (p.name+(p.zh||'')+(p.tip||'')).toLowerCase().includes(q));
+  const note=document.createElement('div'); note.className='libnote';
+  note.textContent = `${list.length}곳 · ✓는 일정에 이미 있는 곳`;
+  box.appendChild(note);
+  list.forEach(p=>{
+    const el=document.createElement('div'); el.className='libitem'; el.dataset.pid=p.id;
+    el.innerHTML = `<div class="nm">${inTrip.has(p.id)?'✓ ':''}${esc(p.name)}</div>
+      <div class="zh">${esc(p.zh||'')}</div>
+      <div class="cat">${CATLABEL[p.cat]||''}</div>
+      <button class="addbtn" title="현재 날짜에 추가">＋</button>`;
+    el.querySelector('.addbtn').onclick = (e)=>{ e.stopPropagation(); addToDay(p.id, state.activeDay); };
+    box.appendChild(el);
+  });
+  if(libSortable) libSortable.destroy();
+  libSortable = Sortable.create(box, {
+    group:{name:'trip', pull:'clone', put:false},
+    sort:false, draggable:'.libitem',
+    delay:150, delayOnTouchOnly:true,
+    setData:(dt)=>dt.setData('text',''),
+  });
+}
+let libSortable = null;
+$('#libSearch') && ($('#libSearch').oninput = ()=>renderLibrary());
+
+function addToDay(pid, dayIdx, index){
+  const item = {uid:uid(), pid, time:'', memo:''};
+  if(index==null) state.days[dayIdx].push(item);
+  else state.days[dayIdx].splice(index,0,item);
+  refresh();
+  if(isMobile()) setView('plan'); // 모바일: 추가 후 일정 화면으로
+}
+
+/* ---------- mobile views ---------- */
+const isMobile = () => window.matchMedia('(max-width:900px)').matches;
+const closeSettings = () => document.querySelector('header').classList.remove('open');
+function setView(v){
+  document.body.classList.remove('v-plan','v-map','v-lib');
+  document.body.classList.add('v-'+v);
+  document.querySelectorAll('#mobileNav button').forEach(b=>b.classList.toggle('on', b.dataset.view===v));
+  closeSettings(); // 설정창이 열린 채 화면을 전환하면 리스트가 가려지므로 닫는다
+  if(v==='map' && map) setTimeout(()=>{ map.invalidateSize(); renderMap(); }, 80);
+}
+document.querySelectorAll('#mobileNav button').forEach(b=> b.onclick=()=>setView(b.dataset.view));
+$('#settingsToggle').onclick = ()=> document.querySelector('header').classList.toggle('open');
+// 모바일: 설정창이 열린 상태에서 장소 검색을 시작하면 설정창을 닫아 리스트 공간 확보
+['libSearch','cpName'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('focus', ()=>{ if(isMobile()) closeSettings(); });
+});
+
+/* ============================================================ board ============================================================ */
+const DOW = ['일','월','화','수','목','금','토'];
+function dayDate(i){
+  const d = new Date(state.settings.startDate+'T00:00:00');
+  d.setDate(d.getDate()+i);
+  return d;
+}
+function renderTabs(){
+  const box=$('#dayTabs'); box.innerHTML='';
+  for(let i=0;i<numDays();i++){
+    const b=document.createElement('button');
+    const d=dayDate(i);
+    b.innerHTML = `Day ${i+1}<span class="dt">${d.getMonth()+1}/${d.getDate()} (${DOW[d.getDay()]})</span>`;
+    b.style.setProperty('--tabclr', DAY_COLORS[i%DAY_COLORS.length]);
+    if(i===state.activeDay) b.classList.add('on');
+    b.onclick=()=>{ state.activeDay=i; refresh(); };
+    box.appendChild(b);
+  }
+}
+
+let daySortable=null;
+function renderDay(){
+  const i = state.activeDay;
+  const color = DAY_COLORS[i%DAY_COLORS.length];
+  const box=$('#dayList'); box.innerHTML='';
+  const st=state.settings;
+  const hotel=getHotel();
+
+  // 상단 앵커
+  if(i===0){
+    box.appendChild(anchorEl('✈️', `${esc(st.arrTime)} 노이바이 공항 도착`, '5인 가족은 그랩 7인승(SUV) 또는 사전 픽업 예약 추천'));
+  }else if(st.hotelInRoute){
+    box.appendChild(anchorEl('🏨', `${esc(hotel.name)} 출발`, hotel.zh||'', true));
+  }
+
+  // 카드 목록
+  const ul=document.createElement('div'); ul.className='dayitems'; ul.id='dayItems';
+  const items = state.days[i];
+  if(!items.length){
+    const eh=document.createElement('div'); eh.className='empty-hint';
+    eh.textContent='왼쪽 라이브러리에서 장소를 드래그하거나 ＋ 버튼으로 추가하세요';
+    ul.appendChild(eh);
+  }
+  items.forEach((it,idx)=>{
+    if(idx>0 || i===0 || st.hotelInRoute) ul.appendChild(segEl(idx));
+    ul.appendChild(cardEl(it, idx, color));
+  });
+  box.appendChild(ul);
+
+  // 하단 앵커
+  const isLast = i===numDays()-1;
+  if(items.length && (st.hotelInRoute || isLast)) box.appendChild(segEl(items.length));
+  if(isLast){
+    box.appendChild(anchorEl('✈️', `${esc(st.depTime)} 노이바이 공항 출발`, '2~3시간 전 공항 도착 권장 · 짐 찾으러 호텔 경유 잊지 마세요!'));
+  }else if(st.hotelInRoute){
+    box.appendChild(anchorEl('🏨', `${esc(hotel.name)} 복귀`, '', true));
+  }
+
+  const foot=document.createElement('div'); foot.className='dayfoot'; foot.id='dayFoot';
+  foot.innerHTML = `장소 <b>${items.length}</b>곳`;
+  box.appendChild(foot);
+
+  if(daySortable) daySortable.destroy();
+  daySortable = Sortable.create(ul, {
+    group:'trip', animation:150, handle:'.badge', draggable:'.card',
+    filter:'.seg,.empty-hint', delay:120, delayOnTouchOnly:true,
+    onAdd: (ev)=>{
+      // 라이브러리에서 클론된 항목
+      const pid = ev.item.dataset.pid;
+      if(pid){
+        const idx = cardIndexOf(ev.item);
+        ev.item.remove();
+        addToDay(pid, state.activeDay, idx);
+      }
+    },
+    onUpdate: ()=>{ syncFromDom(); refresh(); },
+  });
+}
+function cardIndexOf(el){
+  const cards=[...$('#dayItems').querySelectorAll('.card')];
+  return cards.indexOf(el)>=0 ? cards.indexOf(el) : cards.length;
+}
+function syncFromDom(){
+  const uids=[...$('#dayItems').querySelectorAll('.card')].map(c=>c.dataset.uid).filter(Boolean);
+  const cur=state.days[state.activeDay];
+  const map=Object.fromEntries(cur.map(x=>[x.uid,x]));
+  state.days[state.activeDay]=uids.map(u=>map[u]).filter(Boolean);
+}
+
+function anchorEl(ic, title, sub, isHotel){
+  const el=document.createElement('div'); el.className='anchor'+(isHotel?' hotel':'');
+  el.innerHTML=`<span class="ic">${ic}</span><div><div>${title}</div>${sub?`<small>${esc(sub)}</small>`:''}</div>`;
+  return el;
+}
+function segEl(idx){
+  const el=document.createElement('div'); el.className='seg'; el.dataset.seg=idx;
+  el.innerHTML=`<div class="dotline"></div><span id="seg-${idx}">🚕 계산 중…</span>`;
+  return el;
+}
+function cardEl(it, idx, color){
+  const p=getPlace(it.pid);
+  const el=document.createElement('div'); el.className='card'; el.dataset.uid=it.uid;
+  el.style.setProperty('--dayclr', color);
+  if(!p){ el.innerHTML='<div class="bodyc">(삭제된 장소)</div>'; return el; }
+  const dispName = it.name || p.name;
+  const gmap=`https://maps.apple.com/?ll=${p.lat},${p.lng}&q=${encodeURIComponent(dispName)}`;
+  el.innerHTML=`
+    <div class="badge">${idx+1}</div>
+    <div class="bodyc">
+      <div class="l1">
+        <input class="tm" type="time" value="${esc(it.time||'')}" title="시간">
+        <span class="nm">${esc(dispName)}</span>
+        <button class="editnm" title="이름 수정">✏️</button>
+        <span class="zh">${esc(p.zh||'')}</span>
+      </div>
+      ${p.tip?`<div class="quick">💡 ${esc(p.tip)}</div>`:''}
+      <div class="links">
+        <a href="${esc(gmap)}" target="_blank" rel="noopener">애플지도 </a>
+        ${p.amap && /^https?:\/\//.test(p.amap) ? `<a href="${esc(p.amap)}" target="_blank" rel="noopener">고덕지도 🇨🇳</a>` : ''}
+        <button class="memobtn">📝 메모</button>
+      </div>
+      <textarea class="memo" placeholder="우리끼리 메모 (예: 웨이팅 몇 시에 걸기, 예산…)">${esc(it.memo||'')}</textarea>
+    </div>
+    <button class="del" title="일정에서 빼기">✕</button>
+    <button class="toggle">▾ 더보기</button>`;
+  el.querySelector('.tm').onchange=e=>{ it.time=e.target.value; save(); };
+  el.querySelector('.editnm').onclick=()=>{
+    const nm=prompt('이 일정의 표시 이름을 수정하세요.\n(비우면 원래 이름으로 돌아갑니다)', it.name||p.name);
+    if(nm===null) return;
+    const t=nm.trim();
+    if(!t || t===p.name) delete it.name; else it.name=t;
+    refresh();
+  };
+  el.querySelector('.del').onclick=()=>{
+    state.days[state.activeDay]=state.days[state.activeDay].filter(x=>x.uid!==it.uid); refresh();
+  };
+  const toggle=()=>{ el.classList.toggle('open'); el.querySelector('.toggle').textContent=el.classList.contains('open')?'▴ 접기':'▾ 더보기'; };
+  el.querySelector('.toggle').onclick=toggle;
+  el.querySelector('.memobtn').onclick=()=>{ if(!el.classList.contains('open')) toggle(); el.querySelector('.memo').focus(); };
+  el.querySelector('.memo').oninput=e=>{ it.memo=e.target.value; save(); };
+  el.querySelector('.quick') && (el.querySelector('.quick').onclick=toggle);
+  return el;
+}
+
+/* ============================================================ map ============================================================ */
+let map, layerG;
+function initMap(){
+  map = L.map('map',{zoomControl:true}).setView([21.03,105.85],14);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+    maxZoom:19, attribution:'&copy; OpenStreetMap &copy; CARTO'
+  }).addTo(map);
+  layerG = L.layerGroup().addTo(map);
+  $('#mapModeDay').onclick=()=>{ state.mapMode='day'; $('#mapModeDay').classList.add('on'); $('#mapModeAll').classList.remove('on'); renderMap(); };
+  $('#mapModeAll').onclick=()=>{ state.mapMode='all'; $('#mapModeAll').classList.add('on'); $('#mapModeDay').classList.remove('on'); renderMap(); };
+  map.on('click', onMapClick);
+}
+function numIcon(n,color){
+  return L.divIcon({className:'', html:`<div class="numpin" style="background:${color}"><span>${n}</span></div>`, iconSize:[26,26], iconAnchor:[13,24]});
+}
+function emojiIcon(e){ return L.divIcon({className:'', html:`<div class="iconpin">${e}</div>`, iconSize:[24,24], iconAnchor:[12,20]}); }
+
+/* 하루 경유지 좌표열 만들기: [출발앵커] + items + [도착앵커] */
+function dayWaypoints(i){
+  const st=state.settings, hotel=getHotel(), isLast=i===numDays()-1;
+  const pts=[];
+  if(i===0) pts.push({name:AIRPORT.name, lat:AIRPORT.lat, lng:AIRPORT.lng, anchor:'✈️'});
+  else if(st.hotelInRoute) pts.push({name:hotel.name, lat:hotel.lat, lng:hotel.lng, anchor:'🏨'});
+  state.days[i].forEach((it,k)=>{
+    const p=getPlace(it.pid); if(p) pts.push({name:it.name||p.name, lat:p.lat, lng:p.lng, n:k+1, pid:it.pid});
+  });
+  if(isLast) pts.push({name:AIRPORT.name, lat:AIRPORT.lat, lng:AIRPORT.lng, anchor:'✈️'});
+  else if(st.hotelInRoute && state.days[i].length) pts.push({name:hotel.name, lat:hotel.lat, lng:hotel.lng, anchor:'🏨'});
+  return pts;
+}
+
+let routeToken=0;
+function renderMap(){
+  if(!map) return;
+  layerG.clearLayers();
+  const hotel=getHotel();
+  // 호텔 핀(항상)
+  L.marker([hotel.lat, hotel.lng], {icon:emojiIcon('🏨'), draggable:true})
+    .bindPopup(`<b>🏨 ${esc(hotel.name)}</b><br>${esc(hotel.tip||'')}<br><i>핀을 드래그하면 위치가 보정됩니다</i>`)
+    .on('dragend', e=>{ const ll=e.target.getLatLng(); state.coordFix[hotel.id]=[ll.lat,ll.lng]; refresh(); })
+    .addTo(layerG);
+
+  const daysToShow = state.mapMode==='all' ? [...Array(numDays()).keys()] : [state.activeDay];
+  const bounds=[[hotel.lat,hotel.lng]];
+
+  daysToShow.forEach(i=>{
+    const color=DAY_COLORS[i%DAY_COLORS.length];
+    state.days[i].forEach((it,k)=>{
+      const p=getPlace(it.pid); if(!p) return;
+      bounds.push([p.lat,p.lng]);
+      const m=L.marker([p.lat,p.lng],{icon:numIcon(k+1,color), draggable: state.mapMode==='day'})
+        .bindPopup(`<b>Day ${i+1}-${k+1} · ${esc(it.name||p.name)}</b><br>${esc(p.zh||'')}${p.tip?'<br>💡 '+esc(p.tip):''}<br><i>핀 드래그 → 위치 보정</i>`)
+        .addTo(layerG);
+      m.on('dragend', e=>{ const ll=e.target.getLatLng(); state.coordFix[it.pid]=[ll.lat,ll.lng]; refresh(); });
+    });
+  });
+
+  // 경로: 활성 날만
+  drawRoute(state.activeDay);
+
+  if(bounds.length>1){
+    try{ map.fitBounds(bounds,{padding:[40,40], maxZoom:15}); }catch(e){}
+  }
+}
+
+/* ---------- routing (OSRM demo, 캐시+폴백) ---------- */
+const routeCache = JSON.parse(localStorage.getItem('hn-routecache')||'{}');
+function cacheKey(a,b){ return [a.lat.toFixed(4),a.lng.toFixed(4),b.lat.toFixed(4),b.lng.toFixed(4)].join(','); }
+function haversine(a,b){
+  const R=6371, dLat=(b.lat-a.lat)*Math.PI/180, dLng=(b.lng-a.lng)*Math.PI/180;
+  const x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+function estimate(a,b){
+  const d=haversine(a,b)*1.35;
+  const speed = d>30?70 : d>8?40 : 22; // km/h
+  return {dur: d/speed*3600, dist:d*1000, est:true, geom:[[a.lat,a.lng],[b.lat,b.lng]]};
+}
+async function fetchRoute(a,b){
+  const key=cacheKey(a,b);
+  if(routeCache[key]) return routeCache[key];
+  try{
+    const url=`https://router.project-osrm.org/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`;
+    const r=await fetch(url); if(!r.ok) throw 0;
+    const j=await r.json(); if(!j.routes||!j.routes[0]) throw 0;
+    const rt=j.routes[0];
+    const res={dur:rt.duration*1.15, dist:rt.distance, est:false, geom:rt.geometry.coordinates.map(c=>[c[1],c[0]])};
+    routeCache[key]=res;
+    try{ localStorage.setItem('hn-routecache', JSON.stringify(routeCache)); }catch(e){}
+    return res;
+  }catch(e){ return estimate(a,b); }
+}
+function fmtDur(s){ const m=Math.round(s/60); return m>=60? `${Math.floor(m/60)}시간 ${m%60}분` : `${m}분`; }
+function fmtDist(m){ return m>=1000? (m/1000).toFixed(1)+'km' : Math.round(m)+'m'; }
+
+async function drawRoute(dayIdx){
+  const token=++routeToken;
+  const pts=dayWaypoints(dayIdx);
+  const color=DAY_COLORS[dayIdx%DAY_COLORS.length];
+  if(pts.length<2){ msg(''); return; }
+  let totalDur=0, totalDist=0, anyEst=false;
+  msg('🚕 이동 경로 계산 중…');
+  for(let k=0;k<pts.length-1;k++){
+    const res=await fetchRoute(pts[k],pts[k+1]);
+    if(token!==routeToken) return; // 최신 요청만 반영
+    totalDur+=res.dur; totalDist+=res.dist; anyEst=anyEst||res.est;
+    if(dayIdx===state.activeDay){
+      L.polyline(res.geom,{color, weight:4, opacity:.75, dashArray:res.est?'6 8':null}).addTo(layerG);
+      const segSpan=document.getElementById(`seg-${k}`);
+      if(segSpan) segSpan.innerHTML=`🚕 <b>${fmtDur(res.dur)}</b> · ${fmtDist(res.dist)}${res.est?' <i>(직선거리 추정)</i>':''}`;
+    }
+  }
+  if(token!==routeToken) return;
+  msg('');
+  const foot=$('#dayFoot');
+  if(foot && dayIdx===state.activeDay){
+    foot.innerHTML=`장소 <b>${state.days[dayIdx].length}</b>곳 · 총 이동 <b>${fmtDur(totalDur)}</b> · <b>${fmtDist(totalDist)}</b> (택시 기준${anyEst?', 일부 추정':''})`;
+  }
+}
+let msgTimer=null;
+function msg(t){
+  const el=$('#mapMsg');
+  if(!t){ el.style.display='none'; return; }
+  el.textContent=t; el.style.display='block';
+}
+
+/* ============================================================ custom place / hotel pick ============================================================ */
+let pickMode=null; // 'place' | 'hotel'
+function onMapClick(e){
+  if(!pickMode) return;
+  const {lat,lng}=e.latlng;
+  if(pickMode==='place'){
+    const nm=$('#cpName').value.trim()||'새 장소';
+    const id='c_'+Date.now();
+    state.custom.push({id, name:nm, zh:'', cat:'custom', lat, lng, tip:'직접 추가한 장소'});
+    addToDay(id, state.activeDay);
+    $('#cpName').value='';
+  }else if(pickMode==='hotel'){
+    const nm=prompt('숙소 이름을 입력하세요','내 숙소');
+    if(nm){
+      const id='ch_'+Date.now();
+      state.custom.push({id, name:nm, zh:'', cat:'custom', lat, lng, isHotel:true, tip:'직접 지정한 숙소'});
+      state.settings.hotel=id;
+      initHeader();
+    }
+  }
+  pickMode=null; $('#cpPick').classList.remove('on'); msg('');
+  refresh();
+}
+$('#cpPick').onclick=()=>{
+  pickMode = pickMode==='place'? null : 'place';
+  $('#cpPick').classList.toggle('on', pickMode==='place');
+  msg(pickMode?'지도를 클릭해 장소 위치를 지정하세요':'');
+  if(pickMode && isMobile()) setView('map');
+};
+function startHotelPick(){ pickMode='hotel'; msg('지도를 클릭해 숙소 위치를 지정하세요'); if(isMobile()) setView('map'); }
+
+$('#cpSearch').onclick=async ()=>{
+  const q=$('#cpName').value.trim();
+  if(!q){ alert('장소 이름을 먼저 입력하세요'); return; }
+  const box=$('#searchResults'); box.innerHTML='<div class="libnote">검색 중…</div>';
+  try{
+    const url=`https://nominatim.openstreetmap.org/search?format=json&limit=5&accept-language=ko&q=${encodeURIComponent(q+' Shanghai')}`;
+    const r=await fetch(url,{headers:{'Accept':'application/json'}});
+    const j=await r.json();
+    box.innerHTML='';
+    if(!j.length){ box.innerHTML='<div class="libnote">결과 없음 — "지도 클릭으로 지정"을 써보세요</div>'; return; }
+    j.forEach(res=>{
+      const d=document.createElement('div'); d.className='sr'; d.textContent=res.display_name;
+      d.onclick=()=>{
+        const id='c_'+Date.now();
+        state.custom.push({id, name:q, zh:'', cat:'custom', lat:+res.lat, lng:+res.lon, tip:'검색으로 추가한 장소'});
+        addToDay(id, state.activeDay);
+        box.innerHTML=''; $('#cpName').value='';
+      };
+      box.appendChild(d);
+    });
+  }catch(e){ box.innerHTML='<div class="libnote">검색 실패 — 인터넷 연결을 확인하세요</div>'; }
+};
+
+/* ============================================================ export / import ============================================================ */
+function openIO(mode){
+  const dlg=$('#ioDialog');
+  $('#ioTitle').textContent = mode==='export'?'일정 내보내기 (친구에게 이 텍스트를 보내세요)':'일정 가져오기 (받은 텍스트를 붙여넣으세요)';
+  $('#ioText').value = mode==='export'? JSON.stringify(state) : '';
+  $('#ioApply').style.display = mode==='import'?'':'none';
+  $('#ioCopy').style.display = mode==='export'?'':'none';
+  dlg.showModal();
+}
+$('#ioCopy').onclick=()=>{ $('#ioText').select(); document.execCommand('copy'); $('#ioCopy').textContent='복사됨!'; setTimeout(()=>$('#ioCopy').textContent='복사',1500); };
+$('#ioApply').onclick=()=>{
+  try{
+    const s=JSON.parse($('#ioText').value);
+    if(!s.days||!s.settings) throw 0;
+    state=s; save(); $('#ioDialog').close(); initAll();
+  }catch(e){ alert('형식이 올바르지 않습니다. 내보내기로 만든 텍스트 전체를 붙여넣어 주세요.'); }
+};
+
+/* ============================================================ cloud share (Firebase RTDB REST) ============================================================
+   방 코드 + 비밀번호 방식. 비밀번호는 해시로만 전송/저장되며,
+   DB 보안 규칙이 "비밀번호(해시) 불일치 시 쓰기 거부"를 서버에서 강제한다.
+   읽기(목록 보기)는 방 코드만 알면 가능. */
+const FIREBASE_DB_URL = 'https://shanghai-eee28-default-rtdb.asia-southeast1.firebasedatabase.app'; // 미설정이면 ☁️ 버튼 숨김
+const cloudCfg = JSON.parse(localStorage.getItem('hn-cloud')||'{}');
+
+async function sha256(s){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+const roomKey = () => $('#cRoom').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
+const cMsgSet = t => { $('#cMsg').textContent = t; };
+
+if(!FIREBASE_DB_URL) $('#btnCloud').style.display='none';
+$('#btnCloud').onclick = ()=>{
+  $('#cRoom').value = cloudCfg.room||'';
+  $('#cPw').value = cloudCfg.pw||'';
+  $('#cWho').value = cloudCfg.who||'';
+  $('#cSlots').innerHTML='';
+  cloudDialog.showModal();
+  if(cloudCfg.room) cloudList(); // 쓰던 방이 있으면 목록 자동 표시
+};
+
+function cloudInputs(needPw){
+  const room=roomKey(), pw=$('#cPw').value, who=$('#cWho').value.trim()||'익명';
+  if(!room){ cMsgSet('방 코드를 입력하세요 (영문 소문자/숫자/-/_)'); return null; }
+  if(needPw && !pw){ cMsgSet('비밀번호를 입력하세요'); return null; }
+  Object.assign(cloudCfg,{room,pw,who});
+  localStorage.setItem('hn-cloud', JSON.stringify(cloudCfg));
+  return {room,pw,who};
+}
+async function fetchSlots(room){
+  const r=await fetch(`${FIREBASE_DB_URL}/trips/${room}/slots.json`);
+  if(!r.ok) throw 0;
+  return (await r.json())||{};
+}
+/* 전체 노드를 PUT으로 갈아끼운다. 규칙상 secret(비밀번호 해시)이 기존 값과 일치해야 통과 */
+async function putRoom(room, secret, slots){
+  return fetch(`${FIREBASE_DB_URL}/trips/${room}.json`,{
+    method:'PUT',
+    body:JSON.stringify({secret, nonce:Date.now()+'_'+Math.random().toString(36).slice(2), slots})
+  });
+}
+async function cloudSave(){
+  const c=cloudInputs(true); if(!c) return;
+  cMsgSet('저장 중…');
+  try{
+    const secret=await sha256(c.room+'|'+c.pw);
+    const slots=await fetchSlots(c.room);
+    const d=new Date();
+    slots['s'+Date.now()]={
+      name:`${c.who} · ${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`,
+      who:c.who, at:Date.now(), data:JSON.stringify(state)
+    };
+    const r=await putRoom(c.room, secret, slots);
+    if(r.status===401||r.status===403){ cMsgSet('❌ 등록되지 않은 방이거나 비밀번호가 달라요.'); return; }
+    if(!r.ok) throw 0;
+    cMsgSet('✅ 저장했어요! 친구는 같은 방 코드로 이 목록을 볼 수 있어요.');
+    renderSlots(slots);
+  }catch(e){ cMsgSet('저장 실패 — 인터넷 연결을 확인해 주세요.'); }
+}
+async function cloudList(){
+  const c=cloudInputs(false); if(!c) return;
+  cMsgSet('불러오는 중…');
+  try{
+    const slots=await fetchSlots(c.room);
+    if(!Object.keys(slots).length){ cMsgSet('이 방에 저장된 일정이 아직 없어요. "지금 일정 저장"으로 첫 저장을 해보세요.'); $('#cSlots').innerHTML=''; return; }
+    cMsgSet('');
+    renderSlots(slots);
+  }catch(e){ cMsgSet('불러오기 실패 — 인터넷 연결을 확인해 주세요.'); }
+}
+function renderSlots(slots){
+  const box=$('#cSlots'); box.innerHTML='';
+  Object.entries(slots).sort((a,b)=>(b[1].at||0)-(a[1].at||0)).forEach(([id,s])=>{
+    const d=document.createElement('div'); d.className='slot';
+    d.innerHTML=`<span>💾 ${esc(s.name||'저장본')}</span>
+      <span class="slotbtns"><button data-act="load">불러오기</button><button data-act="del">삭제</button></span>`;
+    d.querySelector('[data-act=load]').onclick=()=>{
+      if(!confirm(`"${s.name}" 저장본을 불러올까요?\n지금 화면의 일정은 덮어써져요. (걱정되면 먼저 저장해 두세요)`)) return;
+      try{
+        const st=JSON.parse(s.data);
+        if(!st.days||!st.settings) throw 0;
+        state=st; save(); cloudDialog.close(); initAll();
+      }catch(e){ alert('저장본 형식이 올바르지 않아요.'); }
+    };
+    d.querySelector('[data-act=del]').onclick=()=>cloudDelete(id);
+    box.appendChild(d);
+  });
+}
+async function cloudDelete(id){
+  const c=cloudInputs(true); if(!c) return;
+  if(!confirm('이 저장본을 삭제할까요?')) return;
+  cMsgSet('삭제 중…');
+  try{
+    const secret=await sha256(c.room+'|'+c.pw);
+    const slots=await fetchSlots(c.room);
+    delete slots[id];
+    const r=await putRoom(c.room, secret, slots);
+    if(r.status===401||r.status===403){ cMsgSet('❌ 등록되지 않은 방이거나 비밀번호가 달라요.'); return; }
+    if(!r.ok) throw 0;
+    cMsgSet('삭제했어요.');
+    renderSlots(slots);
+  }catch(e){ cMsgSet('삭제 실패 — 인터넷 연결을 확인해 주세요.'); }
+}
+$('#btnInfo').onclick=()=>infoDialog.showModal();
+$('#cSave').onclick=cloudSave;
+$('#cList').onclick=cloudList;
+
+/* ============================================================ boot ============================================================ */
+function esc(s){ return String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function refresh(){ save(); renderTabs(); renderDay(); renderLibrary(); renderMap(); }
+function initAll(){ initHeader(); renderCatTabs(); refresh(); }
+
+state = load() || defaultState();
+initMap();
+initAll();
+</script>
+</body>
+</html>
