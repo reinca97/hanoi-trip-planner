@@ -589,7 +589,7 @@ function getPlace(pid){
   let p = PLACES.find(x=>x.id===pid) || state.custom.find(x=>x.id===pid);
   if(!p) return null;
   const out = Object.assign({}, p);
-  if(p.useHotel){ const h = getHotel(); out.lat=h.lat; out.lng=h.lng; out.zh = h.name; }
+  if(p.useHotel){ const h = getHotel(); out.lat=h.lat; out.lng=h.lng; out.zh = h.name; out.gq = h.gq; }
   const fix = state.coordFix[pid];
   if(fix){ out.lat=fix[0]; out.lng=fix[1]; }
   return out;
