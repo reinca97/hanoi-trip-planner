@@ -473,80 +473,80 @@ body.viewer .libitem .addbtn{display:none}
    태그: 🧒 아이와 가기 좋음 / 👴 어르신 편함 / 🎫 예약 권장
 ============================================================ */
 const HOTELS = [
- {id:'h_somerset', name:'서머셋 그랜드 하노이', zh:'Somerset Grand Hanoi (49 Hai Ba Trung)', lat:21.02583, lng:105.84637, tip:'호안끼엠 남쪽 도보 10분, 레지던스형이라 가족 여행에 넉넉. 11/13~15 2박'},
+ {id:'h_somerset', name:'서머셋 그랜드 하노이', zh:'Somerset Grand Hanoi (49 Hai Ba Trung)', lat:21.02583, lng:105.84637, gq:"Somerset Grand Hanoi, 49 Hai Bà Trưng, Hoàn Kiếm, Hà Nội", tip:'호안끼엠 남쪽 도보 10분, 레지던스형이라 가족 여행에 넉넉. 11/13~15 2박'},
 ];
 
 const PLACES = [
  // ---- Day 1 (11/13 금) 도착 + 호안끼엠
- {id:'pho10', name:'퍼 10 리꾸옥쓰', zh:'Phở 10 Lý Quốc Sư', cat:'food', lat:21.0299, lng:105.8494, tip:'🧒👴 퍼 보 7만~9만동(약 3,900~5,000원). 매장 깔끔+에어컨이라 가족 첫 끼로 가장 무난. 06:00~22:00 영업. 튀김빵 꿔이(1만동) 곁들이기'},
+ {id:'pho10', name:'퍼 10 리꾸옥쓰', zh:'Phở 10 Lý Quốc Sư', cat:'food', lat:21.03047, lng:105.84885, gq:"Phở 10 Lý Quốc Sư, 10 Lý Quốc Sư, Hoàn Kiếm, Hà Nội", tip:'🧒👴 퍼 보 7만~9만동(약 3,900~5,000원). 매장 깔끔+에어컨이라 가족 첫 끼로 가장 무난. 06:00~22:00 영업. 튀김빵 꿔이(1만동) 곁들이기'},
  {id:'checkin', name:'숙소 체크인', zh:'', cat:'etc', useHotel:true, def:[1,1,'15:00'], tip:'서머셋 그랜드 하노이. 얼리 체크인 가능 여부는 도착 전 문의. 짐 풀고 가볍게 출발!'},
- {id:'hoankiem', name:'호안끼엠 호수 & 응옥썬 사당', zh:'Hồ Hoàn Kiếm / Đền Ngọc Sơn', cat:'tour', lat:21.0309, lng:105.8525, def:[1,2,'16:00'], tip:'🧒👴 사당 5만동(16세 미만 무료). 빨간 테훅 다리가 포토스팟. 평지 산책이라 어르신 부담 없고, 금~일 저녁엔 차 없는 거리로 바뀌어 아이가 뛰어놀기 좋아요'},
- {id:'cong', name:'콩카페 (성당점)', zh:'Cộng Cà Phê, 27 Nhà Thờ', cat:'cafe', lat:21.0290, lng:105.8492, def:[1,3,'17:15'], tip:'🧒👴 코코넛 밀크커피 4.5만~6.5만동(약 2,500~3,600원). 아이는 논커피(코코넛 스무디) 가능. 시내 지점 30여 개라 붐비면 다른 지점으로'},
- {id:'puppet', name:'탕롱 수상인형극', zh:'Múa rối nước Thăng Long, 57B Đinh Tiên Hoàng', cat:'tour', lat:21.0323, lng:105.8531, def:[1,4,'18:30'], tip:'🧒👴🎫 티켓 10만~20만동(약 5,500~11,000원), 50분 공연. 대사 없이 음악·인형이라 5살도 어르신도 확실히 즐기는 필수 코스. 매일 15:00~20:00 여러 회차, 성수기라 사전 예매 필수. 앞줄은 물 튐 주의'},
- {id:'bunchata', name:'분짜 따', zh:'Bún Chả Ta, 21 Nguyễn Hữu Huân', cat:'food', lat:21.0334, lng:105.8534, def:[1,5,'19:45'], tip:'🧒👴 분짜 세트 9만~12만동(약 5,000~6,600원), 게살넴 추가 6만동. 에어컨+등받이 의자+영어 메뉴라 노포가 부담스러운 가족에게 최적'},
- {id:'nightmarket', name:'하노이 주말 야시장', zh:'Chợ đêm phố cổ (금~일)', cat:'tour', lat:21.0345, lng:105.8508, def:[1,6,'21:00'], tip:'🧒 금~일 18:00~23:00, 항다오~동쑤언 3km 보행자거리. 먹거리 2만~5만동. 19~22시가 절정. 인파 많아 아이 손잡기 필수, 어르신은 초저녁 짧게. 소매치기 주의'},
- {id:'tahien', name:'따히엔 맥주거리', zh:'Phố Tạ Hiện (Beer Street)', cat:'tour', lat:21.0352, lng:105.8523, tip:'🍺 생맥주 한 잔 2만~5만동(약 1,100~2,800원), 길바닥 플라스틱 의자에 앉아 마시는 하노이 명물 골목. 금~일엔 보행자거리로 더 활기. 저녁 8시 이후엔 매우 붐비니 아이 동반이면 6~7시쯤 분위기만 맛보기 추천. 야시장과 같은 구역이라 묶기 좋아요'},
+ {id:'hoankiem', name:'호안끼엠 호수 & 응옥썬 사당', zh:'Hồ Hoàn Kiếm / Đền Ngọc Sơn', cat:'tour', lat:21.03073, lng:105.85238, gq:"Đền Ngọc Sơn, Hồ Hoàn Kiếm, Hoàn Kiếm, Hà Nội", def:[1,2,'16:00'], tip:'🧒👴 사당 5만동(16세 미만 무료). 빨간 테훅 다리가 포토스팟. 평지 산책이라 어르신 부담 없고, 금~일 저녁엔 차 없는 거리로 바뀌어 아이가 뛰어놀기 좋아요'},
+ {id:'cong', name:'콩카페 (성당점)', zh:'Cộng Cà Phê, 27 Nhà Thờ', cat:'cafe', lat:21.02881, lng:105.84964, gq:"Cộng Cà Phê, 27 Nhà Thờ, Hoàn Kiếm, Hà Nội", def:[1,3,'17:15'], tip:'🧒👴 코코넛 밀크커피 4.5만~6.5만동(약 2,500~3,600원). 아이는 논커피(코코넛 스무디) 가능. 시내 지점 30여 개라 붐비면 다른 지점으로'},
+ {id:'puppet', name:'탕롱 수상인형극', zh:'Múa rối nước Thăng Long, 57B Đinh Tiên Hoàng', cat:'tour', lat:21.0317, lng:105.85346, gq:"Nhà hát Múa rối nước Thăng Long, 57B Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội", def:[1,4,'18:30'], tip:'🧒👴🎫 티켓 10만~20만동(약 5,500~11,000원), 50분 공연. 대사 없이 음악·인형이라 5살도 어르신도 확실히 즐기는 필수 코스. 매일 15:00~20:00 여러 회차, 성수기라 사전 예매 필수. 앞줄은 물 튐 주의'},
+ {id:'bunchata', name:'분짜 따', zh:'Bún Chả Ta, 21 Nguyễn Hữu Huân', cat:'food', lat:21.03436, lng:105.85449, gq:"Bún Chả Ta, 21 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội", def:[1,5,'19:45'], tip:'🧒👴 분짜 세트 9만~12만동(약 5,000~6,600원), 게살넴 추가 6만동. 에어컨+등받이 의자+영어 메뉴라 노포가 부담스러운 가족에게 최적'},
+ {id:'nightmarket', name:'하노이 주말 야시장', zh:'Chợ đêm phố cổ (금~일)', cat:'tour', lat:21.03351, lng:105.85096, gq:"Chợ đêm Hàng Đào - Đồng Xuân, Hoàn Kiếm, Hà Nội", def:[1,6,'21:00'], tip:'🧒 금~일 18:00~23:00, 항다오~동쑤언 3km 보행자거리. 먹거리 2만~5만동. 19~22시가 절정. 인파 많아 아이 손잡기 필수, 어르신은 초저녁 짧게. 소매치기 주의'},
+ {id:'tahien', name:'따히엔 맥주거리', zh:'Phố Tạ Hiện (Beer Street)', cat:'tour', lat:21.0353, lng:105.85199, gq:"Phố Tạ Hiện, Hàng Buồm, Hoàn Kiếm, Hà Nội", tip:'🍺 생맥주 한 잔 2만~5만동(약 1,100~2,800원), 길바닥 플라스틱 의자에 앉아 마시는 하노이 명물 골목. 금~일엔 보행자거리로 더 활기. 저녁 8시 이후엔 매우 붐비니 아이 동반이면 6~7시쯤 분위기만 맛보기 추천. 야시장과 같은 구역이라 묶기 좋아요'},
  // ---- Day 2 (11/14 토) 바딘·문묘 + 올드쿼터
- {id:'mausoleum', name:'호치민 영묘', zh:'Lăng Chủ tịch Hồ Chí Minh', cat:'tour', lat:21.0369, lng:105.8347, def:[2,1,'08:00'], tip:'👴 무료. 동절기 오전만 개방(08:00~11:00), 월·금 휴관 → 이번 여행에선 14(토)·15(일)만 가능! 줄이 기니 아침 일찍. 반바지·민소매 불가, 내부 촬영·대화 금지'},
- {id:'stilt', name:'주석궁 정원 & 호치민 생가', zh:'Phủ Chủ tịch / Nhà sàn Bác Hồ', cat:'tour', lat:21.0388, lng:105.8339, def:[2,2,'09:30'], tip:'🧒👴 4만동(약 2,200원). 영묘 동선에 이어서. 잉어 연못과 정원이 있어 아이도 지루해하지 않아요. 점심 휴장(11:00~13:30) 주의'},
- {id:'onepillar', name:'한기둥 사원', zh:'Chùa Một Cột', cat:'tour', lat:21.0358, lng:105.8334, def:[2,3,'10:30'], tip:'👴 2.5만동. 5~10분이면 충분한 소규모 사원 — 영묘·생가와 묶어 반나절 코스'},
- {id:'vanmieu', name:'문묘 (베트남 최초 대학)', zh:'Văn Miếu – Quốc Tử Giám', cat:'tour', lat:21.0293, lng:105.8356, def:[2,4,'11:15'], tip:'🧒👴 성인 7만동, 16세 미만 무료. 평지 정원 5개 마당이라 어르신 걷기 무난. 학업 성취 기원 명소라 가족사진 스팟. 거북비석은 만지지 말 것'},
- {id:'ngon', name:'꽌 안 응온', zh:'Quán Ăn Ngon, 18 Phan Bội Châu', cat:'food', lat:21.0257, lng:105.8423, def:[2,5,'12:30'], tip:'🧒👴🎫 1인 10만~20만동(약 5,500~11,000원). 프렌치 빌라 정원+에어컨, 사진 메뉴판으로 베트남 전역 요리를 한 상에 — 5인 가족 나눠먹기 최적. 문묘에서 가까움. 저녁 피크는 웨이팅'},
+ {id:'mausoleum', name:'호치민 영묘', zh:'Lăng Chủ tịch Hồ Chí Minh', cat:'tour', lat:21.03678, lng:105.83469, gq:"Lăng Chủ tịch Hồ Chí Minh, 1 Hùng Vương, Ba Đình, Hà Nội", def:[2,1,'08:00'], tip:'👴 무료. 동절기 오전만 개방(08:00~11:00), 월·금 휴관 → 이번 여행에선 14(토)·15(일)만 가능! 줄이 기니 아침 일찍. 반바지·민소매 불가, 내부 촬영·대화 금지'},
+ {id:'stilt', name:'주석궁 정원 & 호치민 생가', zh:'Phủ Chủ tịch / Nhà sàn Bác Hồ', cat:'tour', lat:21.03817, lng:105.83315, gq:"Nhà sàn Bác Hồ, Khu di tích Phủ Chủ tịch, Ba Đình, Hà Nội", def:[2,2,'09:30'], tip:'🧒👴 4만동(약 2,200원). 영묘 동선에 이어서. 잉어 연못과 정원이 있어 아이도 지루해하지 않아요. 점심 휴장(11:00~13:30) 주의'},
+ {id:'onepillar', name:'한기둥 사원', zh:'Chùa Một Cột', cat:'tour', lat:21.03586, lng:105.83361, gq:"Chùa Một Cột, Ba Đình, Hà Nội", def:[2,3,'10:30'], tip:'👴 2.5만동. 5~10분이면 충분한 소규모 사원 — 영묘·생가와 묶어 반나절 코스'},
+ {id:'vanmieu', name:'문묘 (베트남 최초 대학)', zh:'Văn Miếu – Quốc Tử Giám', cat:'tour', lat:21.02879, lng:105.83595, gq:"Văn Miếu - Quốc Tử Giám, Hà Nội", def:[2,4,'11:15'], tip:'🧒👴 성인 7만동, 16세 미만 무료. 평지 정원 5개 마당이라 어르신 걷기 무난. 학업 성취 기원 명소라 가족사진 스팟. 거북비석은 만지지 말 것'},
+ {id:'ngon', name:'꽌 안 응온', zh:'Quán Ăn Ngon, 18 Phan Bội Châu', cat:'food', lat:21.02626, lng:105.84342, gq:"Quán Ăn Ngon, 18 Phan Bội Châu, Hà Nội", def:[2,5,'12:30'], tip:'🧒👴🎫 1인 10만~20만동(약 5,500~11,000원). 프렌치 빌라 정원+에어컨, 사진 메뉴판으로 베트남 전역 요리를 한 상에 — 5인 가족 나눠먹기 최적. 문묘에서 가까움. 저녁 피크는 웨이팅'},
  {id:'rest', name:'숙소 낮잠·휴식', zh:'', cat:'etc', useHotel:true, def:[2,6,'14:00'], tip:'🧒👴 5살 낮잠 + 어르신 휴식 타임. 오후 일정을 위한 재충전 — 가족여행 필수 버퍼'},
- {id:'cathedral', name:'성 요셉 성당', zh:'Nhà thờ Lớn Hà Nội', cat:'tour', lat:21.0287, lng:105.8489, def:[2,7,'16:30'], tip:'👴 무료. 호안끼엠 도보 5분. 외관만 봐도 충분, 앞 냐토 거리 카페들과 묶기 좋아요'},
- {id:'collective', name:'콜렉티브 메모리 (소품샵)', zh:'Collective Memory, 12 Nhà Chung', cat:'shop', lat:21.0278, lng:105.8487, def:[2,8,'17:00'], tip:'👴 에코백·포스터·자수패치·라탄 5만~50만동. 성당 근처 하노이 작가 수공예 큐레이션숍. 10:00~18:30 영업. 매장이 아담해 아이 손조심. 콩카페 성당점과 같은 블록'},
- {id:'chacathanglong', name:'짜까 탕롱', zh:'Chả Cá Thăng Long, 19-31 Đường Thành', cat:'food', lat:21.0334, lng:105.8460, def:[2,9,'18:30'], tip:'🧒👴🎫 미쉐린 빕구르망. 짜까(강황 생선구이+쌀국수) 1인 17만~18만동(약 9,500~10,000원). 직원이 테이블에서 구워주고 에어컨+정식 좌석이라 가족에게 가장 적합한 짜까집. 저녁 예약 권장'},
- {id:'spa', name:'어반 오아시스 스파', zh:'Urban Oasis Spa, 39A Hàng Hành', cat:'etc', lat:21.0303, lng:105.8503, def:[2,10,'20:30'], tip:'👴 60분 전신 50만~70만동(약 2.8만~3.9만원)+팁 관례. 호안끼엠 도보 2분, 가족 동시 예약 가능 — 부모님 효도 코스. 아이 동반 가능 여부는 예약 시 확인. 대안: SF Spa(30 Cửa Đông)'},
+ {id:'cathedral', name:'성 요셉 성당', zh:'Nhà thờ Lớn Hà Nội', cat:'tour', lat:21.02865, lng:105.84886, gq:"Nhà thờ Lớn Hà Nội, 40 Nhà Thờ, Hoàn Kiếm, Hà Nội", def:[2,7,'16:30'], tip:'👴 무료. 호안끼엠 도보 5분. 외관만 봐도 충분, 앞 냐토 거리 카페들과 묶기 좋아요'},
+ {id:'collective', name:'콜렉티브 메모리 (소품샵)', zh:'Collective Memory, 12 Nhà Chung', cat:'shop', lat:21.02838, lng:105.84965, gq:"Collective Memory - The House of Curios, 12 Nhà Chung, Hoàn Kiếm, Hà Nội", def:[2,8,'17:00'], tip:'👴 에코백·포스터·자수패치·라탄 5만~50만동. 성당 근처 하노이 작가 수공예 큐레이션숍. 10:00~18:30 영업. 매장이 아담해 아이 손조심. 콩카페 성당점과 같은 블록'},
+ {id:'chacathanglong', name:'짜까 탕롱', zh:'Chả Cá Thăng Long, 19-31 Đường Thành', cat:'food', lat:21.03297, lng:105.84612, gq:"Chả Cá Thăng Long, 6B Đường Thành, Cửa Đông, Hoàn Kiếm, Hà Nội", def:[2,9,'18:30'], tip:'🧒👴🎫 미쉐린 빕구르망. 짜까(강황 생선구이+쌀국수) 1인 17만~18만동(약 9,500~10,000원). 직원이 테이블에서 구워주고 에어컨+정식 좌석이라 가족에게 가장 적합한 짜까집. 저녁 예약 권장. 구글맵에 짜까 라봉으로 잘못 뜨는 리스팅이 있으니 주소(Đường Thành 거리)를 확인하세요'},
+ {id:'spa', name:'어반 오아시스 스파', zh:'Urban Oasis Spa, 39A Hàng Hành', cat:'etc', lat:21.0303, lng:105.8503, gq:"Urban Oasis Spa, 39A Hàng Hành, Hoàn Kiếm, Hà Nội", def:[2,10,'20:30'], tip:'👴 60분 전신 50만~70만동(약 2.8만~3.9만원)+팁 관례. 호안끼엠 도보 2분, 가족 동시 예약 가능 — 부모님 효도 코스. 아이 동반 가능 여부는 예약 시 확인. 대안: SF Spa(30 Cửa Đông)'},
  // ---- Day 3 (11/15 일) 하롱베이 크루즈 1일차
  {id:'cruise_pick', name:'크루즈 픽업 (호텔 로비)', zh:'셔틀 or 프라이빗 리무진', cat:'etc', useHotel:true, def:[3,1,'08:00'], tip:'보통 08:00~08:30 올드쿼터 픽업 → 고속도로 2~2.5시간(휴게소 1회). 5인 가족은 프라이빗 리무진 밴 업그레이드(왕복 200~250달러)가 어르신·아이에게 편해요'},
- {id:'cruise_board', name:'하롱베이 크루즈 승선', zh:'하롱국제크루즈항 (선사별 상이)', cat:'tour', lat:20.9513, lng:107.0170, def:[3,2,'12:00'], tip:'🎫 12:30 웰컴 런치하며 출항. 승선 항구는 선사에 따라 하롱국제크루즈항/뚜언쩌우/곳피어(하이퐁·란하베이) — 크루즈 확정 후 이 핀을 드래그해서 보정하세요. 여권 실물 필수'},
- {id:'titop', name:'티톱섬 전망대·해변', zh:'Đảo Ti Tốp', cat:'tour', lat:20.8557, lng:107.0810, def:[3,3,'15:00'], tip:'전망대까지 계단 약 400개 — 어르신은 무리 말고 해변 휴식, 아이는 모래놀이. 11월 물이 차니 수영은 오후에만'},
- {id:'luon', name:'루언 동굴 카약·뱀부보트', zh:'Hang Luồn', cat:'tour', lat:20.8480, lng:107.0890, def:[3,4,'16:30'], tip:'🧒👴 석회암 아치 밑을 배로 통과. 아이·어르신은 사공이 노 젓는 뱀부보트 선택이 안전·편안. 원숭이 출몰 — 음식물 주의. 이후 17:30 선셋 해피아워 → 19:00 선상 석식·오징어낚시'},
+ {id:'cruise_board', name:'하롱베이 크루즈 승선', zh:'하롱국제크루즈항 (선사별 상이)', cat:'tour', lat:20.95364, lng:107.05545, gq:"Cảng tàu khách quốc tế Hạ Long, Bãi Cháy, Hạ Long, Quảng Ninh", def:[3,2,'12:00'], tip:'🎫 12:30 웰컴 런치하며 출항. 승선 항구는 선사에 따라 하롱국제크루즈항/뚜언쩌우/곳피어(하이퐁·란하베이) — 크루즈 확정 후 이 핀을 드래그해서 보정하세요. 여권 실물 필수'},
+ {id:'titop', name:'티톱섬 전망대·해변', zh:'Đảo Ti Tốp', cat:'tour', lat:20.8626, lng:107.06722, gq:"Đảo Ti Tốp, Vịnh Hạ Long, Quảng Ninh", def:[3,3,'15:00'], tip:'전망대까지 계단 약 400개 — 어르신은 무리 말고 해변 휴식, 아이는 모래놀이. 11월 물이 차니 수영은 오후에만'},
+ {id:'luon', name:'루언 동굴 카약·뱀부보트', zh:'Hang Luồn', cat:'tour', lat:20.85168, lng:107.09671, gq:"Hang Luồn, Vịnh Hạ Long, Quảng Ninh", def:[3,4,'16:30'], tip:'🧒👴 석회암 아치 밑을 배로 통과. 아이·어르신은 사공이 노 젓는 뱀부보트 선택이 안전·편안. 원숭이 출몰 — 음식물 주의. 이후 17:30 선셋 해피아워 → 19:00 선상 석식·오징어낚시'},
  // ---- Day 4 (11/16 월) 하선 → 하노이 → 심야 귀국
- {id:'sungsot', name:'승솟 동굴', zh:'Hang Sửng Sốt', cat:'tour', lat:20.8264, lng:107.0936, def:[4,1,'07:30'], tip:'🧒 하롱베이 최대 종유석 동굴. 입구 계단 약 100개, 내부는 완만한 데크길이라 5살도 걸어서 관람 가능(40~50분). 아침이 한산. 이후 08:30 브런치·체크아웃'},
- {id:'cruise_off', name:'크루즈 하선 → 하노이 복귀', zh:'10:15~11:00 하선, 14:30~15:30 시내 도착', cat:'etc', lat:20.9513, lng:107.0170, def:[4,2,'10:30'], tip:'버스에서 낮잠 타임. 시내 도착 후 남은 반나절 일정 시작'},
- {id:'lottemall', name:'롯데몰 웨스트레이크 (기념품 쇼핑)', zh:'Lotte Mall West Lake, 272 Võ Chí Công', cat:'shop', lat:21.0723, lng:105.8117, def:[4,3,'15:30'], tip:'🧒👴 B1 롯데마트에서 G7커피(5만~10만동)·과자·건과일 등 귀국 선물 몰아 사기. 2023년 개장 최신몰이라 수유실·유아시설 완비, 한국 브랜드 많아 부모님도 편안. 시내에서 차 20~25분'},
+ {id:'sungsot', name:'승솟 동굴', zh:'Hang Sửng Sốt', cat:'tour', lat:20.84374, lng:107.09084, gq:"Hang Sửng Sốt, Đảo Bồ Hòn, Vịnh Hạ Long, Quảng Ninh", def:[4,1,'07:30'], tip:'🧒 하롱베이 최대 종유석 동굴. 입구 계단 약 100개, 내부는 완만한 데크길이라 5살도 걸어서 관람 가능(40~50분). 아침이 한산. 이후 08:30 브런치·체크아웃'},
+ {id:'cruise_off', name:'크루즈 하선 → 하노이 복귀', zh:'10:15~11:00 하선, 14:30~15:30 시내 도착', cat:'etc', lat:20.95328, lng:107.05571, gq:"Ha Long International Cruise Port, Đường Võ Nguyên Giáp, Phường Bãi Cháy, Hạ Long, Quảng Ninh", def:[4,2,'10:30'], tip:'버스에서 낮잠 타임. 시내 도착 후 남은 반나절 일정 시작'},
+ {id:'lottemall', name:'롯데몰 웨스트레이크 (기념품 쇼핑)', zh:'Lotte Mall West Lake, 272 Võ Chí Công', cat:'shop', lat:21.07602, lng:105.81255, gq:"Lotte Mall West Lake Hanoi, 272 Võ Chí Công, Tây Hồ, Hà Nội", def:[4,3,'15:30'], tip:'🧒👴 B1 롯데마트에서 G7커피(5만~10만동)·과자·건과일 등 귀국 선물 몰아 사기. 2023년 개장 최신몰이라 수유실·유아시설 완비, 한국 브랜드 많아 부모님도 편안. 시내에서 차 20~25분'},
  {id:'luggage', name:'맡긴 짐 찾기 (서머셋)', zh:'', cat:'etc', useHotel:true, def:[4,4,'17:45'], tip:'체크아웃 때 맡긴 짐 픽업. 로비에서 잠시 정비 후 저녁 식사로'},
- {id:'caugo', name:'꺼우고 레스토랑 (호수뷰 만찬)', zh:'Cau Go, 73 Cầu Gỗ 6층', cat:'food', lat:21.0330, lng:105.8525, def:[4,5,'18:15'], tip:'🧒👴🎫 1인 30만~50만동(약 1.7만~2.8만원). 호안끼엠 야경이 내려다보이는 6층+엘리베이터 — 부모님 모시는 마지막 만찬으로 딱. 창가는 예약 필수, 넴(스프링롤)이 시그니처'},
+ {id:'caugo', name:'꺼우고 레스토랑 (호수뷰 만찬)', zh:'Cau Go, 73 Cầu Gỗ 6층', cat:'food', lat:21.03206, lng:105.85215, gq:"Cầu Gỗ Restaurant, 73 Cầu Gỗ, Hoàn Kiếm, Hà Nội", def:[4,5,'18:15'], tip:'🧒👴🎫 1인 30만~50만동(약 1.7만~2.8만원). 호안끼엠 야경이 내려다보이는 6층+엘리베이터 — 부모님 모시는 마지막 만찬으로 딱. 창가는 예약 필수, 넴(스프링롤)이 시그니처'},
  // ---- 추가 맛집
- {id:'phogia', name:'퍼 자쭈옌 (밧단 쌀국수)', zh:'Phở Gia Truyền, 49 Bát Đàn', cat:'food', lat:21.0340, lng:105.8462, tip:'하노이 3대 퍼 노포. 퍼 보 6만~7.5만동(약 3,300~4,100원). 선불 주문+직접 받아오는 방식. 06:00~10:30/16:30~20:30(소진 시 마감). 간이 좌석·에어컨 없음 — 어르신은 7시 전 아침이 편해요'},
- {id:'obama', name:'분짜 흐엉리엔 (오바마 분짜)', zh:'Bún Chả Hương Liên, 24 Lê Văn Hưu', cat:'food', lat:21.0163, lng:105.8540, tip:'🧒 오바마 콤보(분짜+게살넴+맥주) 12만~14만동(약 6,600~7,700원). 위층 에어컨 좌석 있음. 08:00~20:30. 숙소에서 도보 10~15분'},
- {id:'dackim', name:'분짜 닥킴', zh:'Bún Chả Đắc Kim, 1 Hàng Mạnh', cat:'food', lat:21.0326, lng:105.8482, tip:'1966년 개업·미쉐린 등재. 분짜+게살넴 세트 12만동, 양이 많아 2인 1세트 가능. 2층 계단이 가파르니 어르신은 1층. 주문 전 가격 확인 안전'},
- {id:'banhmi25', name:'반미 25', zh:'Bánh Mì 25, 25 Hàng Cá', cat:'food', lat:21.0361, lng:105.8486, tip:'🧒 반미 믹스 4만동 안팎(약 2,200원). 길 건너 자체 카페 좌석 있음. 맵지 않게 주문하면 아이도 잘 먹어요. 07:00~21:00(일요일 단축 가능 — 방문 전 확인)'},
- {id:'photin', name:'퍼 틴 (로둑점)', zh:'Phở Thìn, 13 Lò Đúc', cat:'food', lat:21.0157, lng:105.8585, tip:'1979년부터 볶은 소고기 쌀국수 단일 메뉴. 7만~9만동. 기름지고 진해 호불호. 간이 좌석·에어컨 없음. 숙소 도보 10분'},
- {id:'chacalavong', name:'짜까 라봉 (원조)', zh:'Chả Cá Lã Vọng, 14 Chả Cá', cat:'food', lat:21.0365, lng:105.8487, tip:'1871년 원조집이지만 시설이 낡고 계단 가파름. 1인 17만동 안팎. 어르신 동반이면 같은 메뉴의 짜까 탕롱 추천. 영업시간 11~14/17~21시 — 방문 전 확인'},
- {id:'bunbo', name:'분보남보 박프엉', zh:'Bún Bò Nam Bộ Bách Phương, 67 Hàng Điệu', cat:'food', lat:21.0341, lng:105.8470, tip:'🧒 소고기 비빔쌀국수 6.5만동(약 3,600원) — 국물 없이 깔끔. 회전 빠름. 같은 이름 가게 많으니 주소(67 Hàng Điệu) 확인'},
- {id:'xoiyen', name:'쏘이 옌 (찹쌀밥)', zh:'Xôi Yến, 35B Nguyễn Hữu Huân', cat:'food', lat:21.0344, lng:105.8535, tip:'🧒 강황 찹쌀밥+닭·계란 토핑 3만~5만동(약 1,700~2,800원). 쌀국수에 지쳤을 때 밥 메뉴 대안. 새벽까지 영업(방문 전 확인)'},
- {id:'banhcuon', name:'반꾸온 타인번 (쌀피롤)', zh:'Bánh Cuốn Thanh Vân, 14 Hàng Gà', cat:'food', lat:21.0364, lng:105.8469, tip:'🧒👴 돼지고기·버섯 쌀피롤 4만~7만동. 부드럽고 순한 맛이라 아이·어르신 아침에 최고. 간이형 로컬 좌석'},
- {id:'gojumong', name:'고주몽 (롯데센터 한식)', zh:'Gojumong, Lotte Center 54 Liễu Giai', cat:'food', lat:21.0321, lng:105.8145, tip:'🧒👴🎫 한식 BBQ·찌개 1인 20만~40만동(약 1.1만~2.2만원). 현지식이 안 맞을 때 비상용. 롯데센터(전망대·마트)와 묶기 좋음. 점심 만석 잦아 예약 권장'},
- {id:'homehanoi', name:'홈 하노이 (파인다이닝)', zh:'HOME Hanoi, 34 Châu Long', cat:'food', lat:21.0444, lng:105.8436, tip:'👴🎫 프렌치 빌라 개조 모던 베트남 요리, 1인 40만~70만동(약 2.2만~3.9만원). 조용하고 좌석 편해 부모님 만찬 대안. 저녁 예약 필수'},
- {id:'duongs', name:'즈엉스 레스토랑', zh:"Duong's Restaurant, 27 Ngõ Huyện", cat:'food', lat:21.0296, lng:105.8482, tip:'👴🎫 마스터셰프 출신 미쉐린 셀렉티드. 코스 45만~65만동(약 2.5만~3.6만원). 성당 근처 골목, 에어컨·아늑한 실내. 저녁 예약 필수'},
+ {id:'phogia', name:'퍼 자쭈옌 (밧단 쌀국수)', zh:'Phở Gia Truyền, 49 Bát Đàn', cat:'food', lat:21.03364, lng:105.84638, gq:"Phở Gia Truyền, 49 Bát Đàn, Hoàn Kiếm, Hà Nội", tip:'하노이 3대 퍼 노포. 퍼 보 6만~7.5만동(약 3,300~4,100원). 선불 주문+직접 받아오는 방식. 06:00~10:30/16:30~20:30(소진 시 마감). 간이 좌석·에어컨 없음 — 어르신은 7시 전 아침이 편해요'},
+ {id:'obama', name:'분짜 흐엉리엔 (오바마 분짜)', zh:'Bún Chả Hương Liên, 24 Lê Văn Hưu', cat:'food', lat:21.01805, lng:105.85388, gq:"Bún Chả Hương Liên (Obama Bun Cha), 24 Lê Văn Hưu, Hai Bà Trưng, Hà Nội", tip:'🧒 오바마 콤보(분짜+게살넴+맥주) 12만~14만동(약 6,600~7,700원). 위층 에어컨 좌석 있음. 08:00~20:30. 숙소에서 도보 10~15분'},
+ {id:'dackim', name:'분짜 닥킴', zh:'Bún Chả Đắc Kim, 1 Hàng Mạnh', cat:'food', lat:21.03226, lng:105.84822, gq:"Bún Chả Đắc Kim, 1 Hàng Mành, Hoàn Kiếm, Hà Nội", tip:'1966년 개업·미쉐린 등재. 분짜+게살넴 세트 12만동, 양이 많아 2인 1세트 가능. 2층 계단이 가파르니 어르신은 1층. 주문 전 가격 확인 안전'},
+ {id:'banhmi25', name:'반미 25', zh:'Bánh Mì 25, 25 Hàng Cá', cat:'food', lat:21.03617, lng:105.84872, gq:"Bánh Mì 25, 25 Hàng Cá, Hoàn Kiếm, Hà Nội", tip:'🧒 반미 믹스 4만동 안팎(약 2,200원). 길 건너 자체 카페 좌석 있음. 맵지 않게 주문하면 아이도 잘 먹어요. 07:00~21:00(일요일 단축 가능 — 방문 전 확인)'},
+ {id:'photin', name:'퍼 틴 (로둑점)', zh:'Phở Thìn, 13 Lò Đúc', cat:'food', lat:21.01704, lng:105.856, gq:"Phở Thìn Lò Đúc, 13 Lò Đúc, Hai Bà Trưng, Hà Nội", tip:'1979년부터 볶은 소고기 쌀국수 단일 메뉴. 7만~9만동. 기름지고 진해 호불호. 간이 좌석·에어컨 없음. 숙소 도보 10분'},
+ {id:'chacalavong', name:'짜까 라봉 (원조)', zh:'Chả Cá Lã Vọng, 14 Chả Cá', cat:'food', lat:21.03568, lng:105.84915, gq:"Chả Cá Lã Vọng, 14 Chả Cá, Hoàn Kiếm, Hà Nội", tip:'1871년 원조집이지만 시설이 낡고 계단 가파름. 1인 17만동 안팎. 어르신 동반이면 같은 메뉴의 짜까 탕롱 추천. 영업시간 11~14/17~21시 — 방문 전 확인'},
+ {id:'bunbo', name:'분보남보 박프엉', zh:'Bún Bò Nam Bộ Bách Phương, 67 Hàng Điệu', cat:'food', lat:21.03214, lng:105.84692, gq:"Bún Bò Nam Bộ Bách Phương, 73-75 Hàng Điếu, Hoàn Kiếm, Hà Nội", tip:'🧒 소고기 비빔쌀국수 6.5만동(약 3,600원) — 국물 없이 깔끔. 회전 빠름. 같은 이름 가게 많으니 주소(67 Hàng Điệu) 확인'},
+ {id:'xoiyen', name:'쏘이 옌 (찹쌀밥)', zh:'Xôi Yến, 35B Nguyễn Hữu Huân', cat:'food', lat:21.03377, lng:105.85454, gq:"Xôi Yến, 35B Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội", tip:'🧒 강황 찹쌀밥+닭·계란 토핑 3만~5만동(약 1,700~2,800원). 쌀국수에 지쳤을 때 밥 메뉴 대안. 새벽까지 영업(방문 전 확인)'},
+ {id:'banhcuon', name:'반꾸온 타인번 (쌀피롤)', zh:'Bánh Cuốn Thanh Vân, 14 Hàng Gà', cat:'food', lat:21.03605, lng:105.84717, gq:"Bánh Cuốn Gia Truyền Thanh Vân, 14 Hàng Gà, Hoàn Kiếm, Hà Nội", tip:'🧒👴 돼지고기·버섯 쌀피롤 4만~7만동. 부드럽고 순한 맛이라 아이·어르신 아침에 최고. 간이형 로컬 좌석'},
+ {id:'gojumong', name:'고주몽 (롯데센터 한식)', zh:'Gojumong, Lotte Center 54 Liễu Giai', cat:'food', lat:21.03227, lng:105.81263, gq:"Gojumong Casual, Lotte Center Hanoi, 54 Liễu Giai, Ba Đình, Hà Nội", tip:'🧒👴🎫 한식 BBQ·찌개 1인 20만~40만동(약 1.1만~2.2만원). 현지식이 안 맞을 때 비상용. 롯데센터(전망대·마트)와 묶기 좋음. 점심 만석 잦아 예약 권장'},
+ {id:'homehanoi', name:'홈 하노이 (파인다이닝)', zh:'HOME Hanoi, 34 Châu Long', cat:'food', lat:21.04538, lng:105.84246, gq:"Home Hanoi Restaurant, 34 Châu Long, Ba Đình, Hà Nội", tip:'👴🎫 프렌치 빌라 개조 모던 베트남 요리, 1인 40만~70만동(약 2.2만~3.9만원). 조용하고 좌석 편해 부모님 만찬 대안. 저녁 예약 필수'},
+ {id:'duongs', name:'즈엉스 레스토랑', zh:"Duong's Restaurant, 27 Ngõ Huyện", cat:'food', lat:21.02948, lng:105.84852, gq:"Duong's Restaurant, 27 Ngõ Huyện, Hoàn Kiếm, Hà Nội", tip:'👴🎫 마스터셰프 출신 미쉐린 셀렉티드. 코스 45만~65만동(약 2.5만~3.6만원). 성당 근처 골목, 에어컨·아늑한 실내. 저녁 예약 필수'},
  // ---- 추가 카페·디저트
- {id:'giang', name:'카페 지앙 (에그커피 원조)', zh:'Cà Phê Giảng, 39 Nguyễn Hữu Huân', cat:'cafe', lat:21.0339, lng:105.8551, tip:'🧒👴 1946년 원조 에그커피 3만~3.5만동(약 1,700~1,900원). 좁은 골목 안, 낮은 의자라 어르신은 안쪽 테이블석. 아이는 에그 코코아'},
- {id:'dinh', name:'카페 딘 (호수뷰 에그커피)', zh:'Cà Phê Đinh, 13 Đinh Tiên Hoàng 2층', cat:'cafe', lat:21.0317, lng:105.8536, tip:'에그커피 2.5만동 — 지앙 창업자 딸의 가게. 1층 가방집 통과해 계단으로. 발코니에서 호안끼엠 뷰. 계단이 가파라 아이 손잡기, 거동 불편한 어르신은 비추'},
- {id:'phoco', name:'카페 포 꼬 (루프탑 호수뷰)', zh:'Cafe Phố Cổ, 11 Hàng Gai 4층', cat:'cafe', lat:21.0322, lng:105.8510, tip:'에그커피 4만~5.5만동. 실크가게 안 통로→안뜰→루프탑, 호안끼엠이 한눈에. 마지막 층 계단 주의, 난간 근처 아이 조심'},
- {id:'maison', name:'메종 드 뗏 데코르 (서호 브런치)', zh:'Maison de Tet Decor, 156 Từ Hoa', cat:'cafe', lat:21.0590, lng:105.8320, tip:'🧒👴 서호 내려다보이는 빌라 카페. 커피 6만~9만동, 브런치·케이크 12만~25만동. 좌석 넓고 조용해 부모님 브런치에 최적. 숙소에서 차 15분'},
- {id:'laviet', name:'라 비엣 커피 (로스터리)', zh:'Là Việt Coffee, 7B Vọng Đức', cat:'cafe', lat:21.0222, lng:105.8530, tip:'🧒👴 달랏 유명 로스터리. 커피 5.5만~8.5만동, 원두·드립백 선물 12만~25만동. 숙소 도보 5분이라 아침 커피 코스. 넓고 에어컨 완비'},
- {id:'kem', name:'쩡띠엔 아이스크림 (노포)', zh:'Kem Tràng Tiền, 35 Tràng Tiền', cat:'cafe', lat:21.0245, lng:105.8548, tip:'🧒 1958년 국민 아이스크림 1만~2만동(약 550~1,100원). 서서 먹는 스탠드. 코코넛·그린라이스맛 추천. 호수 산책 후 간식'},
+ {id:'giang', name:'카페 지앙 (에그커피 원조)', zh:'Cà Phê Giảng, 39 Nguyễn Hữu Huân', cat:'cafe', lat:21.03427, lng:105.8545, gq:"Cà Phê Giảng, 39 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội", tip:'🧒👴 1946년 원조 에그커피 3만~3.5만동(약 1,700~1,900원). 좁은 골목 안, 낮은 의자라 어르신은 안쪽 테이블석. 아이는 에그 코코아'},
+ {id:'dinh', name:'카페 딘 (호수뷰 에그커피)', zh:'Cà Phê Đinh, 13 Đinh Tiên Hoàng 2층', cat:'cafe', lat:21.032, lng:105.85239, gq:"Cà Phê Đinh, 13 Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội", tip:'에그커피 2.5만동 — 지앙 창업자 딸의 가게. 1층 가방집 통과해 계단으로. 발코니에서 호안끼엠 뷰. 계단이 가파라 아이 손잡기, 거동 불편한 어르신은 비추'},
+ {id:'phoco', name:'카페 포 꼬 (루프탑 호수뷰)', zh:'Cafe Phố Cổ, 11 Hàng Gai 4층', cat:'cafe', lat:21.03224, lng:105.85107, gq:"Cafe Phố Cổ, 11 Hàng Gai, Hoàn Kiếm, Hà Nội", tip:'에그커피 4만~5.5만동. 실크가게 안 통로→안뜰→루프탑, 호안끼엠이 한눈에. 마지막 층 계단 주의, 난간 근처 아이 조심'},
+ {id:'maison', name:'메종 드 뗏 데코르 (서호 브런치)', zh:'Maison de Tet Decor, 156 Từ Hoa', cat:'cafe', lat:21.05744, lng:105.8324, gq:"Maison de Tet Decor, Tây Hồ, Hà Nội", tip:'🧒👴 서호 내려다보이는 빌라 카페. 커피 6만~9만동, 브런치·케이크 12만~25만동. 좌석 넓고 조용해 부모님 브런치에 최적. 숙소에서 차 15분'},
+ {id:'laviet', name:'라 비엣 커피 (로스터리)', zh:'Là Việt Coffee, 7B Vọng Đức', cat:'cafe', lat:21.02199, lng:105.85332, gq:"Là Việt Coffee, 7 Vọng Đức, Hoàn Kiếm, Hà Nội", tip:'🧒👴 달랏 유명 로스터리. 커피 5.5만~8.5만동, 원두·드립백 선물 12만~25만동. 숙소 도보 5분이라 아침 커피 코스. 넓고 에어컨 완비'},
+ {id:'kem', name:'쩡띠엔 아이스크림 (노포)', zh:'Kem Tràng Tiền, 35 Tràng Tiền', cat:'cafe', lat:21.02494, lng:105.85475, gq:"Kem Tràng Tiền, 35 Tràng Tiền, Hoàn Kiếm, Hà Nội", tip:'🧒 1958년 국민 아이스크림 1만~2만동(약 550~1,100원). 서서 먹는 스탠드. 코코넛·그린라이스맛 추천. 호수 산책 후 간식'},
  // ---- 추가 관광
- {id:'badinh', name:'바딘 광장', zh:'Quảng trường Ba Đình', cat:'tour', lat:21.0366, lng:105.8345, tip:'🧒👴 무료. 매일 06:00 국기 게양식·21:00 하강식. 잔디 진입 통제 구역 주의'},
- {id:'citadel', name:'탕롱 황성 (유네스코)', zh:'Hoàng thành Thăng Long', cat:'tour', lat:21.0341, lng:105.8372, tip:'👴 성인 10만동, 16세 미만 무료. 단문 누각 위 전경이 하이라이트. 부지가 넓어 중심부만 1시간 코스로. 월요일 휴관(11/16 주의)'},
- {id:'tranquoc', name:'쩐꾸옥 사원', zh:'Chùa Trấn Quốc', cat:'tour', lat:21.0481, lng:105.8366, tip:'👴 무료(자율 시주). 서호 물 위에 뜬 하노이 최고(最古) 사원, 해질녘이 예뻐요. 20~30분 관람. 무릎·어깨 가리는 복장'},
- {id:'westlake', name:'서호 산책', zh:'Hồ Tây (West Lake)', cat:'tour', lat:21.0583, lng:105.8232, tip:'🧒👴 무료. 아이는 오리배(10만~15만동/시간), 어르신은 호반 산책. 쩐꾸옥 사원+호숫가 카페와 묶어 일몰 시간대 추천'},
- {id:'cyclo', name:'올드쿼터 씨클로 투어', zh:'Xích lô Phố Cổ', cat:'tour', lat:21.0338, lng:105.8500, tip:'🧒👴 1시간 대당 10만~15만동(약 5,500~8,300원)이 적정가. 타기 전 대당·시간당 가격을 숫자로 확정! 5명이면 4~5대, 아이는 어른과 합승 가능. 걷기 힘든 어르신에게 최고의 올드쿼터 관람법'},
- {id:'hoalo', name:'호아로 수용소 박물관', zh:'Nhà tù Hỏa Lò', cat:'tour', lat:21.0254, lng:105.8465, tip:'👴 5만동. 전시가 어둡고 무거워 5살에겐 비추 — 어른들끼리 교대 관람 or 생략 가능. 1시간'},
- {id:'ethnology', name:'베트남 민족학 박물관', zh:'Bảo tàng Dân tộc học', cat:'tour', lat:21.0407, lng:105.7988, tip:'🧒👴 성인 4만동·어린이 1.5만동. 야외 실물 소수민족 가옥을 아이가 오르내리며 놀기 좋아요. 비 오는 날 대체 일정. 월요일 휴관. 시내에서 차 15~20분'},
- {id:'trainstreet', name:'기찻길 마을 (트레인 스트리트)', zh:'Train Street (Trần Phú~Phùng Hưng)', cat:'tour', lat:21.0311, lng:105.8415, tip:'2026년 현재 공식 통제 구간 — 선로변 카페 손님으로만 입장 가능하고 당일 거절될 수 있음(방문 전 확인). 음료 4만~6만동 주문 조건. 아이 반드시 손잡고 카페 안쪽에'},
+ {id:'badinh', name:'바딘 광장', zh:'Quảng trường Ba Đình', cat:'tour', lat:21.03699, lng:105.83579, gq:"Quảng trường Ba Đình, Hà Nội", tip:'🧒👴 무료. 매일 06:00 국기 게양식·21:00 하강식. 잔디 진입 통제 구역 주의'},
+ {id:'citadel', name:'탕롱 황성 (유네스코)', zh:'Hoàng thành Thăng Long', cat:'tour', lat:21.03944, lng:105.83722, gq:"Hoàng thành Thăng Long, 19C Hoàng Diệu, Ba Đình, Hà Nội", tip:'👴 성인 10만동, 16세 미만 무료. 단문 누각 위 전경이 하이라이트. 부지가 넓어 중심부만 1시간 코스로. 월요일 휴관(11/16 주의)'},
+ {id:'tranquoc', name:'쩐꾸옥 사원', zh:'Chùa Trấn Quốc', cat:'tour', lat:21.04788, lng:105.83684, gq:"Chùa Trấn Quốc, Đường Thanh Niên, Yên Phụ, Tây Hồ, Hà Nội", tip:'👴 무료(자율 시주). 서호 물 위에 뜬 하노이 최고(最古) 사원, 해질녘이 예뻐요. 20~30분 관람. 무릎·어깨 가리는 복장'},
+ {id:'westlake', name:'서호 산책', zh:'Hồ Tây (West Lake)', cat:'tour', lat:21.05324, lng:105.82609, gq:"Hồ Tây, Tây Hồ, Hà Nội", tip:'🧒👴 무료. 아이는 오리배(10만~15만동/시간), 어르신은 호반 산책. 쩐꾸옥 사원+호숫가 카페와 묶어 일몰 시간대 추천'},
+ {id:'cyclo', name:'올드쿼터 씨클로 투어', zh:'Xích lô Phố Cổ', cat:'tour', lat:21.0338, lng:105.85, gq:"Hanoi Old Quarter (Phố Cổ Hà Nội), Hoàn Kiếm, Hà Nội", tip:'🧒👴 1시간 대당 10만~15만동(약 5,500~8,300원)이 적정가. 타기 전 대당·시간당 가격을 숫자로 확정! 5명이면 4~5대, 아이는 어른과 합승 가능. 걷기 힘든 어르신에게 최고의 올드쿼터 관람법'},
+ {id:'hoalo', name:'호아로 수용소 박물관', zh:'Nhà tù Hỏa Lò', cat:'tour', lat:21.02542, lng:105.84651, gq:"Nhà tù Hỏa Lò, 1 Phố Hỏa Lò, Hoàn Kiếm, Hà Nội", tip:'👴 5만동. 전시가 어둡고 무거워 5살에겐 비추 — 어른들끼리 교대 관람 or 생략 가능. 1시간'},
+ {id:'ethnology', name:'베트남 민족학 박물관', zh:'Bảo tàng Dân tộc học', cat:'tour', lat:21.04008, lng:105.79884, gq:"Bảo tàng Dân tộc học Việt Nam, Đường Nguyễn Văn Huyên, Cầu Giấy, Hà Nội", tip:'🧒👴 성인 4만동·어린이 1.5만동. 야외 실물 소수민족 가옥을 아이가 오르내리며 놀기 좋아요. 비 오는 날 대체 일정. 월요일 휴관. 시내에서 차 15~20분'},
+ {id:'trainstreet', name:'기찻길 마을 (트레인 스트리트)', zh:'Train Street (Trần Phú~Phùng Hưng)', cat:'tour', lat:21.02958, lng:105.84332, gq:"Phố Đường Tàu (Hanoi Train Street), Hoàn Kiếm, Hà Nội", tip:'2026년 현재 공식 통제 구간 — 선로변 카페 손님으로만 입장 가능하고 당일 거절될 수 있음(방문 전 확인). 음료 4만~6만동 주문 조건. 아이 반드시 손잡고 카페 안쪽에'},
  // ---- 마사지 (한국인 후기 多)
- {id:'omamori', name:'오마모리 스파 (성당 골목)', zh:'Omamori Spa, 48 Ngõ Huyện', cat:'etc', lat:21.0294, lng:105.8476, tip:'👴 60분 30만동(약 1.7만원)·90분 45만동 — 4곳 중 최저가인데 지압 압이 좋아 효도 마사지 후기 단골. 시각장애인 테라피스트의 사회적기업이라 공식 노팁 정책(팁 완전 불필요). 09:00~22:30, 홈페이지·전화 예약. 아이 대기 가능 여부는 방문 전 확인'},
- {id:'sfspa', name:'SF 스파 (본점)', zh:'SF Spa, 30 Cửa Đông', cat:'etc', lat:21.0327, lng:105.8443, tip:'🧒👴🎫 60분 49.9만동(약 2.7만원)·90분 74만동. 12세 미만 키즈 콤보가 공식 메뉴라 5살 동반 가족에게 최적 — 가족 동시 예약 시 미리 고지. 호텔→스파 택시비(4만동 한도) 지원. 09:00~22:30, 팁 별도'},
- {id:'mido', name:'미도 스파', zh:'Mido Spa, 11 Hàng Mành', cat:'etc', lat:21.0319, lng:105.8483, tip:'👴 아로마 60분 47만동(약 2.6만원)·90분 66만동. 한국인 후기 최다 — 마이리얼트립·와그에서 한국어로 사전 구매 예약이 편해요. 09:00~23:30 연중무휴라 밤 늦게도 OK, 샤워시설 완비. 팁 정책은 후기가 엇갈려 방문 전 확인'},
- {id:'lasiesta', name:'라 시에스타 스파 (프리미엄)', zh:'La Siesta Spa, 32 Lò Sũ', cat:'etc', lat:21.0312, lng:105.8546, tip:'👴🎫 핫스톤 60분 89만동(약 4.9만원), 전신+스크럽+발 90분 169만동(약 9.3만원). 호텔 부속 최고급 — 시술 전 설문으로 강도·집중부위·오일을 골라 어르신 컨디션 맞춤. 09:00~21:00, 해피아워 할인 활용 후기 많음'},
+ {id:'omamori', name:'오마모리 스파 (성당 골목)', zh:'Omamori Spa, 48 Ngõ Huyện', cat:'etc', lat:21.02953, lng:105.84845, gq:"Omamori Spa, 48 Ngõ Huyện, Hoàn Kiếm, Hà Nội", tip:'👴 60분 30만동(약 1.7만원)·90분 45만동 — 4곳 중 최저가인데 지압 압이 좋아 효도 마사지 후기 단골. 시각장애인 테라피스트의 사회적기업이라 공식 노팁 정책(팁 완전 불필요). 09:00~22:30, 홈페이지·전화 예약. 아이 대기 가능 여부는 방문 전 확인'},
+ {id:'sfspa', name:'SF 스파 (본점)', zh:'SF Spa, 30 Cửa Đông', cat:'etc', lat:21.03447, lng:105.84616, gq:"SF Spa, 30 Cửa Đông, Hoàn Kiếm, Hà Nội", tip:'🧒👴🎫 60분 49.9만동(약 2.7만원)·90분 74만동. 12세 미만 키즈 콤보가 공식 메뉴라 5살 동반 가족에게 최적 — 가족 동시 예약 시 미리 고지. 호텔→스파 택시비(4만동 한도) 지원. 09:00~22:30, 팁 별도'},
+ {id:'mido', name:'미도 스파', zh:'Mido Spa, 11 Hàng Mành', cat:'etc', lat:21.03186, lng:105.84839, gq:"Mido Spa, 11 Hàng Mành, Hoàn Kiếm, Hà Nội", tip:'👴 아로마 60분 47만동(약 2.6만원)·90분 66만동. 한국인 후기 최다 — 마이리얼트립·와그에서 한국어로 사전 구매 예약이 편해요. 09:00~23:30 연중무휴라 밤 늦게도 OK, 샤워시설 완비. 팁 정책은 후기가 엇갈려 방문 전 확인'},
+ {id:'lasiesta', name:'라 시에스타 스파 (프리미엄)', zh:'La Siesta Spa, 32 Lò Sũ', cat:'etc', lat:21.03147, lng:105.85504, gq:"La Siesta Classic Hotel & Spa, 32 Lò Sũ, Hoàn Kiếm, Hà Nội", tip:'👴🎫 핫스톤 60분 89만동(약 4.9만원), 전신+스크럽+발 90분 169만동(약 9.3만원). 호텔 부속 최고급 — 시술 전 설문으로 강도·집중부위·오일을 골라 어르신 컨디션 맞춤. 09:00~21:00, 해피아워 할인 활용 후기 많음'},
  // ---- 추가 쇼핑
- {id:'indigo', name:'인디고 스토어 (천연염색)', zh:'Indigo Store, 33A Văn Miếu', cat:'shop', lat:21.0281, lng:105.8366, tip:'👴 쪽염색 리넨 의류·스카프 20만~80만동(약 1.1만~4.4만원). 문묘 앞이라 관람과 묶기 좋음. 부모님 선물(스카프) 강추. 08:00~19:00'},
- {id:'tanmy', name:'탄미 디자인 (실크 거리)', zh:'Tanmy Design, 61 Hàng Gai', cat:'shop', lat:21.0320, lng:105.8500, tip:'👴 4대째 자수·실크 전문, 스카프 30만동~. 1,000㎡ 규모라 구경만도 볼만. 정찰제라 흥정 부담 없음. 항가이 거리 전체가 실크 상점가'},
- {id:'trangtien', name:'짱띠엔 플라자', zh:'Tràng Tiền Plaza', cat:'shop', lat:21.0245, lng:105.8531, tip:'🧒👴 명품 위주지만 프렌치 콜로니얼 건물 구경+에어컨 휴식용으로. 숙소 도보 5분. 근처 쩡띠엔 아이스크림과 묶기'},
- {id:'dongxuan', name:'동쑤언 시장', zh:'Chợ Đồng Xuân', cat:'shop', lat:21.0380, lng:105.8497, tip:'2,000여 점포 대형 재래시장, 기념품 2만~10만동 흥정 필수. 통로가 좁아 유모차 불가·아이 손잡기. 오전이 쾌적. 현지 분위기 구경 위주로'},
+ {id:'indigo', name:'인디고 스토어 (천연염색)', zh:'Indigo Store, 33A Văn Miếu', cat:'shop', lat:21.02842, lng:105.83649, gq:"Indigo Store, 33A Văn Miếu, Đống Đa, Hà Nội", tip:'👴 쪽염색 리넨 의류·스카프 20만~80만동(약 1.1만~4.4만원). 문묘 앞이라 관람과 묶기 좋음. 부모님 선물(스카프) 강추. 08:00~19:00'},
+ {id:'tanmy', name:'탄미 디자인 (실크 거리)', zh:'Tanmy Design, 61 Hàng Gai', cat:'shop', lat:21.03198, lng:105.85037, gq:"Tanmy Design, 61 Hàng Gai, Hoàn Kiếm, Hà Nội", tip:'👴 4대째 자수·실크 전문, 스카프 30만동~. 1,000㎡ 규모라 구경만도 볼만. 정찰제라 흥정 부담 없음. 항가이 거리 전체가 실크 상점가'},
+ {id:'trangtien', name:'짱띠엔 플라자', zh:'Tràng Tiền Plaza', cat:'shop', lat:21.02477, lng:105.85335, gq:"Tràng Tiền Plaza, 24 Hai Bà Trưng, Hoàn Kiếm, Hà Nội", tip:'🧒👴 명품 위주지만 프렌치 콜로니얼 건물 구경+에어컨 휴식용으로. 숙소 도보 5분. 근처 쩡띠엔 아이스크림과 묶기'},
+ {id:'dongxuan', name:'동쑤언 시장', zh:'Chợ Đồng Xuân', cat:'shop', lat:21.03826, lng:105.84967, gq:"Chợ Đồng Xuân, Phố Cầu Đông, Hoàn Kiếm, Hà Nội", tip:'2,000여 점포 대형 재래시장, 기념품 2만~10만동 흥정 필수. 통로가 좁아 유모차 불가·아이 손잡기. 오전이 쾌적. 현지 분위기 구경 위주로'},
 ];
 
 const AIRPORT = {name:'노이바이 공항', zh:'Sân bay Nội Bài', lat:21.2212, lng:105.8072};
@@ -860,7 +860,8 @@ function cardEl(it, idx, color){
   el.style.setProperty('--dayclr', color);
   if(!p){ el.innerHTML='<div class="bodyc">(삭제된 장소)</div>'; return el; }
   const dispName = it.name || p.name;
-  const gmap=`https://www.google.com/maps/search/?api=1&query=${p.lat}%2C${p.lng}`;
+  // gq(검증된 구글지도 검색어)가 있으면 장소 이름으로, 없으면(커스텀 장소) 좌표로 연다
+  const gmap=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.gq || (p.lat+','+p.lng))}`;
   el.innerHTML=`
     <div class="badge">${idx+1}</div>
     <div class="bodyc">
