@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>차동욱님 칠순 기념 가족여행</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
@@ -78,15 +78,6 @@ main{flex:1 1 auto; display:grid; grid-template-columns:295px minmax(370px,1fr) 
   background:var(--orange-soft); font-weight:800; font-size:14px; line-height:1; display:none}
 .libitem:hover .addbtn{display:block}
 .libnote{font-size:11px; color:var(--ink2); padding:2px 2px 8px}
-#customBox{border-top:2px dashed var(--line); padding:10px 14px 14px; background:#eff6f0}
-#customBox h3{font-size:12px; font-weight:800; margin-bottom:6px}
-#customBox .row{display:flex; gap:6px; margin-bottom:6px}
-#customBox input{flex:1; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; background:#fff; outline:none}
-#customBox button{border:1.5px solid var(--ink); border-radius:8px; background:#fff; font-size:11px; font-weight:700; padding:5px 9px}
-#customBox button.on{background:var(--orange); color:#fff}
-#searchResults{max-height:130px; overflow-y:auto}
-#searchResults .sr{font-size:11.5px; padding:5px 8px; background:#fff; border:1px solid var(--line); border-radius:7px; margin-bottom:4px; cursor:pointer}
-#searchResults .sr:hover{border-color:var(--orange)}
 
 /* ---------- board ---------- */
 #board{display:flex; flex-direction:column; min-height:0; min-width:0}
@@ -259,10 +250,15 @@ body.viewer .libitem .addbtn{display:none}
 #infoDialog th{background:var(--orange-soft)}
 #infoDialog a{color:var(--orange); font-weight:700}
 #infoDialog .warn{background:#fdeaea; border:1.5px solid #d88; border-radius:8px; padding:7px 10px; margin:6px 0}
-#cloudDialog .cfield{display:flex; align-items:center; gap:8px; margin-bottom:8px}
-#cloudDialog .cfield label{flex:0 0 64px; font-size:12px; font-weight:700; color:var(--ink2)}
-#cloudDialog .cfield input{flex:1; min-width:0; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; background:#fff; outline:none}
-#cloudDialog .cfield input:focus{border-color:var(--orange)}
+#cloudDialog .cfield, #addPlaceDialog .cfield{display:flex; align-items:center; gap:8px; margin-bottom:8px}
+#cloudDialog .cfield label, #addPlaceDialog .cfield label{flex:0 0 64px; font-size:12px; font-weight:700; color:var(--ink2)}
+#cloudDialog .cfield input, #addPlaceDialog .cfield input{flex:1; min-width:0; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; background:#fff; outline:none}
+#cloudDialog .cfield input:focus, #addPlaceDialog .cfield input:focus{border-color:var(--orange)}
+#library h2{display:flex; align-items:center; gap:8px}
+#btnAddPlace{border:1.5px solid var(--ink); background:var(--orange-soft); border-radius:8px; width:24px; height:24px; font-weight:800; font-size:15px; line-height:1; padding:0}
+#apResults{max-height:150px; overflow-y:auto; margin-top:8px}
+#apResults .sr{font-size:12px; padding:7px 9px; background:#fff; border:1.5px solid var(--line); border-radius:7px; margin-bottom:5px; cursor:pointer}
+#apResults .sr.sel{border-color:var(--orange); background:var(--orange-soft)}
 #cSlots{max-height:180px; overflow-y:auto; margin-top:8px}
 #cloudDialog .slot{display:flex; align-items:center; justify-content:space-between; gap:8px; background:#fff; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; margin-top:6px; font-size:12px}
 #cloudDialog .slot .slotbtns{display:flex; gap:5px; flex:0 0 auto}
@@ -311,22 +307,13 @@ body.viewer .libitem .addbtn{display:none}
   <!-- library -->
   <aside id="library">
     <div class="libhead">
-      <h2>장소 라이브러리</h2>
+      <h2>장소 라이브러리 <button id="btnAddPlace" title="새 장소 추가">＋</button></h2>
       <div class="sub">가족 픽 장소 모음 · 드래그하거나 ＋로 일정에 추가</div>
       <input id="libSearch" placeholder="장소 검색…">
     </div>
     <div class="cattabs" id="catTabs"></div>
     <div id="libList"></div>
-    <div id="customBox">
-      <h3>➕ 새 장소 추가</h3>
-      <div class="row"><input id="cpName" placeholder="장소 이름 (예: OO카페)"></div>
-      <div class="row">
-        <button id="cpSearch">🔍 지도에서 검색</button>
-        <button id="cpPick">📍 지도 클릭으로 지정</button>
-      </div>
-      <div id="searchResults"></div>
-    </div>
-  </aside>
+      </aside>
 
   <!-- board -->
   <section id="board">
@@ -350,6 +337,18 @@ body.viewer .libitem .addbtn{display:none}
   <button data-view="map"><span>🗺️</span>지도</button>
   <button data-view="lib"><span>➕</span>장소</button>
 </nav>
+
+<dialog id="addPlaceDialog">
+  <h3>⭐ 새 장소 추가</h3>
+  <div class="cfield"><label>이름</label><input id="apName" placeholder="예: OO카페"></div>
+  <div class="btns" style="justify-content:flex-start; margin-top:4px">
+    <button id="apSearch">🔍 이름으로 위치 검색</button>
+    <button id="apPick">📍 지도 클릭으로 지정</button>
+  </div>
+  <div id="apResults"></div>
+  <div id="apStatus" style="font-size:12px; color:var(--ink2); margin-top:8px">위치를 검색해서 고르거나, 지도를 클릭해 지정해 주세요</div>
+  <div class="btns"><button onclick="addPlaceDialog.close()">취소</button><button id="apSave" class="primary">저장</button></div>
+</dialog>
 
 <dialog id="memoDialog">
   <h3>📝 메모</h3>
@@ -554,6 +553,7 @@ const AIRPORT = {name:'노이바이 공항', zh:'Sân bay Nội Bài', lat:21.22
 const DAY_COLORS = ['#0e7f6b','#2f6bc4','#3d9b57','#0f6f8f','#5b57c7','#b13a86','#c98a12','#8a5a3b','#c74b5e','#3c8f9e'];
 const CATS = [['all','전체'],['tour','🏛️ 관광'],['food','🥢 맛집'],['cafe','🧁 카페'],['shop','🛍️ 쇼핑'],['etc','📌 기타'],['custom','⭐ 내 장소']];
 const CATLABEL = {tour:'관광',food:'맛집',cafe:'카페',shop:'쇼핑',etc:'기타',custom:'내 장소'};
+const CATEMOJI = {tour:'🏛️', food:'🥢', cafe:'🧁', shop:'🛍️', etc:'📌', custom:'⭐'};
 
 /* ============================================================ state ============================================================ */
 const LS_KEY = 'hanoi-trip-v1';
@@ -679,10 +679,9 @@ function renderLibrary(){
   box.appendChild(note);
   list.forEach(p=>{
     const el=document.createElement('div'); el.className='libitem'; el.dataset.pid=p.id;
-    el.innerHTML = `<div class="nm">${inTrip.has(p.id)?'✓ ':''}${esc(p.name)}</div>
+    el.innerHTML = `<div class="nm">${CATEMOJI[p.cat]||''} ${inTrip.has(p.id)?'✓ ':''}${esc(p.name)}</div>
       <div class="zh">${esc(p.zh||'')}</div>
-      <div class="cat">${CATLABEL[p.cat]||''}</div>
-      <button class="addbtn" title="현재 날짜에 추가">＋</button>`;
+      <button class="addbtn" title="일정에 추가">＋</button>`;
     el.querySelector('.addbtn').onclick = (e)=>{ e.stopPropagation(); openDayPick(p.id); };
     box.appendChild(el);
   });
@@ -750,7 +749,7 @@ function setView(v){
 document.querySelectorAll('#mobileNav button').forEach(b=> b.onclick=()=>setView(b.dataset.view));
 $('#settingsToggle').onclick = ()=> document.querySelector('header').classList.toggle('open');
 // 모바일: 설정창이 열린 상태에서 장소 검색을 시작하면 설정창을 닫아 리스트 공간 확보
-['libSearch','cpName'].forEach(id=>{
+['libSearch'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('focus', ()=>{ if(isMobile()) closeSettings(); });
 });
@@ -1028,18 +1027,18 @@ function msg(t){
 
 /* ============================================================ custom place / hotel pick ============================================================ */
 let pickMode=null; // 'place' | 'hotel'
+let apCoord=null;     // 새 장소 추가 모달에서 고른 좌표
 function onMapClick(e){
   if(!pickMode) return;
   const {lat,lng}=e.latlng;
   if(pickMode==='place'){
-    const nm=$('#cpName').value.trim()||'새 장소';
-    const id='c_'+Date.now();
-    state.custom.push({id, name:nm, zh:'', cat:'custom', lat, lng, tip:'직접 추가한 장소'});
-    $('#cpName').value='';
-    libCat='custom'; renderCatTabs(); refresh();
-    if(isMobile()) setView('lib');
-    alert(`"${nm}" 을(를) 장소 라이브러리(⭐ 내 장소)에 추가했어요.\n리스트의 ＋ 버튼으로 일정에 넣을 수 있어요.`);
-  }else if(pickMode==='hotel'){
+    apCoord={lat,lng};
+    pickMode=null; msg('');
+    $('#apStatus').textContent=`📍 지도에서 위치 지정됨 (${lat.toFixed(4)}, ${lng.toFixed(4)}) — 저장을 눌러야 추가돼요`;
+    addPlaceDialog.showModal();
+    return;
+  }
+  if(pickMode==='hotel'){
     const nm=prompt('숙소 이름을 입력하세요','내 숙소');
     if(nm){
       const id='ch_'+Date.now();
@@ -1047,22 +1046,30 @@ function onMapClick(e){
       state.settings.hotel=id;
       initHeader();
     }
+    pickMode=null; msg('');
+    refresh();
   }
-  pickMode=null; $('#cpPick').classList.remove('on'); msg('');
-  refresh();
 }
-$('#cpPick').onclick=()=>{
-  pickMode = pickMode==='place'? null : 'place';
-  $('#cpPick').classList.toggle('on', pickMode==='place');
-  msg(pickMode?'지도를 클릭해 장소 위치를 지정하세요':'');
-  if(pickMode && isMobile()) setView('map');
-};
 function startHotelPick(){ pickMode='hotel'; msg('지도를 클릭해 숙소 위치를 지정하세요'); if(isMobile()) setView('map'); }
 
-$('#cpSearch').onclick=async ()=>{
-  const q=$('#cpName').value.trim();
-  if(!q){ alert('장소 이름을 먼저 입력하세요'); return; }
-  const box=$('#searchResults'); box.innerHTML='<div class="libnote">검색 중…</div>';
+/* ---------- 새 장소 추가 모달 (명시적 저장) ---------- */
+function openAddPlace(){
+  apCoord=null; pickMode=null;
+  $('#apName').value=''; $('#apResults').innerHTML='';
+  $('#apStatus').textContent='위치를 검색해서 고르거나, 지도를 클릭해 지정해 주세요';
+  addPlaceDialog.showModal();
+}
+$('#btnAddPlace').onclick=openAddPlace;
+$('#apPick').onclick=()=>{
+  pickMode='place';
+  addPlaceDialog.close();
+  msg('지도를 클릭해 장소 위치를 지정하세요');
+  if(isMobile()) setView('map');
+};
+$('#apSearch').onclick=async ()=>{
+  const q=$('#apName').value.trim();
+  if(!q){ $('#apStatus').textContent='이름을 먼저 입력해 주세요'; return; }
+  const box=$('#apResults'); box.innerHTML='<div class="libnote">검색 중…</div>';
   try{
     const url=`https://nominatim.openstreetmap.org/search?format=json&limit=5&accept-language=ko&q=${encodeURIComponent(q+' Hanoi')}`;
     const r=await fetch(url,{headers:{'Accept':'application/json'}});
@@ -1072,15 +1079,24 @@ $('#cpSearch').onclick=async ()=>{
     j.forEach(res=>{
       const d=document.createElement('div'); d.className='sr'; d.textContent=res.display_name;
       d.onclick=()=>{
-        const id='c_'+Date.now();
-        state.custom.push({id, name:q, zh:'', cat:'custom', lat:+res.lat, lng:+res.lon, tip:'검색으로 추가한 장소'});
-        box.innerHTML=''; $('#cpName').value='';
-        libCat='custom'; renderCatTabs(); refresh();
-        alert(`"${q}" 을(를) 장소 라이브러리(⭐ 내 장소)에 추가했어요.\n리스트의 ＋ 버튼으로 일정에 넣을 수 있어요.`);
+        apCoord={lat:+res.lat, lng:+res.lon};
+        box.querySelectorAll('.sr').forEach(x=>x.classList.remove('sel'));
+        d.classList.add('sel');
+        $('#apStatus').textContent='✓ 위치 선택됨 — 저장을 눌러야 추가돼요';
       };
       box.appendChild(d);
     });
   }catch(e){ box.innerHTML='<div class="libnote">검색 실패 — 인터넷 연결을 확인하세요</div>'; }
+};
+$('#apSave').onclick=()=>{
+  const nm=$('#apName').value.trim();
+  if(!nm){ $('#apStatus').textContent='이름을 입력해 주세요'; return; }
+  if(!apCoord){ $('#apStatus').textContent='위치를 검색해서 고르거나 지도에서 지정해 주세요'; return; }
+  state.custom.push({id:'c_'+Date.now(), name:nm, zh:'', cat:'custom', lat:apCoord.lat, lng:apCoord.lng, tip:'직접 추가한 장소'});
+  apCoord=null;
+  addPlaceDialog.close();
+  libCat='custom'; renderCatTabs(); refresh();
+  if(isMobile()) setView('lib');
 };
 
 /* ============================================================ export / import ============================================================ */
