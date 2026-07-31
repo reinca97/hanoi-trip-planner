@@ -391,6 +391,10 @@ dialog button.primary{background:var(--orange); color:#fff}
    가격은 2025~2026 기준(1만동≈550원), 좌표는 근사값 — 핀 드래그로 보정 가능.
    태그: 🧒 아이와 가기 좋음 / 👴 어르신 편함 / 🎫 예약 권장
 ============================================================ */
+const HOTELS = [
+ {id:'h_somerset', name:'서머셋 그랜드 하노이', zh:'Somerset Grand Hanoi (49 Hai Ba Trung)', lat:21.02583, lng:105.84637, tip:'호안끼엠 남쪽 도보 10분, 레지던스형이라 가족 여행에 넉넉. 11/13~15 2박'},
+];
+
 const PLACES = [
  // ---- Day 1 (11/13 금) 도착 + 호안끼엠
  {id:'pho10', name:'퍼 10 리꾸옥쓰', zh:'Phở 10 Lý Quốc Sư', cat:'food', lat:21.0299, lng:105.8494, def:[1,1,'12:30'], tip:'🧒👴 퍼 보 7만~9만동(약 3,900~5,000원). 매장 깔끔+에어컨이라 가족 첫 끼로 가장 무난. 06:00~22:00 영업. 튀김빵 꿔이(1만동) 곁들이기'},
@@ -935,7 +939,7 @@ $('#cpSearch').onclick=async ()=>{
   if(!q){ alert('장소 이름을 먼저 입력하세요'); return; }
   const box=$('#searchResults'); box.innerHTML='<div class="libnote">검색 중…</div>';
   try{
-    const url=`https://nominatim.openstreetmap.org/search?format=json&limit=5&accept-language=ko&q=${encodeURIComponent(q+' Shanghai')}`;
+    const url=`https://nominatim.openstreetmap.org/search?format=json&limit=5&accept-language=ko&q=${encodeURIComponent(q+' Hanoi')}`;
     const r=await fetch(url,{headers:{'Accept':'application/json'}});
     const j=await r.json();
     box.innerHTML='';
