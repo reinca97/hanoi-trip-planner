@@ -136,8 +136,11 @@ main{flex:1 1 auto; display:grid; grid-template-columns:295px minmax(370px,1fr) 
   border:1px solid var(--line); border-radius:6px; padding:2px 7px; background:var(--paper2);
 }
 .card .links a:hover{border-color:var(--orange); color:var(--orange)}
-.card .memo{width:100%; margin-top:6px; border:1.5px dashed var(--line); border-radius:8px; padding:5px 8px; font-size:12px; background:#f6fbf5; resize:vertical; min-height:34px; display:none; outline:none}
-.card.open .memo{display:block}
+.card .memotxt{margin-top:6px; border:1.5px dashed var(--line); border-radius:8px; padding:5px 8px; font-size:12px; background:#f6fbf5; white-space:pre-wrap; word-break:break-word}
+.card .draghandle{flex:0 0 auto; align-self:center; padding:10px 4px 10px 8px; color:var(--ink2); opacity:.5; cursor:grab; font-size:19px; line-height:1; touch-action:none; user-select:none; -webkit-user-select:none}
+.card .draghandle:active{cursor:grabbing; opacity:.9}
+body.viewer .card .draghandle{display:none}
+@media(pointer:coarse){ .card .draghandle{opacity:.75; font-size:22px; padding:12px 6px 12px 10px} }
 .card .del{position:absolute; top:7px; right:8px; border:none; background:none; color:#c33; font-size:13px; font-weight:800; opacity:.35}
 .card .del:hover{opacity:1}
 .card .toggle{position:absolute; bottom:7px; right:8px; border:none; background:none; font-size:11px; color:var(--ink2)}
@@ -171,7 +174,7 @@ main{flex:1 1 auto; display:grid; grid-template-columns:295px minmax(370px,1fr) 
 #mobileNav{display:none; flex:0 0 auto; border-top:2px solid var(--ink); background:var(--paper2); padding-bottom:env(safe-area-inset-bottom)}
 #mobileNav button{flex:1; padding:8px 0 6px; border:none; background:transparent; font-size:11px; font-weight:700; color:var(--ink2)}
 #mobileNav button span{display:block; font-size:19px; line-height:1.2}
-#mobileNav button.on{color:var(--orange)}
+#mobileNav button.on{color:var(--orange); background:var(--orange-soft); box-shadow:inset 0 3px 0 var(--orange)}
 @media(pointer:coarse){ .libitem .addbtn{display:block} }
 @media(max-width:900px){
   body{height:100dvh}
@@ -265,6 +268,10 @@ body.viewer .libitem .addbtn{display:none}
 #cloudDialog .slot .slotbtns{display:flex; gap:5px; flex:0 0 auto}
 #cloudDialog .slot button{padding:3px 8px; font-size:11px}
 #cMsg{font-size:12px; color:var(--ink2); margin-top:10px; min-height:16px}
+#memoDialog textarea{height:120px}
+#dayPickBtns button{display:block; width:100%; text-align:left; margin-bottom:7px; border:1.5px solid var(--line); border-left:6px solid var(--dc,var(--orange)); border-radius:9px; background:#fff; padding:11px 13px; font-size:13.5px}
+#dayPickBtns button:hover{border-color:var(--dc,var(--orange))}
+#dayPickBtns button small{color:var(--ink2); font-weight:400}
 #cloudDialog .cwho{display:flex; align-items:center; gap:8px; font-size:12.5px; background:#fff; border:1.5px solid var(--line); border-radius:8px; padding:6px 10px}
 #cloudDialog .cwho button{margin-left:auto; padding:3px 9px; font-size:11px; border:1.5px solid var(--line); border-radius:7px; background:#fff; color:var(--ink2)}
 </style>
@@ -343,6 +350,20 @@ body.viewer .libitem .addbtn{display:none}
   <button data-view="map"><span>🗺️</span>지도</button>
   <button data-view="lib"><span>➕</span>장소</button>
 </nav>
+
+<dialog id="memoDialog">
+  <h3>📝 메모</h3>
+  <div id="memoPlace" style="font-size:12px; color:var(--ink2); margin-bottom:8px"></div>
+  <textarea id="memoText" placeholder="예: 웨이팅 몇 시에 걸기, 예산, 예약 번호…"></textarea>
+  <div class="btns"><button onclick="memoDialog.close()">취소</button><button id="memoSave" class="primary">저장</button></div>
+</dialog>
+
+<dialog id="dayPickDialog">
+  <h3>어느 날 일정에 넣을까요?</h3>
+  <div id="dayPickName" style="font-size:12px; color:var(--ink2); margin-bottom:10px"></div>
+  <div id="dayPickBtns"></div>
+  <div class="btns"><button onclick="dayPickDialog.close()">취소</button></div>
+</dialog>
 
 <dialog id="infoDialog">
   <button class="xclose" onclick="infoDialog.close()" title="닫기">✕</button>
@@ -662,7 +683,7 @@ function renderLibrary(){
       <div class="zh">${esc(p.zh||'')}</div>
       <div class="cat">${CATLABEL[p.cat]||''}</div>
       <button class="addbtn" title="현재 날짜에 추가">＋</button>`;
-    el.querySelector('.addbtn').onclick = (e)=>{ e.stopPropagation(); addToDay(p.id, state.activeDay); };
+    el.querySelector('.addbtn').onclick = (e)=>{ e.stopPropagation(); openDayPick(p.id); };
     box.appendChild(el);
   });
   if(VIEWER_ROOM) return;
@@ -683,6 +704,37 @@ function addToDay(pid, dayIdx, index){
   else state.days[dayIdx].splice(index,0,item);
   refresh();
   if(isMobile()) setView('plan'); // 모바일: 추가 후 일정 화면으로
+}
+
+/* ---------- memo modal (명시적 저장) ---------- */
+let memoTarget=null;
+function openMemo(it, name){
+  memoTarget=it;
+  $('#memoPlace').textContent=name;
+  $('#memoText').value=it.memo||'';
+  memoDialog.showModal();
+}
+$('#memoSave').onclick=()=>{
+  if(memoTarget) memoTarget.memo=$('#memoText').value.trim();
+  memoTarget=null; memoDialog.close(); refresh();
+};
+
+/* ---------- day picker (＋ 버튼 → 날짜 골라 추가) ---------- */
+let pickPid=null;
+function openDayPick(pid){
+  pickPid=pid;
+  const p=getPlace(pid);
+  $('#dayPickName').textContent = p ? `${p.name} — 넣을 날짜를 고르면 그날 맨 뒤에 들어가요. 위치는 드래그로 조정!` : '';
+  const box=$('#dayPickBtns'); box.innerHTML='';
+  for(let i=0;i<numDays();i++){
+    const d=dayDate(i);
+    const b=document.createElement('button');
+    b.style.setProperty('--dc', DAY_COLORS[i%DAY_COLORS.length]);
+    b.innerHTML=`<b>Day ${i+1}</b> · ${d.getMonth()+1}/${d.getDate()} (${DOW[d.getDay()]}) <small>· 지금 ${state.days[i].length}곳${i===state.activeDay?' · 보는 중':''}</small>`;
+    b.onclick=()=>{ dayPickDialog.close(); state.activeDay=i; addToDay(pickPid, i); };
+    box.appendChild(b);
+  }
+  dayPickDialog.showModal();
 }
 
 /* ---------- mobile views ---------- */
@@ -768,7 +820,7 @@ function renderDay(){
   if(VIEWER_ROOM) return;
   if(daySortable) daySortable.destroy();
   daySortable = Sortable.create(ul, {
-    group:'trip', animation:150, handle:'.badge', draggable:'.card',
+    group:'trip', animation:150, handle:'.badge,.draghandle', draggable:'.card',
     filter:'.seg,.empty-hint', delay:120, delayOnTouchOnly:true,
     onAdd: (ev)=>{
       // 라이브러리에서 클론된 항목
@@ -820,16 +872,16 @@ function cardEl(it, idx, color){
         <span class="zh">${esc(p.zh||'')}</span>
       </div>
       ${p.tip?`<div class="quick">💡 ${esc(p.tip)}</div>`:''}
+      ${it.memo?`<div class="memotxt">📝 ${esc(it.memo)}</div>`:''}
       <div class="links">
         <a href="${esc(gmap)}" target="_blank" rel="noopener">구글지도 📍</a>
-        ${p.amap && /^https?:\/\//.test(p.amap) ? `<a href="${esc(p.amap)}" target="_blank" rel="noopener">고덕지도 🇨🇳</a>` : ''}
-        <button class="memobtn">📝 메모</button>
+        <button class="memobtn">${it.memo?'📝 메모 수정':'📝 메모'}</button>
       </div>
-      <textarea class="memo" placeholder="우리끼리 메모 (예: 웨이팅 몇 시에 걸기, 예산…)">${esc(it.memo||'')}</textarea>
     </div>
+    <div class="draghandle" title="여기를 끌어 순서 변경">⠿</div>
     <button class="del" title="일정에서 빼기">✕</button>
     <button class="toggle">▾ 더보기</button>`;
-  if(VIEWER_ROOM){ el.querySelector('.tm').disabled=true; el.querySelector('.memo').readOnly=true; }
+  if(VIEWER_ROOM){ el.querySelector('.tm').disabled=true; }
   el.querySelector('.tm').onchange=e=>{ it.time=e.target.value; save(); };
   el.querySelector('.editnm').onclick=()=>{
     const nm=prompt('이 일정의 표시 이름을 수정하세요.\n(비우면 원래 이름으로 돌아갑니다)', it.name||p.name);
@@ -843,8 +895,7 @@ function cardEl(it, idx, color){
   };
   const toggle=()=>{ el.classList.toggle('open'); el.querySelector('.toggle').textContent=el.classList.contains('open')?'▴ 접기':'▾ 더보기'; };
   el.querySelector('.toggle').onclick=toggle;
-  el.querySelector('.memobtn').onclick=()=>{ if(!el.classList.contains('open')) toggle(); el.querySelector('.memo').focus(); };
-  el.querySelector('.memo').oninput=e=>{ it.memo=e.target.value; save(); };
+  el.querySelector('.memobtn').onclick=()=>openMemo(it, dispName);
   el.querySelector('.quick') && (el.querySelector('.quick').onclick=toggle);
   return el;
 }
@@ -984,8 +1035,10 @@ function onMapClick(e){
     const nm=$('#cpName').value.trim()||'새 장소';
     const id='c_'+Date.now();
     state.custom.push({id, name:nm, zh:'', cat:'custom', lat, lng, tip:'직접 추가한 장소'});
-    addToDay(id, state.activeDay);
     $('#cpName').value='';
+    libCat='custom'; renderCatTabs(); refresh();
+    if(isMobile()) setView('lib');
+    alert(`"${nm}" 을(를) 장소 라이브러리(⭐ 내 장소)에 추가했어요.\n리스트의 ＋ 버튼으로 일정에 넣을 수 있어요.`);
   }else if(pickMode==='hotel'){
     const nm=prompt('숙소 이름을 입력하세요','내 숙소');
     if(nm){
@@ -1021,8 +1074,9 @@ $('#cpSearch').onclick=async ()=>{
       d.onclick=()=>{
         const id='c_'+Date.now();
         state.custom.push({id, name:q, zh:'', cat:'custom', lat:+res.lat, lng:+res.lon, tip:'검색으로 추가한 장소'});
-        addToDay(id, state.activeDay);
         box.innerHTML=''; $('#cpName').value='';
+        libCat='custom'; renderCatTabs(); refresh();
+        alert(`"${q}" 을(를) 장소 라이브러리(⭐ 내 장소)에 추가했어요.\n리스트의 ＋ 버튼으로 일정에 넣을 수 있어요.`);
       };
       box.appendChild(d);
     });
