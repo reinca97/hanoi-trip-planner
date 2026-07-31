@@ -204,6 +204,22 @@ dialog .btns{display:flex; gap:8px; margin-top:12px; justify-content:flex-end}
 dialog button{border:1.5px solid var(--ink); background:#fff; border-radius:8px; padding:6px 14px; font-weight:700; font-size:12px}
 dialog button.primary{background:var(--orange); color:#fff}
 
+/* ---------- viewer (발행본 보기 전용) ---------- */
+#viewBanner{display:none; align-items:center; gap:8px; padding:7px 16px; background:var(--orange-soft); border-bottom:2px solid var(--ink); font-size:13px; font-weight:600}
+body.viewer #settingsToggle, body.viewer header .hgroup, body.viewer header .hbtns, body.viewer #btnCloud{display:none !important}
+body.viewer #library{display:none !important}
+body.viewer #mobileNav button[data-view="lib"]{display:none}
+@media(min-width:901px){ body.viewer main{grid-template-columns:minmax(370px,1fr) minmax(340px,1.1fr)} }
+body.viewer #dayTabs button{font-size:14px; padding:12px 18px 10px}
+body.viewer #dayTabs button .dt{font-size:11px}
+body.viewer .anchor{font-size:14px}
+body.viewer .seg{font-size:12.5px}
+body.viewer .card .l1 .nm{font-size:16.5px}
+body.viewer .card .quick{font-size:13px; -webkit-line-clamp:3}
+body.viewer .card .l1 input.tm{background:transparent; font-size:13px; pointer-events:none}
+body.viewer .card .del, body.viewer .card .editnm, body.viewer .card .memobtn{display:none}
+body.viewer .libitem .addbtn{display:none}
+
 /* ---------- cloud share ---------- */
 #btnCloud,#btnInfo{border:1.5px solid var(--ink); background:#fff; border-radius:10px; padding:6px 12px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink); transition:.12s}
 #btnCloud:hover,#btnInfo:hover{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink)}
@@ -253,6 +269,7 @@ dialog button.primary{background:var(--orange); color:#fff}
     <button id="btnReset">초기화</button>
   </div>
 </header>
+<div id="viewBanner"><span id="viewBannerText">발행본 불러오는 중…</span></div>
 
 <main>
   <!-- library -->
@@ -379,6 +396,10 @@ dialog button.primary{background:var(--orange); color:#fff}
       <button id="cSave" class="primary">💾 지금 일정 저장</button>
       <button id="cRefresh">새로고침</button>
     </div>
+    <div class="btns" style="justify-content:flex-start; margin:6px 0 0">
+      <button id="cPublish">📣 발행하기</button>
+      <button id="cViewLink">🔗 보기 링크 복사</button>
+    </div>
     <div id="cSlots"></div>
   </div>
   <div id="cMsg">한 번 입장하면 이 기기에 기억돼요. 같은 방에 저장하면 가족의 저장본이 한 목록에 쌓입니다.</div>
@@ -485,6 +506,8 @@ const CATLABEL = {tour:'관광',food:'맛집',cafe:'카페',shop:'쇼핑',etc:'�
 
 /* ============================================================ state ============================================================ */
 const LS_KEY = 'hanoi-trip-v1';
+/* 보기 전용 모드: 링크가 #v/방코드 형태면 발행본만 보여준다 */
+const VIEWER_ROOM = (location.hash.match(/^#v\/([a-z0-9_-]+)/)||[])[1] || null;
 let state = null;
 let uidSeq = 1;
 const uid = () => 'i' + (uidSeq++) + '_' + Math.random().toString(36).slice(2,6);
@@ -504,7 +527,7 @@ function defaultState(){
 }
 function nextMonth(){ const d=new Date(); d.setDate(d.getDate()+30); return d.toISOString().slice(0,10); }
 
-function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
+function save(){ if(VIEWER_ROOM) return; localStorage.setItem(LS_KEY, JSON.stringify(state)); }
 function load(){
   try{ const s = JSON.parse(localStorage.getItem(LS_KEY)); if(s && s.days) return s; }catch(e){}
   return null;
@@ -612,6 +635,7 @@ function renderLibrary(){
     el.querySelector('.addbtn').onclick = (e)=>{ e.stopPropagation(); addToDay(p.id, state.activeDay); };
     box.appendChild(el);
   });
+  if(VIEWER_ROOM) return;
   if(libSortable) libSortable.destroy();
   libSortable = Sortable.create(box, {
     group:{name:'trip', pull:'clone', put:false},
@@ -711,6 +735,7 @@ function renderDay(){
   foot.innerHTML = `장소 <b>${items.length}</b>곳`;
   box.appendChild(foot);
 
+  if(VIEWER_ROOM) return;
   if(daySortable) daySortable.destroy();
   daySortable = Sortable.create(ul, {
     group:'trip', animation:150, handle:'.badge', draggable:'.card',
@@ -774,6 +799,7 @@ function cardEl(it, idx, color){
     </div>
     <button class="del" title="일정에서 빼기">✕</button>
     <button class="toggle">▾ 더보기</button>`;
+  if(VIEWER_ROOM){ el.querySelector('.tm').disabled=true; el.querySelector('.memo').readOnly=true; }
   el.querySelector('.tm').onchange=e=>{ it.time=e.target.value; save(); };
   el.querySelector('.editnm').onclick=()=>{
     const nm=prompt('이 일정의 표시 이름을 수정하세요.\n(비우면 원래 이름으로 돌아갑니다)', it.name||p.name);
@@ -830,7 +856,7 @@ function renderMap(){
   layerG.clearLayers();
   const hotel=getHotel();
   // 호텔 핀(항상)
-  L.marker([hotel.lat, hotel.lng], {icon:emojiIcon('🏨'), draggable:true})
+  L.marker([hotel.lat, hotel.lng], {icon:emojiIcon('🏨'), draggable:!VIEWER_ROOM})
     .bindPopup(`<b>🏨 ${esc(hotel.name)}</b><br>${esc(hotel.tip||'')}<br><i>핀을 드래그하면 위치가 보정됩니다</i>`)
     .on('dragend', e=>{ const ll=e.target.getLatLng(); state.coordFix[hotel.id]=[ll.lat,ll.lng]; refresh(); })
     .addTo(layerG);
@@ -843,7 +869,7 @@ function renderMap(){
     state.days[i].forEach((it,k)=>{
       const p=getPlace(it.pid); if(!p) return;
       bounds.push([p.lat,p.lng]);
-      const m=L.marker([p.lat,p.lng],{icon:numIcon(k+1,color), draggable: state.mapMode==='day'})
+      const m=L.marker([p.lat,p.lng],{icon:numIcon(k+1,color), draggable: state.mapMode==='day' && !VIEWER_ROOM})
         .bindPopup(`<b>Day ${i+1}-${k+1} · ${esc(it.name||p.name)}</b><br>${esc(p.zh||'')}${p.tip?'<br>💡 '+esc(p.tip):''}<br><i>핀 드래그 → 위치 보정</i>`)
         .addTo(layerG);
       m.on('dragend', e=>{ const ll=e.target.getLatLng(); state.coordFix[it.pid]=[ll.lat,ll.lng]; refresh(); });
@@ -1077,14 +1103,14 @@ async function cloudList(){
   cMsgSet('불러오는 중…');
   try{
     const slots=await fetchSlots(cloudCfg.room);
-    if(!Object.keys(slots).length){ cMsgSet('아직 저장된 일정이 없어요. "지금 일정 저장"으로 첫 저장을 해보세요.'); $('#cSlots').innerHTML=''; return; }
+    if(!Object.keys(slots).filter(k=>k!=='__published').length){ cMsgSet('아직 저장된 일정이 없어요. "지금 일정 저장"으로 첫 저장을 해보세요.'); $('#cSlots').innerHTML=''; return; }
     cMsgSet('');
     renderSlots(slots);
   }catch(e){ cMsgSet('불러오기 실패 — 인터넷 연결을 확인해 주세요.'); }
 }
 function renderSlots(slots){
   const box=$('#cSlots'); box.innerHTML='';
-  Object.entries(slots).sort((a,b)=>(b[1].at||0)-(a[1].at||0)).forEach(([id,s])=>{
+  Object.entries(slots).filter(([id])=>id!=='__published').sort((a,b)=>(b[1].at||0)-(a[1].at||0)).forEach(([id,s])=>{
     const d=document.createElement('div'); d.className='slot';
     d.innerHTML=`<span>💾 ${esc(s.name||'저장본')}</span>
       <span class="slotbtns"><button data-act="load">불러오기</button><button data-act="del">삭제</button></span>`;
@@ -1114,6 +1140,27 @@ async function cloudDelete(id){
     renderSlots(slots);
   }catch(e){ cMsgSet('삭제 실패 — 인터넷 연결을 확인해 주세요.'); }
 }
+async function cloudPublish(){
+  if(!confirm('지금 화면의 일정을 발행할까요?\n보기 링크로 접속하는 가족에게 이 버전이 보여요.')) return;
+  cMsgSet('발행 중…');
+  try{
+    const secret=await sha256(cloudCfg.room+'|'+cloudCfg.pw);
+    const slots=await fetchSlots(cloudCfg.room);
+    slots['__published']={who:cloudCfg.who, at:Date.now(), data:JSON.stringify(state)};
+    const r=await putRoom(cloudCfg.room, secret, slots);
+    if(r.status===401||r.status===403){ cMsgSet('❌ 권한 확인 실패 — 나가기 후 다시 입장해 주세요.'); return; }
+    if(!r.ok) throw 0;
+    cMsgSet('📣 발행 완료! "보기 링크 복사"를 눌러 가족에게 보내세요.');
+  }catch(e){ cMsgSet('발행 실패 — 인터넷 연결을 확인해 주세요.'); }
+}
+function copyViewLink(){
+  const url=`${location.origin}${location.pathname}#v/${cloudCfg.room}`;
+  navigator.clipboard.writeText(url)
+    .then(()=>cMsgSet('🔗 보기 링크를 복사했어요! 카톡에 붙여넣기 하세요.'))
+    .catch(()=>{ prompt('이 링크를 복사하세요', url); });
+}
+$('#cPublish').onclick=cloudPublish;
+$('#cViewLink').onclick=copyViewLink;
 $('#btnInfo').onclick=()=>infoDialog.showModal();
 $('#cLoginBtn').onclick=cloudLogin;
 $('#cLogout').onclick=cloudLogout;
@@ -1130,7 +1177,31 @@ state = load() || defaultState();
 if(state.settings.arrTime==='10:30') state.settings.arrTime='13:25';
 if(state.settings.depTime==='23:00') state.settings.depTime='23:40';
 initMap();
-initAll();
+if(VIEWER_ROOM){
+  document.body.classList.add('viewer');
+  $('#viewBanner').style.display='flex';
+  (async ()=>{
+    try{
+      const r=await fetch(`${FIREBASE_DB_URL}/trips/${VIEWER_ROOM}/slots/__published.json`);
+      const pub = r.ok ? await r.json() : null;
+      if(pub && pub.data){
+        const st=JSON.parse(pub.data);
+        if(st.days && st.settings) state=st;
+        const d=new Date(pub.at||0);
+        $('#viewBannerText').textContent=`👀 보기 전용 · ${pub.who||'편집자'}님이 ${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}에 발행한 일정입니다`;
+      }else{
+        $('#viewBannerText').textContent='아직 발행된 일정이 없어요 — 편집자가 ☁️ 공유에서 발행하면 여기에 보여요';
+      }
+    }catch(e){ $('#viewBannerText').textContent='일정을 불러오지 못했어요 — 인터넷 연결을 확인해 주세요'; }
+    // 여행 중이면 오늘 날짜 탭을 자동으로 연다
+    const t0=new Date(state.settings.startDate+'T00:00:00');
+    const diff=Math.floor((Date.now()-t0.getTime())/86400000);
+    if(diff>=0 && diff<numDays()) state.activeDay=diff;
+    initAll();
+  })();
+}else{
+  initAll();
+}
 </script>
 </body>
 </html>
