@@ -224,7 +224,16 @@ body.viewer .libitem .addbtn{display:none}
 #btnCloud,#btnInfo{border:1.5px solid var(--ink); background:#fff; border-radius:10px; padding:6px 12px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink); transition:.12s}
 #btnCloud:hover,#btnInfo:hover{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink)}
 @media(max-width:900px){ #btnCloud,#btnInfo{padding:5px 9px} }
-#infoDialog{max-width:600px; width:min(94vw,600px)}
+#infoDialog{max-width:600px; width:min(94vw,600px); position:relative}
+#infoDialog .xclose{position:absolute; top:8px; right:10px; border:none; background:none; font-size:20px; font-weight:800; color:var(--ink2); padding:6px 10px; box-shadow:none; z-index:5}
+#infoDialog .xclose:hover{color:var(--ink)}
+@media(max-width:900px){
+  #infoDialog{width:100vw; max-width:100vw; height:100dvh; max-height:100dvh; margin:0; border:none; border-radius:0; padding:16px 14px}
+  #infoDialog .ibody{max-height:none; flex:1}
+  #infoDialog{display:flex; flex-direction:column}
+  #infoDialog[open]{display:flex}
+  #infoDialog:not([open]){display:none}
+}
 #infoDialog .ibody{max-height:62vh; overflow-y:auto; font-size:13px; line-height:1.65; padding-right:4px}
 #infoDialog h4{font-family:'Hahmlet',serif; font-size:14px; margin:14px 0 5px; color:var(--orange)}
 #infoDialog h4:first-child{margin-top:0}
@@ -316,6 +325,7 @@ body.viewer .libitem .addbtn{display:none}
 </nav>
 
 <dialog id="infoDialog">
+  <button class="xclose" onclick="infoDialog.close()" title="닫기">✕</button>
   <h3>ℹ️ 여행 실용 정보 <small style="font-weight:400;font-size:11px;color:var(--ink2)">2026년 7월 조사 기준 — 가격·스케줄은 변동될 수 있어요</small></h3>
   <div class="ibody">
     <h4>🌤️ 11월 중순 날씨 &amp; 옷차림</h4>
@@ -779,7 +789,7 @@ function cardEl(it, idx, color){
   el.style.setProperty('--dayclr', color);
   if(!p){ el.innerHTML='<div class="bodyc">(삭제된 장소)</div>'; return el; }
   const dispName = it.name || p.name;
-  const gmap=`https://maps.apple.com/?ll=${p.lat},${p.lng}&q=${encodeURIComponent(dispName)}`;
+  const gmap=`https://www.google.com/maps/search/?api=1&query=${p.lat}%2C${p.lng}`;
   el.innerHTML=`
     <div class="badge">${idx+1}</div>
     <div class="bodyc">
@@ -791,7 +801,7 @@ function cardEl(it, idx, color){
       </div>
       ${p.tip?`<div class="quick">💡 ${esc(p.tip)}</div>`:''}
       <div class="links">
-        <a href="${esc(gmap)}" target="_blank" rel="noopener">애플지도 </a>
+        <a href="${esc(gmap)}" target="_blank" rel="noopener">구글지도 📍</a>
         ${p.amap && /^https?:\/\//.test(p.amap) ? `<a href="${esc(p.amap)}" target="_blank" rel="noopener">고덕지도 🇨🇳</a>` : ''}
         <button class="memobtn">📝 메모</button>
       </div>
