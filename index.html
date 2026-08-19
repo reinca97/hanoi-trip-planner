@@ -476,6 +476,14 @@ const HOTELS = [
  {id:'h_somerset', name:'서머셋 그랜드 하노이', zh:'Somerset Grand Hanoi (49 Hai Ba Trung)', lat:21.02583, lng:105.84637, gq:"Somerset Grand Hanoi, 49 Hai Bà Trưng, Hoàn Kiếm, Hà Nội", tip:'호안끼엠 남쪽 도보 10분, 레지던스형이라 가족 여행에 넉넉. 11/13~15 2박'},
 ];
 
+/* 호텔이 아닌 숙박지. 3일차 밤은 하롱베이 크루즈 선상에서 자고, 4일차 아침도 여기서 시작한다.
+   정박지는 선사마다 달라 하롱베이 중심부 근사 좌표를 넣었으며, 지도 핀을 끌어 보정할 수 있다. */
+const STAYS = [
+ {id:'stay_cruise', name:'하롱베이 크루즈 선상 1박', zh:'Overnight on board · Vịnh Hạ Long', ic:'🛳️', sea:true, lat:20.8505, lng:107.1005, gq:"Vịnh Hạ Long, Quảng Ninh", tip:'선사가 하롱베이(또는 란하베이) 안쪽에 정박해 1박. 저녁은 선상 석식·오징어낚시, 아침은 승솟 동굴 관람 후 브런치·체크아웃. 하노이 호텔은 3일차 아침에 체크아웃하고 큰 짐을 맡겨 두니 배에는 1박 짐만 가져가세요'},
+];
+/* 밤별 숙박지 지정 — 키는 Day 번호(1부터), 값은 STAYS의 id. 지정 없는 밤은 호텔에서 잔다 */
+const NIGHT_STAYS = {3:'stay_cruise'};
+
 const PLACES = [
  // ---- Day 1 (11/13 금) 도착 + 호안끼엠
  {id:'pho10', name:'퍼 10 리꾸옥쓰', zh:'Phở 10 Lý Quốc Sư', cat:'food', lat:21.03047, lng:105.84885, gq:"Phở 10 Lý Quốc Sư, 10 Lý Quốc Sư, Hoàn Kiếm, Hà Nội", tip:'🧒👴 퍼 보 7만~9만동(약 3,900~5,000원). 매장 깔끔+에어컨이라 가족 첫 끼로 가장 무난. 06:00~22:00 영업. 튀김빵 꿔이(1만동) 곁들이기'},
@@ -498,12 +506,12 @@ const PLACES = [
  {id:'chacathanglong', name:'짜까 탕롱', zh:'Chả Cá Thăng Long, 19-31 Đường Thành', cat:'food', lat:21.03297, lng:105.84612, gq:"Chả Cá Thăng Long, 6B Đường Thành, Cửa Đông, Hoàn Kiếm, Hà Nội", def:[2,9,'18:30'], tip:'🧒👴🎫 미쉐린 빕구르망. 짜까(강황 생선구이+쌀국수) 1인 17만~18만동(약 9,500~10,000원). 직원이 테이블에서 구워주고 에어컨+정식 좌석이라 가족에게 가장 적합한 짜까집. 저녁 예약 권장. 구글맵에 짜까 라봉으로 잘못 뜨는 리스팅이 있으니 주소(Đường Thành 거리)를 확인하세요'},
  {id:'spa', name:'어반 오아시스 스파', zh:'Urban Oasis Spa, 39A Hàng Hành', cat:'etc', lat:21.0303, lng:105.8503, gq:"Urban Oasis Spa, 39A Hàng Hành, Hoàn Kiếm, Hà Nội", def:[2,10,'20:30'], tip:'👴 60분 전신 50만~70만동(약 2.8만~3.9만원)+팁 관례. 호안끼엠 도보 2분, 가족 동시 예약 가능 — 부모님 효도 코스. 아이 동반 가능 여부는 예약 시 확인. 대안: SF Spa(30 Cửa Đông)'},
  // ---- Day 3 (11/15 일) 하롱베이 크루즈 1일차
- {id:'cruise_pick', name:'크루즈 픽업 (호텔 로비)', zh:'셔틀 or 프라이빗 리무진', cat:'etc', useHotel:true, def:[3,1,'08:00'], tip:'보통 08:00~08:30 올드쿼터 픽업 → 고속도로 2~2.5시간(휴게소 1회). 5인 가족은 프라이빗 리무진 밴 업그레이드(왕복 200~250달러)가 어르신·아이에게 편해요'},
+ {id:'cruise_pick', name:'크루즈 픽업 (호텔 로비)', zh:'셔틀 or 프라이빗 리무진', cat:'etc', useHotel:true, def:[3,1,'08:00'], tip:'호텔은 이날 아침 체크아웃하고 큰 짐은 로비에 맡긴 뒤, 1박 짐만 챙겨 탑승해요. 보통 08:00~08:30 올드쿼터 픽업 → 고속도로 2~2.5시간(휴게소 1회). 5인 가족은 프라이빗 리무진 밴 업그레이드(왕복 200~250달러)가 어르신·아이에게 편해요'},
  {id:'cruise_board', name:'하롱베이 크루즈 승선', zh:'하롱국제크루즈항 (선사별 상이)', cat:'tour', lat:20.95364, lng:107.05545, gq:"Cảng tàu khách quốc tế Hạ Long, Bãi Cháy, Hạ Long, Quảng Ninh", def:[3,2,'12:00'], tip:'🎫 12:30 웰컴 런치하며 출항. 승선 항구는 선사에 따라 하롱국제크루즈항/뚜언쩌우/곳피어(하이퐁·란하베이) — 크루즈 확정 후 이 핀을 드래그해서 보정하세요. 여권 실물 필수'},
- {id:'titop', name:'티톱섬 전망대·해변', zh:'Đảo Ti Tốp', cat:'tour', lat:20.8626, lng:107.06722, gq:"Đảo Ti Tốp, Vịnh Hạ Long, Quảng Ninh", def:[3,3,'15:00'], tip:'전망대까지 계단 약 400개 — 어르신은 무리 말고 해변 휴식, 아이는 모래놀이. 11월 물이 차니 수영은 오후에만'},
- {id:'luon', name:'루언 동굴 카약·뱀부보트', zh:'Hang Luồn', cat:'tour', lat:20.85168, lng:107.09671, gq:"Hang Luồn, Vịnh Hạ Long, Quảng Ninh", def:[3,4,'16:30'], tip:'🧒👴 석회암 아치 밑을 배로 통과. 아이·어르신은 사공이 노 젓는 뱀부보트 선택이 안전·편안. 원숭이 출몰 — 음식물 주의. 이후 17:30 선셋 해피아워 → 19:00 선상 석식·오징어낚시'},
+ {id:'titop', name:'티톱섬 전망대·해변', zh:'Đảo Ti Tốp', cat:'tour', sea:true, lat:20.8626, lng:107.06722, gq:"Đảo Ti Tốp, Vịnh Hạ Long, Quảng Ninh", def:[3,3,'15:00'], tip:'전망대까지 계단 약 400개 — 어르신은 무리 말고 해변 휴식, 아이는 모래놀이. 11월 물이 차니 수영은 오후에만'},
+ {id:'luon', name:'루언 동굴 카약·뱀부보트', zh:'Hang Luồn', cat:'tour', sea:true, lat:20.85168, lng:107.09671, gq:"Hang Luồn, Vịnh Hạ Long, Quảng Ninh", def:[3,4,'16:30'], tip:'🧒👴 석회암 아치 밑을 배로 통과. 아이·어르신은 사공이 노 젓는 뱀부보트 선택이 안전·편안. 원숭이 출몰 — 음식물 주의. 이후 17:30 선셋 해피아워 → 19:00 선상 석식·오징어낚시'},
  // ---- Day 4 (11/16 월) 하선 → 하노이 → 심야 귀국
- {id:'sungsot', name:'승솟 동굴', zh:'Hang Sửng Sốt', cat:'tour', lat:20.84374, lng:107.09084, gq:"Hang Sửng Sốt, Đảo Bồ Hòn, Vịnh Hạ Long, Quảng Ninh", def:[4,1,'07:30'], tip:'🧒 하롱베이 최대 종유석 동굴. 입구 계단 약 100개, 내부는 완만한 데크길이라 5살도 걸어서 관람 가능(40~50분). 아침이 한산. 이후 08:30 브런치·체크아웃'},
+ {id:'sungsot', name:'승솟 동굴', zh:'Hang Sửng Sốt', cat:'tour', sea:true, lat:20.84374, lng:107.09084, gq:"Hang Sửng Sốt, Đảo Bồ Hòn, Vịnh Hạ Long, Quảng Ninh", def:[4,1,'07:30'], tip:'🧒 하롱베이 최대 종유석 동굴. 입구 계단 약 100개, 내부는 완만한 데크길이라 5살도 걸어서 관람 가능(40~50분). 아침이 한산. 이후 08:30 브런치·체크아웃'},
  {id:'cruise_off', name:'크루즈 하선 → 하노이 복귀', zh:'10:15~11:00 하선, 14:30~15:30 시내 도착', cat:'etc', lat:20.95328, lng:107.05571, gq:"Ha Long International Cruise Port, Đường Võ Nguyên Giáp, Phường Bãi Cháy, Hạ Long, Quảng Ninh", def:[4,2,'10:30'], tip:'버스에서 낮잠 타임. 시내 도착 후 남은 반나절 일정 시작'},
  {id:'lottemall', name:'롯데몰 웨스트레이크 (기념품 쇼핑)', zh:'Lotte Mall West Lake, 272 Võ Chí Công', cat:'shop', lat:21.07602, lng:105.81255, gq:"Lotte Mall West Lake Hanoi, 272 Võ Chí Công, Tây Hồ, Hà Nội", def:[4,3,'15:30'], tip:'🧒👴 B1 롯데마트에서 G7커피(5만~10만동)·과자·건과일 등 귀국 선물 몰아 사기. 2023년 개장 최신몰이라 수유실·유아시설 완비, 한국 브랜드 많아 부모님도 편안. 시내에서 차 20~25분'},
  {id:'luggage', name:'맡긴 짐 찾기 (서머셋)', zh:'', cat:'etc', useHotel:true, def:[4,4,'17:45'], tip:'체크아웃 때 맡긴 짐 픽업. 로비에서 잠시 정비 후 저녁 식사로'},
@@ -563,17 +571,68 @@ let state = null;
 let uidSeq = 1;
 const uid = () => 'i' + (uidSeq++) + '_' + Math.random().toString(36).slice(2,6);
 
+/* 화면 기본 일정 — 공유방(hanoi-family)에 저장된 "jg의 계획 · 8/17 16:54"를 그대로 고정한 것.
+   처음 접속하거나 "초기화"를 눌렀을 때 이 일정이 뜬다.
+   PLACES의 def는 조사 단계의 초안 배치를 남겨 둔 기록이고, 실제 기본 일정은 여기가 정한다. */
+const DEFAULT_PLAN = {
+ settings:{ startDate:'2026-11-13', nights:3, arrTime:'13:25', depTime:'23:40', hotel:'h_somerset', hotelInRoute:true },
+ coordFix:{},
+ /* jg가 직접 추가한 장소 — 아래 days가 pid로 참조하므로 함께 들고 있어야 한다 */
+ custom:[
+  {id:'c_1786946097383', name:'PHO INN', zh:'', cat:'custom', lat:21.03176060068082, lng:105.85112102329731, tip:'직접 추가한 장소'},
+  {id:'c_1786946421171', name:'banh mi mama', zh:'', cat:'custom', lat:21.0368005, lng:105.8523553, tip:'직접 추가한 장소'},
+  {id:'c_1786946600633', name:'MIA', zh:'', cat:'custom', lat:21.0316787, lng:105.8459293, tip:'직접 추가한 장소'},
+  {id:'c_1786946694848', name:'MIAs restaurant', zh:'', cat:'custom', lat:21.030098157741513, lng:105.85032910108568, tip:'직접 추가한 장소'},
+  {id:'c_1785472775671', name:'test cafe1111', zh:'', cat:'custom', lat:21.045963903086612, lng:105.8409498109446, tip:'직접 추가한 장소'},
+  {id:'c_1785473765970', name:'야시장', zh:'', cat:'custom', lat:21.0335078, lng:105.8509571, tip:'직접 추가한 장소'},
+ ],
+ days:[
+  [ // Day 1
+   {pid:'checkin', time:'15:00'},
+   {pid:'hoankiem', time:'16:00'},
+   {pid:'puppet', time:'17:20'},
+   {pid:'c_1786946097383', time:'18:30', memo:"호수 근처 쌀국수 현지인 맛집\n고기가 엄청나다"},
+   {pid:'nightmarket', time:'21:00'},
+  ],
+  [ // Day 2
+   {pid:'stilt', time:'09:00'},
+   {pid:'onepillar', time:'10:00'},
+   {pid:'vanmieu', time:'11:00'},
+   {pid:'ngon', time:'12:30'},
+   {pid:'cong', time:'14:00'},
+   {pid:'cathedral', time:'15:00'},
+   {pid:'c_1786946421171', time:'15:40', memo:'하노이 최고 반미 맛집'},
+   {pid:'collective', time:'16:00'},
+   {pid:'spa', time:'16:30', memo:'쨔연은 여기서 낮잠 자도 됨'},
+   {pid:'c_1786946694848', time:'18:30', memo:"고급 퓨전 베트남식 레스토랑(고급 분짜도 있음)\n코스요리도 있고 현지 맛집으로 유명.\n게다가 어반 스파랑 가까움!"},
+   {pid:'lottemall', time:'19:50', name:'롯데몰 웨스트레이크 (전망대&마트)', memo:'쇼핑을 마지막에 하면 짐 싸기도 힘들거같고 전망대도 볼 겸 저녁먹고 가면 좋을듯?'},
+   {pid:'tahien', time:'19:50', memo:"아니면 마지막날에 마트 가고\n둘째 날엔 맥주거리ㄱㄱ"},
+  ],
+  [ // Day 3
+   {pid:'cruise_pick', time:'08:00'},
+   {pid:'cruise_board', time:'12:00'},
+   {pid:'titop', time:'15:00'},
+   {pid:'luon', time:'16:30'},
+  ],
+  [ // Day 4
+   {pid:'sungsot', time:'07:30'},
+   {pid:'cruise_off', time:'10:30'},
+   {pid:'tranquoc', time:'15:30', memo:"6시간짜리 차를 빌려서 캐리어 맡기기와\n공항까지의 교통편을 한 번에 해결"},
+   {pid:'citadel', time:'16:30'},
+   {pid:'lottemall', time:'17:00'},
+   {pid:'caugo', time:'18:30'},
+  ],
+ ],
+};
+
 function defaultState(){
-  const days = [];
-  for(let d=1; d<=4; d++){
-    const items = PLACES.filter(p=>p.def && p.def[0]===d)
-      .sort((a,b)=>a.def[1]-b.def[1])
-      .map(p=>({uid:uid(), pid:p.id, time:p.def[2], memo:''}));
-    days.push(items);
-  }
   return {
-    settings:{ startDate:'2026-11-13', nights:3, arrTime:'13:25', depTime:'23:40', hotel:'h_somerset', hotelInRoute:true },
-    days, activeDay:0, custom:[], coordFix:{}, mapMode:'day'
+    settings: Object.assign({}, DEFAULT_PLAN.settings),
+    days: DEFAULT_PLAN.days.map(day => day.map(it => Object.assign({uid:uid(), memo:''}, it))),
+    activeDay: 0,
+    custom: DEFAULT_PLAN.custom.map(c => Object.assign({}, c)),
+    coordFix: Object.assign({}, DEFAULT_PLAN.coordFix),
+    mapMode: 'day'
   };
 }
 function nextMonth(){ const d=new Date(); d.setDate(d.getDate()+30); return d.toISOString().slice(0,10); }
@@ -600,6 +659,27 @@ function getHotel(){
   return fix ? Object.assign({},h,{lat:fix[0],lng:fix[1]}) : h;
 }
 const numDays = () => state.settings.nights + 1;
+
+/* i일차(0부터) 밤에 자는 곳. NIGHT_STAYS에 걸린 밤은 호텔 대신 그 숙박지를 돌려준다 */
+function stayFor(i){
+  const ov = STAYS.find(x=>x.id===NIGHT_STAYS[i+1]);
+  if(!ov) return Object.assign({ic:'🏨'}, getHotel());
+  const fix = state.coordFix[ov.id];
+  return Object.assign({ic:'🛏️'}, ov, fix?{lat:fix[0], lng:fix[1]}:{});
+}
+/* 하루의 시작·종료 앵커를 한 곳에서 판정한다 — 일정 카드 렌더와 경로 계산이 같은 규칙을 쓰게 하려는 것.
+   선상 1박처럼 호텔이 아닌 숙박지는 "경로에 숙소 포함" 설정과 무관하게 항상 앵커로 세운다.
+   그날 밤을 어디서 보내는지가 그 하루의 끝점이자 다음 날의 출발점이기 때문이다. */
+function dayAnchors(i){
+  const st=state.settings, isLast = i===numDays()-1;
+  const air = {name:AIRPORT.name, lat:AIRPORT.lat, lng:AIRPORT.lng, ic:'✈️'};
+  const prev = i>0 ? stayFor(i-1) : null;
+  const here = stayFor(i);
+  return {
+    start: i===0 ? air : (st.hotelInRoute || prev.sea) ? prev : null,
+    end:   isLast ? air : (st.hotelInRoute || here.sea) ? here : null,
+  };
+}
 
 /* ============================================================ header controls ============================================================ */
 const $ = s => document.querySelector(s);
@@ -632,7 +712,7 @@ function initHeader(){
   $('#btnExport').onclick = ()=> openIO('export');
   $('#btnImport').onclick = ()=> openIO('import');
   $('#btnReset').onclick = ()=>{
-    if(confirm('일정을 기본 3박 5일 코스로 초기화할까요? 내 장소·메모도 사라집니다.')){
+    if(confirm('일정을 기본 코스(jg의 계획)로 초기화할까요? 내 장소·메모도 사라집니다.')){
       localStorage.removeItem(LS_KEY); state = defaultState(); initAll();
     }
   };
@@ -780,13 +860,13 @@ function renderDay(){
   const color = DAY_COLORS[i%DAY_COLORS.length];
   const box=$('#dayList'); box.innerHTML='';
   const st=state.settings;
-  const hotel=getHotel();
+  const {start, end} = dayAnchors(i);
 
   // 상단 앵커
   if(i===0){
     box.appendChild(anchorEl('✈️', `${esc(st.arrTime)} 노이바이 공항 도착`, '5인 가족은 그랩 7인승(SUV) 또는 사전 픽업 예약 추천'));
-  }else if(st.hotelInRoute){
-    box.appendChild(anchorEl('🏨', `${esc(hotel.name)} 출발`, hotel.zh||'', true));
+  }else if(start){
+    box.appendChild(anchorEl(start.ic, start.sea?`${esc(start.name)}에서 아침 시작`:`${esc(start.name)} 출발`, start.zh||'', true));
   }
 
   // 카드 목록
@@ -798,18 +878,18 @@ function renderDay(){
     ul.appendChild(eh);
   }
   items.forEach((it,idx)=>{
-    if(idx>0 || i===0 || st.hotelInRoute) ul.appendChild(segEl(idx));
+    if(idx>0 || start) ul.appendChild(segEl(idx));
     ul.appendChild(cardEl(it, idx, color));
   });
   box.appendChild(ul);
 
   // 하단 앵커
   const isLast = i===numDays()-1;
-  if(items.length && (st.hotelInRoute || isLast)) box.appendChild(segEl(items.length));
+  if(items.length && end) box.appendChild(segEl(items.length));
   if(isLast){
     box.appendChild(anchorEl('✈️', `${esc(st.depTime)} 노이바이 공항 출발`, '2~3시간 전 공항 도착 권장 · 짐 찾으러 호텔 경유 잊지 마세요!'));
-  }else if(st.hotelInRoute){
-    box.appendChild(anchorEl('🏨', `${esc(hotel.name)} 복귀`, '', true));
+  }else if(end){
+    box.appendChild(anchorEl(end.ic, end.sea?esc(end.name):`${esc(end.name)} 복귀`, end.sea?(end.zh||''):'', true));
   }
 
   const foot=document.createElement('div'); foot.className='dayfoot'; foot.id='dayFoot';
@@ -919,15 +999,14 @@ function emojiIcon(e){ return L.divIcon({className:'', html:`<div class="iconpin
 
 /* 하루 경유지 좌표열 만들기: [출발앵커] + items + [도착앵커] */
 function dayWaypoints(i){
-  const st=state.settings, hotel=getHotel(), isLast=i===numDays()-1;
+  const isLast=i===numDays()-1;
+  const {start, end} = dayAnchors(i);
   const pts=[];
-  if(i===0) pts.push({name:AIRPORT.name, lat:AIRPORT.lat, lng:AIRPORT.lng, anchor:'✈️'});
-  else if(st.hotelInRoute) pts.push({name:hotel.name, lat:hotel.lat, lng:hotel.lng, anchor:'🏨'});
+  if(start) pts.push({name:start.name, lat:start.lat, lng:start.lng, anchor:start.ic, sea:!!start.sea});
   state.days[i].forEach((it,k)=>{
-    const p=getPlace(it.pid); if(p) pts.push({name:it.name||p.name, lat:p.lat, lng:p.lng, n:k+1, pid:it.pid});
+    const p=getPlace(it.pid); if(p) pts.push({name:it.name||p.name, lat:p.lat, lng:p.lng, n:k+1, pid:it.pid, sea:!!p.sea});
   });
-  if(isLast) pts.push({name:AIRPORT.name, lat:AIRPORT.lat, lng:AIRPORT.lng, anchor:'✈️'});
-  else if(st.hotelInRoute && state.days[i].length) pts.push({name:hotel.name, lat:hotel.lat, lng:hotel.lng, anchor:'🏨'});
+  if(end && (isLast || state.days[i].length)) pts.push({name:end.name, lat:end.lat, lng:end.lng, anchor:end.ic, sea:!!end.sea});
   return pts;
 }
 
@@ -944,6 +1023,21 @@ function renderMap(){
 
   const daysToShow = state.mapMode==='all' ? [...Array(numDays()).keys()] : [state.activeDay];
   const bounds=[[hotel.lat,hotel.lng]];
+
+  // 선상 1박 정박지 핀 — 그날 밤이나 전날 밤을 배에서 보내는 날에만 띄운다
+  const seaStays=[];
+  [state.activeDay-1, state.activeDay].forEach(d=>{
+    if(d<0) return;
+    const sp=stayFor(d);
+    if(sp.sea && !seaStays.some(x=>x.id===sp.id)) seaStays.push(sp);
+  });
+  seaStays.forEach(sp=>{
+    bounds.push([sp.lat,sp.lng]);
+    L.marker([sp.lat,sp.lng], {icon:emojiIcon(sp.ic), draggable:!VIEWER_ROOM})
+      .bindPopup(`<b>${sp.ic} ${esc(sp.name)}</b><br>${esc(sp.tip||'')}<br><i>핀을 드래그하면 정박지가 보정됩니다</i>`)
+      .on('dragend', e=>{ const ll=e.target.getLatLng(); state.coordFix[sp.id]=[ll.lat,ll.lng]; refresh(); })
+      .addTo(layerG);
+  });
 
   daysToShow.forEach(i=>{
     const color=DAY_COLORS[i%DAY_COLORS.length];
@@ -1000,15 +1094,28 @@ async function drawRoute(dayIdx){
   const pts=dayWaypoints(dayIdx);
   const color=DAY_COLORS[dayIdx%DAY_COLORS.length];
   if(pts.length<2){ msg(''); return; }
-  let totalDur=0, totalDist=0, anyEst=false;
+  // 시작 앵커가 없는 날은 첫 구간이 seg-1부터다 (seg 요소는 카드 앞에 붙으므로 카드 0 앞에는 seg가 없다)
+  const segBase = dayAnchors(dayIdx).start ? 0 : 1;
+  let totalDur=0, totalDist=0, anyEst=false, anySea=false;
   msg('🚕 이동 경로 계산 중…');
   for(let k=0;k<pts.length-1;k++){
-    const res=await fetchRoute(pts[k],pts[k+1]);
+    const a=pts[k], b=pts[k+1];
+    // 배로만 닿는 구간은 크루즈가 실어다 주므로, 택시 합계에 넣지 않고 선상 이동으로 따로 표기한다
+    if(a.sea || b.sea){
+      anySea=true;
+      if(dayIdx===state.activeDay){
+        L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{color, weight:4, opacity:.55, dashArray:'2 8'}).addTo(layerG);
+        const seaSpan=document.getElementById(`seg-${k+segBase}`);
+        if(seaSpan) seaSpan.innerHTML=`🛳️ 선상 이동 <b>${fmtDist(haversine(a,b)*1000)}</b> · 크루즈 일정에 포함`;
+      }
+      continue;
+    }
+    const res=await fetchRoute(a,b);
     if(token!==routeToken) return; // 최신 요청만 반영
     totalDur+=res.dur; totalDist+=res.dist; anyEst=anyEst||res.est;
     if(dayIdx===state.activeDay){
       L.polyline(res.geom,{color, weight:4, opacity:.75, dashArray:res.est?'6 8':null}).addTo(layerG);
-      const segSpan=document.getElementById(`seg-${k}`);
+      const segSpan=document.getElementById(`seg-${k+segBase}`);
       if(segSpan) segSpan.innerHTML=`🚕 <b>${fmtDur(res.dur)}</b> · ${fmtDist(res.dist)}${res.est?' <i>(직선거리 추정)</i>':''}`;
     }
   }
@@ -1016,7 +1123,7 @@ async function drawRoute(dayIdx){
   msg('');
   const foot=$('#dayFoot');
   if(foot && dayIdx===state.activeDay){
-    foot.innerHTML=`장소 <b>${state.days[dayIdx].length}</b>곳 · 총 이동 <b>${fmtDur(totalDur)}</b> · <b>${fmtDist(totalDist)}</b> (택시 기준${anyEst?', 일부 추정':''})`;
+    foot.innerHTML=`장소 <b>${state.days[dayIdx].length}</b>곳 · 총 이동 <b>${fmtDur(totalDur)}</b> · <b>${fmtDist(totalDist)}</b> (택시 기준${anyEst?', 일부 추정':''})${anySea?' · 🛳️ 선상 이동 별도':''}`;
   }
 }
 let msgTimer=null;
