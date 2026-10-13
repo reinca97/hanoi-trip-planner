@@ -45,10 +45,6 @@ header h1 em{color:var(--orange); font-style:normal}
 .stepper{display:flex; align-items:center; gap:2px}
 .stepper button{width:22px; height:22px; border:1.5px solid var(--ink); border-radius:6px; background:#fff; font-weight:800; line-height:1}
 .stepper b{min-width:44px; text-align:center; font-size:14px}
-.hbtns{margin-left:auto; display:flex; gap:8px}
-.hbtns button{border:1.5px solid var(--ink); background:#fff; border-radius:10px; padding:6px 12px; font-size:12px; font-weight:700; box-shadow:2px 2px 0 var(--ink); transition:.12s}
-.hbtns button:hover{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink)}
-.hbtns button.primary{background:var(--orange); color:#fff}
 #hotelSelect{max-width:190px}
 
 /* ---------- layout ---------- */
@@ -87,6 +83,13 @@ main{flex:1 1 auto; display:grid; grid-template-columns:295px minmax(370px,1fr) 
   color:var(--ink2); border-right:1.5px dashed var(--line); position:relative;
 }
 #dayTabs button .dt{display:block; font-size:10px; font-weight:500}
+.mdot{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--orange); vertical-align:middle}
+#dayTabs button .mdot{position:absolute; top:7px; right:6px; box-shadow:0 0 0 1.5px var(--paper)}
+#dayTabs button.on .mdot{background:#fff; box-shadow:none}
+#curFile{font-size:11.5px; color:var(--ink2); background:#fff; border:1.5px solid var(--line); border-radius:99px; padding:3px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px; flex:0 1 auto; display:inline-flex; align-items:center; gap:5px}
+#curFile b{color:var(--ink); font-weight:700; overflow:hidden; text-overflow:ellipsis}
+body.viewer #curFile{display:none}
+@media (max-width:760px){ #curFile{max-width:44vw; padding:3px 8px} #curFile span:not(.mdot){display:none} }
 #dayTabs button.on{color:#fff; background:var(--tabclr,var(--ink));}
 #dayList{flex:1; overflow-y:auto; padding:16px 20px 60px; min-height:0}
 .anchor{
@@ -170,9 +173,8 @@ body.viewer .card .draghandle{display:none}
 @media(max-width:900px){
   body{height:100dvh}
   header{gap:6px; padding:6px 10px}
-  header .hgroup, header .hbtns{display:none}
+  header .hgroup{display:none}
   header.open .hgroup{display:flex}
-  header.open .hbtns{display:flex; margin-left:0; width:100%; justify-content:flex-end}
   #mobileNav{display:flex}
   main{display:flex; min-height:0}
   /* 설정창·키보드로 세로 공간이 줄어도 리스트가 0으로 찌부러지지 않게 */
@@ -188,7 +190,7 @@ body.viewer .card .draghandle{display:none}
   dialog{width:92vw}
 }
 
-dialog{border:2px solid var(--ink); border-radius:14px; padding:20px; max-width:420px; box-shadow:6px 6px 0 rgba(35,37,43,.25); background:var(--paper2)}
+dialog{margin:auto; border:2px solid var(--ink); border-radius:14px; padding:20px; max-width:420px; box-shadow:6px 6px 0 rgba(35,37,43,.25); background:var(--paper2)}
 dialog::backdrop{background:rgba(35,37,43,.45)}
 dialog h3{font-family:'Hahmlet',serif; margin-bottom:10px}
 dialog textarea{width:100%; height:180px; border:1.5px solid var(--line); border-radius:8px; padding:8px; font-size:11px; background:#fff}
@@ -199,7 +201,7 @@ dialog button.primary{background:var(--orange); color:#fff}
 /* ---------- viewer (발행본 보기 전용) ---------- */
 #pubStamp{display:none}
 body.viewer #pubStamp{display:inline-block; font-size:10.5px; color:var(--ink2); white-space:nowrap; background:var(--orange-soft); border:1px solid var(--line); border-radius:99px; padding:2px 9px; flex:0 0 auto}
-body.viewer #settingsToggle, body.viewer header .hgroup, body.viewer header .hbtns, body.viewer #btnCloud{display:none !important}
+body.viewer #settingsToggle, body.viewer header .hgroup, body.viewer #btnCloud{display:none !important}
 body.viewer #library{display:none !important}
 body.viewer #mobileNav button[data-view="lib"]{display:none}
 @media(min-width:901px){ body.viewer main{grid-template-columns:minmax(370px,1fr) minmax(340px,1.1fr)} }
@@ -219,7 +221,7 @@ body.viewer .libitem .addbtn{display:none}
 #moreWrap{display:none}
 @media(max-width:900px){
   header:not(.open){flex-wrap:nowrap}
-  header h1{font-size:16px; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1}
+  header h1{font-size:16px; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1 1 auto}
   #btnCloud,#btnInfo{display:none}
   #moreWrap{display:block; margin-left:auto; position:relative; flex:0 0 auto}
   #moreBtn{border:1.5px solid var(--ink); background:#fff; border-radius:9px; padding:4px 13px; font-weight:800; font-size:17px; line-height:1.2; box-shadow:2px 2px 0 var(--ink)}
@@ -260,16 +262,42 @@ body.viewer .libitem .addbtn{display:none}
 #apResults .sr{font-size:12px; padding:7px 9px; background:#fff; border:1.5px solid var(--line); border-radius:7px; margin-bottom:5px; cursor:pointer}
 #apResults .sr.sel{border-color:var(--orange); background:var(--orange-soft)}
 #cSlots{max-height:180px; overflow-y:auto; margin-top:8px}
-#cloudDialog .slot{display:flex; align-items:center; justify-content:space-between; gap:8px; background:#fff; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; margin-top:6px; font-size:12px}
+#cloudDialog .slot{display:flex; align-items:center; gap:5px; margin-top:6px; font-size:12px}
 #cloudDialog .slot .slotbtns{display:flex; gap:5px; flex:0 0 auto}
-#cloudDialog .slot button{padding:3px 8px; font-size:11px}
 #cMsg{font-size:12px; color:var(--ink2); margin-top:10px; min-height:16px}
 #memoDialog textarea{height:120px}
 #dayPickBtns button{display:block; width:100%; text-align:left; margin-bottom:7px; border:1.5px solid var(--line); border-left:6px solid var(--dc,var(--orange)); border-radius:9px; background:#fff; padding:11px 13px; font-size:13.5px}
 #dayPickBtns button:hover{border-color:var(--dc,var(--orange))}
 #dayPickBtns button small{color:var(--ink2); font-weight:400}
-#cloudDialog .cwho{display:flex; align-items:center; gap:8px; font-size:12.5px; background:#fff; border:1.5px solid var(--line); border-radius:8px; padding:6px 10px}
-#cloudDialog .cwho button{margin-left:auto; padding:3px 9px; font-size:11px; border:1.5px solid var(--line); border-radius:7px; background:#fff; color:var(--ink2)}
+#cloudDialog{width:min(420px,92vw)}
+#cloudDialog .chead{display:flex; align-items:center; gap:8px; margin-bottom:12px}
+#cloudDialog .chead h3{margin:0}
+#cloudDialog .ctext{border:none; background:none; box-shadow:none; padding:3px 4px; font-size:11.5px; font-weight:600; color:var(--ink2); text-decoration:underline; text-underline-offset:2px}
+#cloudDialog .chead .ctext{margin-left:auto}
+#cloudDialog .cwide{display:block; width:100%; padding:10px; font-size:14px}
+#cloudDialog .csec{margin-top:16px; padding-top:12px; border-top:1.5px dashed var(--line)}
+#cloudDialog .csech{display:flex; align-items:center; font-size:13px}
+#cloudDialog .csech .ctext{margin-left:auto}
+#cloudDialog .cnote{font-size:11.5px; color:var(--ink2); margin-top:4px; line-height:1.5}
+#cloudDialog .slot .sname{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; height:30px; padding:0 10px; text-align:left; font-size:12px; font-weight:600; background:#fff; border:1.5px solid var(--line); border-radius:8px; box-shadow:none}
+@media (hover:hover){ #cloudDialog .slot:not(.cur) .sname:hover{border-color:var(--orange)} }
+#cloudDialog .slot .sname small{color:var(--ink2); font-weight:400; margin-left:4px}
+#cloudDialog .slot .scur{flex:0 0 18px; color:var(--orange); display:inline-flex; align-items:center; justify-content:center}
+#cloudDialog .slot.cur .sname{font-weight:800; border-color:var(--orange); background:var(--orange-soft)}
+#cloudDialog .slot .sname{flex:1}
+#cloudDialog .slot .slotbtns button{width:30px; height:30px; padding:0; font-size:13px; line-height:1; background:none; border:none; box-shadow:none; border-radius:8px}
+@media (hover:hover){ #cloudDialog .slot .slotbtns button:not(.ison):hover{background:var(--orange-soft)} }
+#cloudDialog .slot .slotbtns button{display:inline-flex; align-items:center; justify-content:center; color:var(--ink2)}
+#cloudDialog .slot .slotbtns svg{stroke:currentColor; fill:none}
+#cloudDialog .cicon{display:inline-flex; align-items:center; gap:6px}
+#cloudDialog .cicon svg{stroke:currentColor; fill:none; flex:0 0 auto}
+#cloudDialog .slot .slotbtns button.ison{cursor:default; color:var(--orange)}
+#cloudDialog .slot .slotbtns button.ison svg{fill:var(--orange)}
+#saveDialog{width:min(380px,92vw)}
+#saveDialog input{width:100%; box-sizing:border-box; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; background:#fff; outline:none; font-size:14px}
+#saveDialog input:focus{border-color:var(--orange)}
+#toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--ink); color:#fff; font-size:12.5px; padding:9px 16px; border-radius:99px; z-index:3000; opacity:0; pointer-events:none; transition:opacity .25s; max-width:90vw; text-align:center}
+#toast.on{opacity:1}
 </style>
 </head>
 <body class="v-plan">
@@ -277,13 +305,14 @@ body.viewer .libitem .addbtn{display:none}
 <header>
   <h1>차동욱님 <em>칠순</em> 기념 가족여행</h1>
   <span id="pubStamp"></span>
-  <button id="btnCloud" title="가족과 일정 공유">☁️ 공유</button>
+  <span id="curFile" title="불러온 저장본과 달라진 내용이 있으면 주황 점이 표시돼요"></span>
+  <button id="btnCloud" title="일정 저장·불러오기, 가족에게 공유">💾 저장·공유</button>
   <button id="btnInfo" title="여행 실용 정보">ℹ️</button>
   <button id="settingsToggle">⚙️ 설정</button>
   <div id="moreWrap">
     <button id="moreBtn" title="메뉴">⋯</button>
     <div id="moreMenu">
-      <button data-m="cloud">☁️ 공유 저장</button>
+      <button data-m="cloud">💾 저장·공유</button>
       <button data-m="info">ℹ️ 여행 정보</button>
       <button data-m="set">⚙️ 여행 설정</button>
     </div>
@@ -296,11 +325,6 @@ body.viewer .libitem .addbtn{display:none}
   <div class="hgroup"><label>✈️ 출발</label><input type="time" id="depTime"></div>
   <div class="hgroup"><label>🏨 숙소</label><select id="hotelSelect"></select></div>
   <div class="hgroup"><label>경로에 숙소 포함</label><input type="checkbox" id="hotelInRoute"></div>
-  <div class="hbtns">
-    <button id="btnExport">내보내기</button>
-    <button id="btnImport">가져오기</button>
-    <button id="btnReset">초기화</button>
-  </div>
 </header>
 
 <main>
@@ -430,41 +454,41 @@ body.viewer .libitem .addbtn{display:none}
   <div class="btns"><button onclick="infoDialog.close()">닫기</button></div>
 </dialog>
 
-<dialog id="cloudDialog">
-  <h3>☁️ 가족과 일정 공유</h3>
+
+  <dialog id="cloudDialog">
+  <div class="chead"><h3>💾 저장·공유</h3><button id="cLogout" class="ctext">로그아웃</button></div>
   <div id="cLogin">
-    <div class="cfield"><label>방 코드</label><input id="cRoom" placeholder="예: my-trip-01 (영문/숫자/-)"></div>
     <div class="cfield"><label>비밀번호</label><input id="cPw" type="password" placeholder="가족과 약속한 비밀번호"></div>
-    <div class="cfield"><label>저장 이름</label><input id="cWho" placeholder="예: 제니의 계획"></div>
     <div class="btns" style="justify-content:flex-start; margin-top:4px">
-      <button id="cLoginBtn" class="primary">입장하기</button>
+      <button id="cLoginBtn" class="primary">로그인</button>
     </div>
   </div>
   <div id="cPanel" style="display:none">
-    <div class="cwho">🔓 <b id="cWhoBadge"></b><button id="cLogout">나가기</button></div>
-    <div class="btns" style="justify-content:flex-start; margin:8px 0 0">
-      <button id="cSave" class="primary">💾 지금 일정 저장</button>
-      <button id="cRefresh">새로고침</button>
+    <button id="cSave" class="primary cwide">💾 지금 일정 저장</button>
+    <div class="csec">
+      <div class="csech"><b>저장본</b><button id="cRefresh" class="ctext">↻ 새로고침</button></div>
+      <div id="cSlots"></div>
     </div>
-    <div class="btns" style="justify-content:flex-start; margin:6px 0 0">
-      <button id="cPublish">📣 발행하기</button>
-      <button id="cViewLink">🔗 보기 링크 복사</button>
+    <div class="csec">
+      <div class="csech"><b>가족에게 보여주기</b></div>
+      <div class="cnote" id="cShareNote"></div>
+      <div class="btns" style="justify-content:flex-start; margin:8px 0 0">
+        <button id="cViewLink" class="cicon">보기 링크 복사</button>
+      </div>
     </div>
-    <div id="cSlots"></div>
   </div>
-  <div id="cMsg">한 번 입장하면 이 기기에 기억돼요. 같은 방에 저장하면 가족의 저장본이 한 목록에 쌓입니다.</div>
+  <div id="cMsg"></div>
   <div class="btns"><button onclick="cloudDialog.close()">닫기</button></div>
 </dialog>
 
-<dialog id="ioDialog">
-  <h3 id="ioTitle">일정 내보내기</h3>
-  <textarea id="ioText"></textarea>
-  <div class="btns">
-    <button id="ioCopy">복사</button>
-    <button id="ioApply" class="primary">적용</button>
-    <button onclick="ioDialog.close()">닫기</button>
-  </div>
+<dialog id="saveDialog">
+  <h3>💾 지금 일정 저장</h3>
+  <div style="font-size:12.5px; color:var(--ink2); margin-bottom:8px">저장본 목록에 보일 제목을 입력해 주세요.</div>
+  <input id="sTitle" maxlength="40" placeholder="저장 제목 입력 (예: 3일차 동선 수정본)">
+  <div style="font-size:11.5px; color:var(--ink2); margin-top:6px">비워 두면 저장한 시각이 제목이 돼요.</div>
+  <div class="btns"><button onclick="saveDialog.close()">취소</button><button id="sOk" class="primary">저장</button></div>
 </dialog>
+<div id="toast"></div>
 
 <script>
 /* ============================================================
@@ -565,8 +589,8 @@ const CATEMOJI = {tour:'🏛️', food:'🥢', cafe:'🧁', shop:'🛍️', etc:
 
 /* ============================================================ state ============================================================ */
 const LS_KEY = 'hanoi-trip-v1';
-/* 보기 전용 모드: 링크가 #v/방코드 형태면 발행본만 보여준다 */
-const VIEWER_ROOM = (location.hash.match(/^#v\/([a-z0-9_-]+)/)||[])[1] || null;
+/* 보기 전용 모드: 링크가 #v/방코드 형태면 공유 중인 일정만 보여준다 */
+const VIEWER_ROOM = /^#v\//.test(location.hash) ? 'hanoi-family' : null; // 보기 링크도 하노이 방만
 let state = null;
 let uidSeq = 1;
 const uid = () => 'i' + (uidSeq++) + '_' + Math.random().toString(36).slice(2,6);
@@ -709,13 +733,6 @@ function initHeader(){
   };
   $('#nMinus').onclick = ()=> changeNights(-1);
   $('#nPlus').onclick = ()=> changeNights(1);
-  $('#btnExport').onclick = ()=> openIO('export');
-  $('#btnImport').onclick = ()=> openIO('import');
-  $('#btnReset').onclick = ()=>{
-    if(confirm('일정을 기본 코스(jg의 계획)로 초기화할까요? 내 장소·메모도 사라집니다.')){
-      localStorage.removeItem(LS_KEY); state = defaultState(); initAll();
-    }
-  };
 }
 function changeNights(delta){
   const st=state.settings;
@@ -849,6 +866,7 @@ function renderTabs(){
     b.innerHTML = `Day ${i+1}<span class="dt">${d.getMonth()+1}/${d.getDate()} (${DOW[d.getDay()]})</span>`;
     b.style.setProperty('--tabclr', DAY_COLORS[i%DAY_COLORS.length]);
     if(i===state.activeDay) b.classList.add('on');
+    if(dayChanged(i)){ b.insertAdjacentHTML('beforeend','<span class="mdot"></span>'); b.title='저장본과 달라진 일정이 있어요'; }
     b.onclick=()=>{ state.activeDay=i; refresh(); };
     box.appendChild(b);
   }
@@ -1207,30 +1225,15 @@ $('#apSave').onclick=()=>{
   if(isMobile()) setView('lib');
 };
 
-/* ============================================================ export / import ============================================================ */
-function openIO(mode){
-  const dlg=$('#ioDialog');
-  $('#ioTitle').textContent = mode==='export'?'일정 내보내기 (친구에게 이 텍스트를 보내세요)':'일정 가져오기 (받은 텍스트를 붙여넣으세요)';
-  $('#ioText').value = mode==='export'? JSON.stringify(state) : '';
-  $('#ioApply').style.display = mode==='import'?'':'none';
-  $('#ioCopy').style.display = mode==='export'?'':'none';
-  dlg.showModal();
-}
-$('#ioCopy').onclick=()=>{ $('#ioText').select(); document.execCommand('copy'); $('#ioCopy').textContent='복사됨!'; setTimeout(()=>$('#ioCopy').textContent='복사',1500); };
-$('#ioApply').onclick=()=>{
-  try{
-    const s=JSON.parse($('#ioText').value);
-    if(!s.days||!s.settings) throw 0;
-    state=s; save(); $('#ioDialog').close(); initAll();
-  }catch(e){ alert('형식이 올바르지 않습니다. 내보내기로 만든 텍스트 전체를 붙여넣어 주세요.'); }
-};
-
 /* ============================================================ cloud share (Firebase RTDB REST) ============================================================
    방 코드 + 비밀번호 방식. 비밀번호는 해시로만 전송/저장되며,
    DB 보안 규칙이 "비밀번호(해시) 불일치 시 쓰기 거부"를 서버에서 강제한다.
    읽기(목록 보기)는 방 코드만 알면 가능. */
-const FIREBASE_DB_URL = 'https://shanghai-eee28-default-rtdb.asia-southeast1.firebasedatabase.app'; // 미설정이면 ☁️ 버튼 숨김
+const FIREBASE_DB_URL = 'https://shanghai-eee28-default-rtdb.asia-southeast1.firebasedatabase.app'; // 미설정이면 저장·공유 버튼 숨김
 const cloudCfg = JSON.parse(localStorage.getItem('hn-cloud')||'{}');
+const ROOM = 'hanoi-family'; // 하노이 플래너는 이 방만 쓴다 (사용자에게는 노출하지 않음)
+const DEF_SEEN_KEY = 'hn-default-seen';
+if(cloudCfg.room && cloudCfg.room!==ROOM){ cloudCfg.ok=false; cloudCfg.pw=''; cloudCfg.room=ROOM; } // 다른 방으로 로그인돼 있던 기기는 로그아웃
 function saveCloudCfg(){ localStorage.setItem('hn-cloud', JSON.stringify(cloudCfg)); }
 
 async function sha256(s){
@@ -1277,30 +1280,30 @@ function cloudUI(){
   const on = !!cloudCfg.ok;
   $('#cLogin').style.display = on?'none':'block';
   $('#cPanel').style.display = on?'block':'none';
-  if(on) $('#cWhoBadge').textContent = `${cloudCfg.room} · ${cloudCfg.who}`;
+  $('#cLogout').style.display = on?'':'none';
 }
 if(!FIREBASE_DB_URL) $('#btnCloud').style.display='none';
 $('#btnCloud').onclick = ()=>{
   cMsgSet(''); $('#cSlots').innerHTML='';
   if(!cloudCfg.ok){
-    $('#cRoom').value=cloudCfg.room||''; $('#cPw').value=cloudCfg.pw||''; $('#cWho').value=cloudCfg.who||'';
+    $('#cPw').value=cloudCfg.pw||'';
+    cMsgSet('한 번 로그인하면 이 기기에 기억돼요.');
   }
   cloudUI(); cloudDialog.showModal();
   if(cloudCfg.ok) cloudList(); // 입장 상태면 목록 자동 표시
 };
 
 async function cloudLogin(){
-  const room=$('#cRoom').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'');
-  const pw=$('#cPw').value, who=$('#cWho').value.trim()||'익명';
-  if(!room || !pw){ cMsgSet('방 코드와 비밀번호를 입력하세요'); return; }
+  const room=ROOM, pw=$('#cPw').value;
+  if(!pw){ cMsgSet('비밀번호를 입력하세요'); return; }
   cMsgSet('확인 중…');
   try{
     const secret=await sha256(room+'|'+pw);
     const slots=await fetchSlots(room);
     const r=await putRoom(room, secret, slots); // 내용 변경 없는 쓰기로 비밀번호를 검증
-    if(r.status===401||r.status===403){ cMsgSet('❌ 등록되지 않은 방이거나 비밀번호가 달라요.'); return; }
+    if(r.status===401||r.status===403){ cMsgSet('❌ 비밀번호가 달라요.'); return; }
     if(!r.ok) throw 0;
-    Object.assign(cloudCfg,{room,pw,who,ok:true}); saveCloudCfg();
+    Object.assign(cloudCfg,{room,pw,ok:true}); saveCloudCfg();
     mergeLib(slots['__lib']); refresh();
     cloudUI(); cMsgSet('');
     renderSlots(slots);
@@ -1308,25 +1311,28 @@ async function cloudLogin(){
 }
 function cloudLogout(){
   cloudCfg.ok=false; saveCloudCfg();
-  $('#cRoom').value=cloudCfg.room||''; $('#cPw').value=cloudCfg.pw||''; $('#cWho').value=cloudCfg.who||'';
-  $('#cSlots').innerHTML=''; cMsgSet(''); cloudUI();
+  $('#cPw').value='';
+  $('#cSlots').innerHTML=''; cMsgSet('로그아웃했어요.'); cloudUI();
 }
 
+function openSaveDialog(){
+  $('#sTitle').value=''; saveDialog.showModal(); $('#sTitle').focus();
+}
 async function cloudSave(){
+  const title=$('#sTitle').value.trim() || fmtStamp(Date.now());
+  saveDialog.close();
   cMsgSet('저장 중…');
   try{
-    const secret=await sha256(cloudCfg.room+'|'+cloudCfg.pw);
-    const slots=await fetchSlots(cloudCfg.room);
+    const secret=await sha256(ROOM+'|'+cloudCfg.pw);
+    const slots=await fetchSlots(ROOM);
     mergeLib(slots['__lib']); refresh();
     slots['__lib']=buildLibSlot(slots['__lib']);
-    const d=new Date();
-    slots['s'+Date.now()]={
-      name:`${cloudCfg.who} · ${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`,
-      who:cloudCfg.who, at:Date.now(), data:JSON.stringify(state)
-    };
-    const r=await putRoom(cloudCfg.room, secret, slots);
-    if(r.status===401||r.status===403){ cMsgSet('❌ 방 비밀번호가 바뀐 것 같아요 — 나가기 후 다시 입장해 주세요.'); return; }
+    const saved={ name:title, at:Date.now(), data:JSON.stringify(state) };
+    slots['s'+saved.at]=saved;
+    const r=await putRoom(ROOM, secret, slots);
+    if(r.status===401||r.status===403){ cMsgSet('❌ 비밀번호가 바뀐 것 같아요 — 로그아웃 후 다시 로그인해 주세요.'); return; }
     if(!r.ok) throw 0;
+    setBase(saved.name, saved.at, saved.data); renderCurFile(); renderTabs();
     cMsgSet('✅ 저장했어요!');
     renderSlots(slots);
   }catch(e){ cMsgSet('저장 실패 — 인터넷 연결을 확인해 주세요.'); }
@@ -1334,28 +1340,58 @@ async function cloudSave(){
 async function cloudList(){
   cMsgSet('불러오는 중…');
   try{
-    const slots=await fetchSlots(cloudCfg.room);
+    const slots=await fetchSlots(ROOM);
     mergeLib(slots['__lib']); refresh();
     if(!Object.keys(slots).filter(k=>!k.startsWith('__')).length){ cMsgSet('아직 저장된 일정이 없어요. "지금 일정 저장"으로 첫 저장을 해보세요.'); $('#cSlots').innerHTML=''; return; }
     cMsgSet('');
     renderSlots(slots);
   }catch(e){ cMsgSet('불러오기 실패 — 인터넷 연결을 확인해 주세요.'); }
 }
+const ICON_PUB='<svg viewBox="0 0 24 24" width="17" height="17" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M3.5 10v4h3l8 4.5v-13l-8 4.5z"/><path d="M6.5 14l1.2 5h2.3l-1-5" /><path d="M18 9.5a3.5 3.5 0 010 5" fill="none"/></svg>';
+const ICON_LINK='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/></svg>';
+const ICON_EYE='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>';
+let lastSlots={};
+const ICON_TRASH='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 12.5h9l1-12.5M10 11v5M14 11v5"/></svg>';
+/* 공유 중인 일정 = slots/__published. 플래너에 들어오는 사람도, 보기 링크로 들어오는 사람도 이 일정을 본다. */
+function sharedOf(slots){
+  const pub=slots['__published'];
+  let id=null, at=0, data=null;
+  if(pub && pub.data){
+    at=pub.at||0; data=pub.data;
+    id = pub.src || (Object.entries(slots).find(([k,x])=>!k.startsWith('__') && x.data===pub.data)||[])[0] || null;
+  }
+  if(!data) return null;
+  const slot = id ? slots[id] : null;
+  return {id, at, data, name: slot ? slot.name : '공유 일정', savedAt: slot ? slot.at : at};
+}
 function renderSlots(slots){
+  lastSlots=slots;
   const box=$('#cSlots'); box.innerHTML='';
+  const shared=sharedOf(slots), pubId=shared && shared.id;
+  $('#cShareNote').textContent = (shared ? '' : '아직 공유 중인 일정이 없어요. ')
+    + '확성기가 켜진 저장본이 모두에게 보여요. 보기 링크로는 일정을 볼 수만 있어요.';
   Object.entries(slots).filter(([id])=>!id.startsWith('__')).sort((a,b)=>(b[1].at||0)-(a[1].at||0)).forEach(([id,s])=>{
-    const d=document.createElement('div'); d.className='slot';
-    d.innerHTML=`<span>💾 ${esc(s.name||'저장본')}</span>
-      <span class="slotbtns"><button data-act="load">불러오기</button><button data-act="del">삭제</button></span>`;
+    const isPub = pubId===id;
+    const isCur = base && base.at===s.at; // 지금 화면이 이 저장본에서 왔는지
+    const d=document.createElement('div'); d.className='slot'+(isCur?' cur':'');
+    d.innerHTML=`<span class="scur" title="${isCur?'지금 보고 있는 저장본':''}">${isCur?ICON_EYE:''}</span>
+      <button class="sname" data-act="load" title="${isCur?'지금 보고 있는 저장본 · 다시 불러오기':'불러오기'}">💾 ${esc(slotTitle(s.name, s.at))}<small>${fmtStamp(s.at)}</small></button>
+      <span class="slotbtns">${isPub
+        ? `<button class="ison" title="공유 중인 일정" aria-label="공유 중인 일정">${ICON_PUB}</button>`
+        : `<button data-act="pub" title="이 일정 공유하기" aria-label="이 일정 공유하기">${ICON_PUB}</button>`}<button data-act="del" title="삭제" aria-label="삭제">${ICON_TRASH}</button></span>`;
+    const pubBtn=d.querySelector('[data-act=pub]');
+    if(pubBtn) pubBtn.onclick=()=>cloudPublish(s, id);
     d.querySelector('[data-act=load]').onclick=()=>{
       if(!confirm(`"${s.name}" 저장본을 불러올까요?\n지금 화면의 일정은 덮어써져요. (걱정되면 먼저 저장해 두세요)`)) return;
       try{
         const st=JSON.parse(s.data);
         if(!st.days||!st.settings) throw 0;
-        state=st; save(); cloudDialog.close(); initAll();
+        state=keepView(st); setBase(s.name||'저장본', s.at, s.data); save(); cloudDialog.close(); initAll();
       }catch(e){ alert('저장본 형식이 올바르지 않아요.'); }
     };
     d.querySelector('[data-act=del]').onclick=()=>cloudDelete(id);
+    // 확인창에서 취소해도 눌렀던 버튼이 선택된 것처럼 남지 않게 포커스를 푼다
+    d.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>b.blur()));
     box.appendChild(d);
   });
 }
@@ -1363,37 +1399,44 @@ async function cloudDelete(id){
   if(!confirm('이 저장본을 삭제할까요?')) return;
   cMsgSet('삭제 중…');
   try{
-    const secret=await sha256(cloudCfg.room+'|'+cloudCfg.pw);
-    const slots=await fetchSlots(cloudCfg.room);
+    const secret=await sha256(ROOM+'|'+cloudCfg.pw);
+    const slots=await fetchSlots(ROOM);
     delete slots[id];
-    const r=await putRoom(cloudCfg.room, secret, slots);
-    if(r.status===401||r.status===403){ cMsgSet('❌ 삭제 권한 확인 실패 — 나가기 후 다시 입장해 주세요.'); return; }
+    const r=await putRoom(ROOM, secret, slots);
+    if(r.status===401||r.status===403){ cMsgSet('❌ 삭제 권한 확인 실패 — 로그아웃 후 다시 로그인해 주세요.'); return; }
     if(!r.ok) throw 0;
     cMsgSet('삭제했어요.');
     renderSlots(slots);
   }catch(e){ cMsgSet('삭제 실패 — 인터넷 연결을 확인해 주세요.'); }
 }
-async function cloudPublish(){
-  if(!confirm('지금 화면의 일정을 발행할까요?\n보기 링크로 접속하는 가족에게 이 버전이 보여요.')) return;
-  cMsgSet('발행 중…');
+/* 저장본 하나를 공유 일정으로 정한다 */
+async function cloudPublish(slot, src){
+  if(!confirm(`"${slotTitle(slot.name, slot.at)}" 일정을 공유할까요?\n플래너에 들어오는 사람과 보기 링크로 들어오는 사람 모두 이 일정을 보게 돼요.`)) return;
+  cMsgSet('공유 중…');
   try{
-    const secret=await sha256(cloudCfg.room+'|'+cloudCfg.pw);
-    const slots=await fetchSlots(cloudCfg.room);
+    const secret=await sha256(ROOM+'|'+cloudCfg.pw);
+    const slots=await fetchSlots(ROOM);
     mergeLib(slots['__lib']); refresh();
     slots['__lib']=buildLibSlot(slots['__lib']);
-    slots['__published']={who:cloudCfg.who, at:Date.now(), data:JSON.stringify(state)};
-    const r=await putRoom(cloudCfg.room, secret, slots);
-    if(r.status===401||r.status===403){ cMsgSet('❌ 권한 확인 실패 — 나가기 후 다시 입장해 주세요.'); return; }
+    const at=Date.now();
+    slots['__published']={at, src, data:slot.data};
+    const r=await putRoom(ROOM, secret, slots);
+    if(r.status===401||r.status===403){ cMsgSet('❌ 권한 확인 실패 — 로그아웃 후 다시 로그인해 주세요.'); return; }
     if(!r.ok) throw 0;
-    cMsgSet('📣 발행 완료! "보기 링크 복사"를 눌러 가족에게 보내세요.');
-  }catch(e){ cMsgSet('발행 실패 — 인터넷 연결을 확인해 주세요.'); }
+    localStorage.setItem(DEF_SEEN_KEY, at); // 내가 공유한 일정이 다음 접속 때 내 화면을 덮어쓰지 않게
+    cMsgSet('📣 공유했어요! "보기 링크 복사"로 링크를 보낼 수 있어요.');
+    renderSlots(slots);
+  }catch(e){ cMsgSet('공유 실패 — 인터넷 연결을 확인해 주세요.'); }
 }
 function copyViewLink(){
-  const url=`${location.origin}${location.pathname}#v/${cloudCfg.room}`;
+  const url=`${location.origin}${location.pathname}#v/${ROOM}`;
   navigator.clipboard.writeText(url)
     .then(()=>cMsgSet('🔗 보기 링크를 복사했어요! 카톡에 붙여넣기 하세요.'))
     .catch(()=>{ prompt('이 링크를 복사하세요', url); });
 }
+$('#cViewLink').insertAdjacentHTML('afterbegin', ICON_LINK);
+$('#cViewLink').onclick=copyViewLink;
+
 /* 모바일 ⋯ 메뉴 */
 const moreMenu=$('#moreMenu');
 $('#moreBtn').onclick=(e)=>{ e.stopPropagation(); moreMenu.classList.toggle('open'); };
@@ -1405,19 +1448,59 @@ moreMenu.querySelectorAll('button').forEach(b=> b.onclick=()=>{
   else if(b.dataset.m==='set') document.querySelector('header').classList.toggle('open');
 });
 
-$('#cPublish').onclick=cloudPublish;
-$('#cViewLink').onclick=copyViewLink;
 $('#btnInfo').onclick=()=>infoDialog.showModal();
 $('#cLoginBtn').onclick=cloudLogin;
 $('#cLogout').onclick=cloudLogout;
-$('#cSave').onclick=cloudSave;
+$('#cSave').onclick=openSaveDialog;
+$('#sOk').onclick=cloudSave;
+$('#sTitle').onkeydown=e=>{ if(e.key==='Enter' && !e.isComposing) cloudSave(); };
+
 $('#cRefresh').onclick=cloudList;
 
 /* ============================================================ boot ============================================================ */
+function fmtStamp(t){ const d=new Date(t||0); return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+/* 예전 저장본은 제목 끝에 " · 10/10 20:37"이 붙어 있어 날짜가 두 번 보이지 않게 뗀다 */
+const slotTitle = (name, at) => { const t=String(name||'저장본'), sfx=' · '+fmtStamp(at); return at && t.endsWith(sfx) ? t.slice(0,-sfx.length) : t; };
+/* 저장본을 불러와도 지금 보던 Day 탭·지도 모드는 유지한다 (저장 당시 탭으로 튀면 화면 색이 통째로 바뀜) */
+function keepView(st){
+  st.activeDay = Math.min(state ? state.activeDay||0 : 0, (st.settings.nights||0));
+  if(state && state.mapMode) st.mapMode = state.mapMode;
+  return st;
+}
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('on'),3500); }
 function esc(s){ return String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function refresh(){ save(); renderTabs(); renderDay(); renderLibrary(); renderMap(); }
+/* 지금 화면이 어느 저장본에서 왔는지(base) 기억해 두고, 그 저장본과 달라진 곳에 점을 찍는다 */
+const BASE_KEY='sh-base';
+let base=null;
+try{ base=JSON.parse(localStorage.getItem(BASE_KEY)); }catch(e){}
+let baseState=null;
+function parseBase(){ try{ baseState = base && base.data ? JSON.parse(base.data) : null; }catch(e){ baseState=null; } }
+parseBase();
+function setBase(name, at, data){
+  base={name, at, data}; parseBase();
+  try{ localStorage.setItem(BASE_KEY, JSON.stringify(base)); }catch(e){}
+}
+const dayKey = items => JSON.stringify((items||[]).map(it=>[it.pid, it.time, it.memo||'']));
+function dayChanged(i){
+  if(!baseState || VIEWER_ROOM) return false;
+  return dayKey(state.days[i]) !== dayKey(baseState.days[i]);
+}
+function anyChanged(){
+  if(!baseState) return false;
+  const k=['startDate','nights','arrTime','depTime','hotel','hotelInRoute'];
+  if(k.some(x=>state.settings[x]!==baseState.settings[x])) return true;
+  for(let i=0;i<Math.max(state.days.length, baseState.days.length);i++) if(dayChanged(i)) return true;
+  return false;
+}
+function renderCurFile(){
+  const el=$('#curFile');
+  if(!base){ el.innerHTML='📄 저장본 없음'; return; }
+  el.innerHTML=`📄 <b>${esc(slotTitle(base.name, base.at))}</b>${base.at?`<span>${fmtStamp(base.at)}</span>`:''}${anyChanged()?'<span class="mdot" title="저장본과 달라진 내용이 있어요"></span>':''}`;
+}
+function refresh(){ save(); renderCurFile(); renderTabs(); renderDay(); renderLibrary(); renderMap(); }
 function initAll(){ initHeader(); renderCatTabs(); refresh(); }
 
+const HAD_LOCAL = !!load(); // 이 기기에 이미 편집하던 일정이 있었는지
 state = load() || defaultState();
 // 항공편 확정(13:25 도착 / 23:40 출발) 반영 — 이전 임시 기본값을 그대로 쓰던 상태만 자동 갱신
 if(state.settings.arrTime==='10:30') state.settings.arrTime='13:25';
@@ -1427,15 +1510,14 @@ if(VIEWER_ROOM){
   document.body.classList.add('viewer');
   (async ()=>{
     try{
-      const r=await fetch(`${FIREBASE_DB_URL}/trips/${VIEWER_ROOM}/slots/__published.json`);
-      const pub = r.ok ? await r.json() : null;
-      if(pub && pub.data){
+      const r=await fetch(`${FIREBASE_DB_URL}/trips/${VIEWER_ROOM}/slots.json`);
+      const pub = r.ok ? sharedOf((await r.json())||{}) : null;
+      if(pub){
         const st=JSON.parse(pub.data);
         if(st.days && st.settings) state=st;
-        const d=new Date(pub.at||0);
-        $('#pubStamp').textContent=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')} 발행`;
+        $('#pubStamp').textContent=`${fmtStamp(pub.savedAt)} 저장본`;
       }else{
-        $('#pubStamp').textContent='미발행';
+        $('#pubStamp').textContent='공유 전';
       }
     }catch(e){ $('#pubStamp').textContent='오프라인'; }
     // 여행 중이면 오늘 날짜 탭을 자동으로 연다
@@ -1446,7 +1528,29 @@ if(VIEWER_ROOM){
   })();
 }else{
   initAll();
+  syncDefault();
 }
+/* 공유 중인 일정이 이 기기에서 마지막으로 반영한 것보다 새로우면 자동으로 불러온다 */
+async function syncDefault(){
+  if(!FIREBASE_DB_URL) return;
+  try{
+    const r=await fetch(`${FIREBASE_DB_URL}/trips/${ROOM}/slots.json`);
+    const sh = r.ok ? sharedOf((await r.json())||{}) : null;
+    if(!sh) return;
+    // 이 기능이 생기기 전부터 편집하던 기기는 첫 접속 때 덮어쓰지 않고, 이후 새로 공유되는 일정부터 반영한다
+    if(localStorage.getItem(DEF_SEEN_KEY)===null && HAD_LOCAL){
+      localStorage.setItem(DEF_SEEN_KEY, sh.at);
+      if(!base){ setBase(sh.name, sh.savedAt, sh.data); renderCurFile(); renderTabs(); }
+      return;
+    }
+    if((sh.at||0) <= (+localStorage.getItem(DEF_SEEN_KEY)||0)) return;
+    const st=JSON.parse(sh.data);
+    if(!st.days || !st.settings) return;
+    state=keepView(st); localStorage.setItem(DEF_SEEN_KEY, sh.at); setBase(sh.name, sh.savedAt, sh.data); initAll();
+    toast(`📣 공유 중인 일정 "${slotTitle(sh.name, sh.savedAt)}"을 불러왔어요`);
+  }catch(e){}
+}
+
 </script>
 </body>
 </html>
