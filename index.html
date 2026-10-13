@@ -1491,12 +1491,16 @@ function keepView(st){
 function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('on'),3500); }
 function esc(s){ return String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 /* 지금 화면이 어느 저장본에서 왔는지(base) 기억해 두고, 그 저장본과 달라진 곳에 점을 찍는다 */
-const BASE_KEY='sh-base';
+const BASE_KEY='hn-base'; // 상하이 플래너와 같은 도메인이라 키 이름이 겹치면 안 된다
 let base=null;
 try{ base=JSON.parse(localStorage.getItem(BASE_KEY)); }catch(e){}
 let baseState=null;
 function parseBase(){ try{ baseState = base && base.data ? JSON.parse(base.data) : null; }catch(e){ baseState=null; } }
 parseBase();
+// 같은 도메인의 다른 플래너가 남긴 기록이면 버린다 (숙소가 이 플래너 목록에 없으면 남의 것)
+if(baseState && !(baseState.settings && (HOTELS.some(h=>h.id===baseState.settings.hotel) || (baseState.custom||[]).some(c=>c.id===baseState.settings.hotel)))){
+  base=null; baseState=null; try{ localStorage.removeItem(BASE_KEY); }catch(e){}
+}
 function setBase(name, at, data){
   base={name, at, data}; parseBase();
   try{ localStorage.setItem(BASE_KEY, JSON.stringify(base)); }catch(e){}
@@ -1560,6 +1564,13 @@ async function syncDefault(){
     const r=await fetch(`${FIREBASE_DB_URL}/trips/${ROOM}/slots.json`);
     const sh = r.ok ? sharedOf((await r.json())||{}) : null;
     if(!sh) return;
+    // 불러온 저장본 기록이 없어도, 지금 화면이 공유 일정과 같으면 헤더 표시를 되살린다
+    if(!base){
+      try{
+        const ss=JSON.parse(sh.data);
+        if(ss.days && ss.days.length===state.days.length && state.days.every((d,i)=>dayKey(d)===dayKey(ss.days[i]))){ setBase(sh.name, sh.savedAt, sh.data); renderCurFile(); renderTabs(); }
+      }catch(e){}
+    }
     // 이 기능이 생기기 전부터 편집하던 기기는 첫 접속 때 덮어쓰지 않고, 이후 새로 공유되는 일정부터 반영한다
     if(localStorage.getItem(DEF_SEEN_KEY)===null && HAD_LOCAL){
       localStorage.setItem(DEF_SEEN_KEY, sh.at);
