@@ -999,10 +999,31 @@ function cardEl(it, idx, color){
 }
 
 /* ============================================================ map ============================================================ */
-let map, layerG;
+let map, layerG, baseLayer;
+const CARTO_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+function cachedMapKey(){ try{ return localStorage.getItem('hn-cartokey')||''; }catch(e){ return ''; } }
+function applyMapKey(key){
+  if(!/^[\w-]{1,100}$/.test(key||'')) return;
+  try{ localStorage.setItem('hn-cartokey', key); }catch(e){}
+  if(baseLayer) baseLayer.setUrl(`${CARTO_URL}?key=${key}`);
+}
+/* 지도 키는 소스에 넣지 않고 방 설정(slots/__config.cartoKey)에서 읽는다.
+   하노이 방에 설정이 없으면 같은 키를 쓰는 상하이 방 설정을 읽는다. */
+const MAP_KEY_FALLBACK_ROOM = 'shanghai-nana';
+async function loadMapKey(room){
+  for(const r of [room, MAP_KEY_FALLBACK_ROOM]){
+    if(!r) continue;
+    try{
+      const res=await fetch(`${FIREBASE_DB_URL}/trips/${r}/slots/__config.json`);
+      const cfg=res.ok ? await res.json() : null;
+      if(cfg && cfg.cartoKey){ applyMapKey(cfg.cartoKey); return; }
+    }catch(e){}
+  }
+}
 function initMap(){
   map = L.map('map',{zoomControl:true}).setView([21.03,105.85],14);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+  const key=cachedMapKey();
+  baseLayer = L.tileLayer(CARTO_URL+(key?`?key=${key}`:''),{
     maxZoom:19, attribution:'&copy; OpenStreetMap &copy; CARTO'
   }).addTo(map);
   layerG = L.layerGroup().addTo(map);
@@ -1508,6 +1529,7 @@ if(state.settings.depTime==='23:00') state.settings.depTime='23:40';
 initMap();
 if(VIEWER_ROOM){
   document.body.classList.add('viewer');
+  loadMapKey(VIEWER_ROOM);
   (async ()=>{
     try{
       const r=await fetch(`${FIREBASE_DB_URL}/trips/${VIEWER_ROOM}/slots.json`);
@@ -1528,6 +1550,7 @@ if(VIEWER_ROOM){
   })();
 }else{
   initAll();
+  loadMapKey(ROOM);
   syncDefault();
 }
 /* 공유 중인 일정이 이 기기에서 마지막으로 반영한 것보다 새로우면 자동으로 불러온다 */
