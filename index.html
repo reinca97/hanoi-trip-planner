@@ -1261,8 +1261,9 @@ function openGuide(pid, name){
     (g.kid?`<h4>🧒 아이에게</h4><p class="gkid">${esc(g.kid)}</p>`:'')+
     (g.tips&&g.tips.length?`<h4>💡 현장 팁</h4><ul>${g.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:'')+
     `<p class="gfoot">2026년 11월 기준으로 정리했어요. 가격·운영시간은 현장에서 달라질 수 있어요.</p>`;
-  $('#guideBody').scrollTop=0;
   guideDialog.showModal();
+  // 닫혀 있는(display:none) 동안엔 scrollTop을 바꿔도 먹지 않아서, 연 다음에 맨 위로 되돌린다
+  $('#guideBody').scrollTop=0; guideDialog.scrollTop=0;
 }
 
 /* ============================================================ map ============================================================ */
