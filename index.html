@@ -1073,10 +1073,15 @@ function renderTabs(){
 }
 
 let daySortable=null;
+let renderedDay=null;
 function renderDay(){
   const i = state.activeDay;
   const color = DAY_COLORS[i%DAY_COLORS.length];
-  const box=$('#dayList'); box.innerHTML='';
+  const box=$('#dayList');
+  // 날짜를 바꿀 때만 맨 위로 이동한다. 같은 날짜의 편집 위치는 유지한다.
+  if(renderedDay!==i) box.scrollTop=0;
+  renderedDay=i;
+  box.innerHTML='';
   const st=state.settings;
   const {start, end} = dayAnchors(i);
 
