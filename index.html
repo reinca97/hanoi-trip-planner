@@ -130,6 +130,13 @@ body.viewer #curFile{display:none}
   border:1px solid var(--line); border-radius:6px; padding:2px 7px; background:var(--paper2);
 }
 .card .links a:hover{border-color:var(--orange); color:var(--orange)}
+.card .links button.guidebtn{border-color:var(--orange); color:var(--orange)}
+#guideDialog h3{padding-right:34px}
+#guideDialog .ibody p{margin:0 0 9px}
+#guideDialog .gone{font-weight:700; font-size:14px; background:var(--orange-soft); border-radius:8px; padding:8px 11px}
+#guideDialog .gkid{background:#fff; border:1.5px dashed var(--line); border-radius:8px; padding:8px 11px}
+#guideDialog .gfoot{font-size:11px; color:var(--ink2); margin-top:12px}
+body.viewer #guideDialog .ibody{font-size:15px}
 .card .links a.navlink{border-color:var(--orange); color:var(--orange); background:var(--orange-soft)}
 .card .memotxt{margin-top:6px; border:1.5px dashed var(--line); border-radius:8px; padding:5px 8px; font-size:12px; background:#f6fbf5; white-space:pre-wrap; word-break:break-word}
 .card .draghandle{flex:0 0 auto; align-self:center; padding:10px 4px 10px 8px; color:var(--ink2); opacity:.5; cursor:grab; font-size:19px; line-height:1; touch-action:none; user-select:none; -webkit-user-select:none}
@@ -233,26 +240,26 @@ body.viewer .libitem .addbtn{display:none}
   body.viewer #moreWrap{display:none}
   body.viewer #btnInfo{display:block; margin-left:auto}
 }
-#infoDialog{max-width:600px; width:min(94vw,600px); position:relative}
-#infoDialog .xclose{position:absolute; top:8px; right:10px; border:none; background:none; font-size:20px; font-weight:800; color:var(--ink2); padding:6px 10px; box-shadow:none; z-index:5}
-#infoDialog .xclose:hover{color:var(--ink)}
+:is(#infoDialog,#guideDialog){max-width:600px; width:min(94vw,600px); position:relative}
+:is(#infoDialog,#guideDialog) .xclose{position:absolute; top:8px; right:10px; border:none; background:none; font-size:20px; font-weight:800; color:var(--ink2); padding:6px 10px; box-shadow:none; z-index:5}
+:is(#infoDialog,#guideDialog) .xclose:hover{color:var(--ink)}
 @media(max-width:900px){
-  #infoDialog{width:100vw; max-width:100vw; height:100dvh; max-height:100dvh; margin:0; border:none; border-radius:0; padding:16px 14px}
-  #infoDialog .ibody{max-height:none; flex:1}
-  #infoDialog{display:flex; flex-direction:column}
-  #infoDialog[open]{display:flex}
-  #infoDialog:not([open]){display:none}
+  :is(#infoDialog,#guideDialog){width:100vw; max-width:100vw; height:100dvh; max-height:100dvh; margin:0; border:none; border-radius:0; padding:16px 14px}
+  :is(#infoDialog,#guideDialog) .ibody{max-height:none !important; flex:1; min-height:0}
+  :is(#infoDialog,#guideDialog){display:flex; flex-direction:column}
+  :is(#infoDialog,#guideDialog)[open]{display:flex}
+  :is(#infoDialog,#guideDialog):not([open]){display:none}
 }
-#infoDialog .ibody{max-height:62vh; overflow-y:auto; font-size:13px; line-height:1.65; padding-right:4px}
-#infoDialog h4{font-family:'Hahmlet',serif; font-size:14px; margin:14px 0 5px; color:var(--orange)}
-#infoDialog h4:first-child{margin-top:0}
-#infoDialog ul{padding-left:18px; margin:4px 0}
-#infoDialog li{margin-bottom:3px}
-#infoDialog table{border-collapse:collapse; width:100%; font-size:12px; margin:6px 0}
-#infoDialog th,#infoDialog td{border:1px solid var(--line); padding:5px 7px; text-align:left; vertical-align:top}
-#infoDialog th{background:var(--orange-soft)}
-#infoDialog a{color:var(--orange); font-weight:700}
-#infoDialog .warn{background:#fdeaea; border:1.5px solid #d88; border-radius:8px; padding:7px 10px; margin:6px 0}
+:is(#infoDialog,#guideDialog) .ibody{max-height:62vh; overflow-y:auto; font-size:13px; line-height:1.65; padding-right:4px}
+:is(#infoDialog,#guideDialog) h4{font-family:'Hahmlet',serif; font-size:14px; margin:14px 0 5px; color:var(--orange)}
+:is(#infoDialog,#guideDialog) h4:first-child{margin-top:0}
+:is(#infoDialog,#guideDialog) ul{padding-left:18px; margin:4px 0}
+:is(#infoDialog,#guideDialog) li{margin-bottom:3px}
+:is(#infoDialog,#guideDialog) table{border-collapse:collapse; width:100%; font-size:12px; margin:6px 0}
+:is(#infoDialog,#guideDialog) th,:is(#infoDialog,#guideDialog) td{border:1px solid var(--line); padding:5px 7px; text-align:left; vertical-align:top}
+:is(#infoDialog,#guideDialog) th{background:var(--orange-soft)}
+:is(#infoDialog,#guideDialog) a{color:var(--orange); font-weight:700}
+:is(#infoDialog,#guideDialog) .warn{background:#fdeaea; border:1.5px solid #d88; border-radius:8px; padding:7px 10px; margin:6px 0}
 #cloudDialog .cfield, #addPlaceDialog .cfield{display:flex; align-items:center; gap:8px; margin-bottom:8px}
 #cloudDialog .cfield label, #addPlaceDialog .cfield label{flex:0 0 64px; font-size:12px; font-weight:700; color:var(--ink2)}
 #cloudDialog .cfield input, #addPlaceDialog .cfield input{flex:1; min-width:0; border:1.5px solid var(--line); border-radius:8px; padding:6px 9px; background:#fff; outline:none}
@@ -387,6 +394,13 @@ body.viewer .libitem .addbtn{display:none}
   <div id="dayPickName" style="font-size:12px; color:var(--ink2); margin-bottom:10px"></div>
   <div id="dayPickBtns"></div>
   <div class="btns"><button onclick="dayPickDialog.close()">취소</button></div>
+</dialog>
+
+<dialog id="guideDialog">
+  <button class="xclose" onclick="guideDialog.close()" title="닫기">✕</button>
+  <h3 id="guideTitle"></h3>
+  <div class="ibody" id="guideBody"></div>
+  <div class="btns"><button onclick="guideDialog.close()">닫기</button></div>
 </dialog>
 
 <dialog id="infoDialog">
@@ -953,6 +967,240 @@ function segEl(idx){
   el.innerHTML=`<div class="dotline"></div><span id="seg-${idx}">🚕 계산 중…</span>`;
   return el;
 }
+/* ============================================================ 가이드 이야기 ============================================================
+   일정 카드의 "📖 이야기" 버튼으로 여는 장소별 해설. 가이드 역할을 맡은 사람이 현장에서 읽어 주기 좋게 말투로 썼다.
+   키는 장소 id(pid). one=한마디, story=읽어 줄 이야기(문단 배열), kid=아이에게, tips=현장 팁 */
+const GUIDE = {
+ hoankiem:{
+  one:'"검을 돌려준 호수" — 하노이의 심장이에요.',
+  story:[
+   '호안끼엠(Hoàn Kiếm)은 한자로 還劍, "검을 돌려준 호수"라는 뜻이에요. 원래는 물빛이 푸르다고 "녹수호(Lục Thủy)"라고 불렸대요.',
+   '15세기 초, 베트남은 중국 명나라의 지배를 받고 있었어요. 이때 레러이(Lê Lợi)라는 장군이 용왕에게서 신비한 검을 받아 10년 동안 싸운 끝에 1428년 명나라 군대를 몰아내고 왕이 됐어요.',
+   '전쟁이 끝난 뒤 왕이 이 호수에서 배를 타고 있는데, 커다란 황금 거북이 물 위로 올라와 "이제 나라가 평화로워졌으니 검을 용왕께 돌려 달라"고 했대요. 왕이 검을 건네자 거북이 검을 물고 물속으로 사라졌고, 그때부터 이름이 호안끼엠이 됐어요.',
+   '호수 한가운데 작은 섬에 있는 탑이 거북탑(Tháp Rùa)이에요. 1886년에 세워졌고 하노이를 상징하는 그림에 꼭 나와요.',
+   '빨간 다리는 테훅교(Cầu Thê Húc)예요. "아침 햇살이 머무는 다리"라는 뜻이고, 건너면 응옥썬 사당(Đền Ngọc Sơn, 옥산사)이 나와요. 이 사당은 13세기에 몽골군을 세 번이나 물리친 쩐흥다오 장군과, 학문의 신을 모시고 있어요.',
+   '사당 안쪽 별실에는 실제로 이 호수에 살던 거대한 자라(거북) 박제가 있어요. 1968년에 죽은 개체로 길이 2m, 무게 250kg 정도였대요. 마지막으로 남아 있던 한 마리도 2016년에 죽었어요. 이 종(양쯔강대왕자라)은 지금 전 세계에 몇 마리 남지 않은 멸종 직전 동물이라, 베트남 사람들은 이 거북을 "끄 루어(Cụ Rùa, 거북 할아버지)"라고 부르며 아꼈어요.'
+  ],
+  kid:'"옛날에 커다란 황금 거북이 임금님의 칼을 입에 물고 물속으로 쏙 들어갔대. 저 안에 진짜 엄청 큰 거북이 있어. 우리 찾으러 가 볼까?"',
+  tips:['사당 입장료는 성인 5만동이고 16세 미만은 무료예요.','금요일 저녁부터 일요일 밤까지는 호수 주변이 차 없는 거리가 돼요. 아이가 뛰어놀기 좋아요.','거북 박제 전시 위치는 사당 안 왼쪽 별실이에요. 2016년 개체가 함께 전시되는지는 현장에서 확인해 주세요.']
+ },
+ puppet:{
+  one:'논에서 태어난 1,000년 된 인형극이에요.',
+  story:[
+   '수상인형극(Múa rối nước)은 11세기쯤 홍강 삼각주의 농촌에서 시작됐다고 해요. 모내기를 끝낸 농부들이 물이 찬 논을 무대 삼아 인형을 놀린 게 시작이래요.',
+   '무대 뒤 대나무 발 뒤에서 인형사들이 허리까지 물에 잠긴 채 긴 장대로 인형을 움직여요. 인형은 무화과나무로 깎고 옻칠을 해서 물에 떠요. 공연이 끝나면 인형사들이 발 밖으로 나와 인사하는데, 정말 물속에 서 있었다는 걸 볼 수 있어요.',
+   '옆에서 연주하는 악기 중에 줄이 하나뿐인 "단버우(đàn bầu)"가 있어요. 줄 하나로 사람 목소리처럼 우는 소리를 내는 베트남 전통 악기예요.',
+   '공연에는 모내기, 고기잡이, 용춤, 오리 몰이 같은 장면이 나와요. 아까 본 호안끼엠 호수 전설도 자주 나와요. 레러이 왕이 거북에게 검을 돌려주는 장면을 찾아보세요. 배불뚝이 익살꾼 "떼우(Tễu)"는 사회자 역할을 하는 인기 캐릭터예요.'
+  ],
+  kid:'"인형들이 물 위에서 혼자 움직이지? 사실 저 뒤에 아저씨들이 물속에 들어가 있대! 끝나면 나와서 인사하니까 꼭 봐."',
+  tips:['공연은 약 50분이고 대사 없이 음악과 노래로 진행돼요.','앞 1~2줄은 물이 튈 수 있어요.','사진은 되지만 플래시는 끄세요.']
+ },
+ c_1786946097383:{
+  one:'하노이 쌀국수는 맑은 국물이 핵심이에요.',
+  story:[
+   '쌀국수(phở)는 20세기 초 베트남 북부에서 생겼다는 게 정설이에요. 프랑스 식민지 시절 소고기를 먹는 문화가 퍼지면서 생겼다는 설, 프랑스 수프 "포토푀"에서 이름이 왔다는 설도 있어요.',
+   '하노이식은 국물이 맑고 담백해요. 고명은 파 정도만 올라가요. 숙주와 허브를 듬뿍 넣는 남부 호치민식과 달라요.',
+   '"퍼 보 따이(phở bò tái)"는 살짝 익힌 생고기, "퍼 보 찐(chín)"은 푹 익힌 고기예요. "꿔이(quẩy)"라는 기름에 튀긴 빵을 국물에 적셔 먹는 게 하노이식이에요.'
+  ],
+  kid:'"한국 국수랑 뭐가 다를까? 국물부터 먼저 먹어 보자."',
+  tips:['식탁 위 라임, 고추, 마늘식초를 조금씩 넣어 가며 간을 맞춰요.','아이는 익힌 고기(찐)로 시키면 무난해요.']
+ },
+ tahien:{
+  one:'목욕탕 의자에 앉아 마시는 하노이 생맥주 거리예요.',
+  story:[
+   '여기서 마시는 맥주는 "비어 허이(bia hơi)"라고 해요. 매일 아침 양조장에서 만들어 그날 다 마셔 버리는 생맥주라서, 도수가 3% 안팎으로 가볍고 한 잔에 천 원 남짓이에요.',
+   '길바닥의 작은 플라스틱 의자에 무릎을 모으고 앉아 마시는 게 하노이 길거리 문화예요. 처음엔 불편해 보여도 금방 익숙해져요.',
+   '건배는 "못, 하이, 바, 조!(một, hai, ba, dzô!)" — 하나, 둘, 셋, 원샷이라는 뜻이에요.'
+  ],
+  kid:'"여기 의자가 다 쪼끄맣지? 어른들도 다 이 의자에 앉아."',
+  tips:['아이와 함께라면 저녁 8시 전에 분위기만 보고 나오는 게 좋아요.','오징어구이, 땅콩, 넴(튀김 스프링롤)이 대표 안주예요.','인파가 많아 휴대폰과 지갑은 앞으로 메세요.']
+ },
+ nightmarket:{
+  one:'"36거리"라 불리는 구시가지를 걸어요.',
+  story:[
+   '이 구시가지는 "36거리(Phố cổ 36 phố phường)"라고 불려요. 옛날에는 거리마다 한 가지 물건만 파는 장인 마을이 모여 있었어요.',
+   '그래서 거리 이름에 "항(Hàng, 물건)"이 많이 붙어요. 항다오(Hàng Đào)는 비단, 항박(Hàng Bạc)은 은, 항드엉(Hàng Đường)은 설탕, 항마(Hàng Mã)는 제사 때 태우는 종이 물건 거리예요. 지금도 몇몇 거리는 이름대로 장사를 해요.',
+   '주말 야시장은 항다오 거리에서 시작해 북쪽 끝 동쑤언 시장 앞까지 이어져요. 금요일부터 일요일까지 저녁에만 열려요.',
+   '이 동네 집들이 가로는 좁고 안쪽으로 길쭉한 이유가 있어요. 옛날에 가게 앞면 폭으로 세금을 매겨서 "튜브 하우스(nhà ống)"라는 길쭉한 집이 됐대요.'
+  ],
+  kid:'"이 길은 옛날에 설탕만 파는 길이었대. 다음 길은 뭘 팔았을까?"',
+  tips:['아이 손을 꼭 잡으세요. 사람이 아주 많아요.','가격은 흥정하는 게 보통이에요. 처음 부른 값의 60~70%부터 시작해 보세요.','동쑤언 끝에서 택시나 그랩을 부르면 돌아가기 편해요.']
+ },
+ stilt:{
+  one:'호치민이 궁전을 마다하고 살았던 소박한 나무집이에요.',
+  story:[
+   '노란 건물은 주석궁(Phủ Chủ tịch)이에요. 1900~1906년에 프랑스가 인도차이나 총독 관저로 지었어요.',
+   '1954년 독립 뒤 호치민은 "인민이 가난한데 나만 궁전에 살 수 없다"며 이 건물에 살지 않았어요. 처음엔 관저 전기기사가 쓰던 작은 집에 살았고, 1958년부터는 연못가에 지은 2층 나무 고상가옥(Nhà sàn)에서 1969년 세상을 떠날 때까지 지냈어요.',
+   '집 아래층은 회의 공간, 위층은 침실과 서재예요. 지금도 쓰던 책상, 라디오, 전화기가 그대로 있어요.',
+   '집 앞 연못에서 호치민이 손뼉을 치면 잉어들이 모여들었다는 이야기가 유명해요. 망고나무 길도 그가 산책하던 길이에요.',
+   '출구 쪽으로 나가면 바로 한기둥 사원이 있어요. 지나가면서 들러 보세요.'
+  ],
+  kid:'"호치민 할아버지가 손뼉을 치면 물고기들이 모였대. 우리도 연못에 물고기 있나 볼까?"',
+  tips:['입장료 4만동. 점심시간(11:00~13:30쯤)에는 문을 닫아요.','호치민 유적지는 복장 규정이 있어요. 반바지·민소매는 입구에서 제지받을 수 있으니 긴 바지나 무릎을 덮는 옷이 안전해요. 더운 날 현지인 반바지 차림도 보이지만, 관광객은 검사받는 경우가 많다는 후기가 있어요.','영묘 쪽 광장(바딘 광장)은 1945년 9월 2일 호치민이 독립선언문을 읽은 곳이에요.']
+ },
+ onepillar:{
+  one:'기둥 하나 위에 핀 연꽃 모양 사원이에요.',
+  story:[
+   '1049년 리 왕조의 리타이똥 왕이 지었어요. 아들이 없던 왕이 꿈에서 연꽃 위에 앉은 관세음보살에게서 아기를 받는 꿈을 꾸었고, 실제로 아들을 얻은 뒤 연꽃 모양 사원을 세웠대요.',
+   '연못 한가운데 돌기둥 하나 위에 사원이 얹혀 있어서 "못꼿(Một Cột, 한 기둥)" 사원이에요.',
+   '1954년 프랑스군이 물러나면서 폭파했고, 1955년에 다시 지었어요. 그래서 지금 건물은 복원한 거예요.'
+  ],
+  kid:'"집이 기둥 하나 위에 올라가 있어! 연꽃처럼 생겼지?"',
+  tips:['5~10분이면 충분해요.','아이를 원하는 사람들이 기도하러 오는 곳이기도 해요.']
+ },
+ vanmieu:{
+  one:'1,000년 전에 세운 베트남 최초의 대학이에요.',
+  story:[
+   '문묘(Văn Miếu)는 1070년 리 왕조가 공자를 모시려고 세웠어요. 6년 뒤인 1076년에 왕족과 귀족 자녀를 가르치는 국자감(Quốc Tử Giám)이 생겼고, 이게 베트남 최초의 대학이에요.',
+   '마당이 다섯 개로 나뉘어 있어요. 세 번째 마당 앞의 2층 누각이 규문각(Khuê Văn Các)이에요. 베트남 10만동 지폐 뒷면에 나오는 그 건물이니 지폐를 꺼내 비교해 보세요.',
+   '거북이 등에 비석을 얹은 게 82개 있어요. 1442년부터 1779년까지 과거시험에 합격한 박사들의 이름을 새긴 거예요. 유네스코 세계기록유산이에요.',
+   '옛날엔 시험을 앞둔 학생들이 거북 머리를 쓰다듬으면 붙는다고 해서 다들 만졌는데, 비석이 닳아서 지금은 울타리를 치고 만지지 못하게 해요. 요즘도 수능 철에는 학생들이 합격을 빌러 와요.'
+  ],
+  kid:'"거북이들이 등에 커다란 돌판을 업고 있지? 거기 공부 잘한 사람들 이름이 써 있대."',
+  tips:['성인 7만동, 16세 미만 무료예요.','평지 마당이라 걷기 편해요. 가족사진 찍기 좋은 곳이에요.','10만동 지폐를 한 장 챙겨 가면 사진 찍을 때 재밌어요.']
+ },
+ ngon:{
+  one:'베트남 전국 길거리 음식을 한 상에 모은 식당이에요.',
+  story:[
+   '꽌 안 응온은 "맛있는 식당"이라는 뜻이에요. 베트남 곳곳의 길거리 음식을 프랑스풍 빌라 한곳에 모아 놓은 콘셉트예요.',
+   '정원 가장자리에 작은 노점처럼 조리대가 늘어서 있어서 만드는 걸 구경할 수 있어요.',
+   '추천: 분짜(숯불 돼지고기+쌀국수), 반쎄오(베트남식 부침개), 넴(스프링롤), 짜까(강황 생선구이), 반꾸온(얇은 쌀전병)'
+  ],
+  kid:'"요리하는 걸 직접 볼 수 있어. 뭐 먹고 싶은지 구경하고 골라 보자."',
+  tips:['메뉴판에 사진이 있어서 고르기 쉬워요.','5명이면 5~7가지를 시켜서 나눠 먹으면 딱 좋아요.']
+ },
+ dongxuan:{
+  one:'130년 넘은 하노이 최대의 실내 시장이에요.',
+  story:[
+   '동쑤언 시장(Chợ Đồng Xuân)은 1889년 프랑스 식민 정부가 지었어요. 하노이에서 가장 큰 실내 시장이에요.',
+   '1994년에 큰불이 나서 거의 다 탔고, 앞쪽 외관은 옛 모습대로 살려서 다시 지었어요.',
+   '1층은 옷감과 잡화, 2층은 옷, 뒤쪽은 건어물과 식재료가 많아요. 원래는 도매시장이라 상인들이 물건 떼러 오는 곳이에요.'
+  ],
+  kid:'"여기 가게가 2천 개래! 엄청 많지? 손 놓치면 안 돼."',
+  tips:['통로가 좁고 붐벼요. 아이 손을 꼭 잡으세요.','흥정은 필수예요. 도매 위주라 한두 개만 사면 비싸게 부르기도 해요.','18시쯤 문을 닫아요.']
+ },
+ c_1786946421171:{
+  one:'프랑스 바게트가 베트남식으로 다시 태어난 샌드위치예요.',
+  story:[
+   '반미(bánh mì)는 원래 "빵"이라는 뜻이에요. 프랑스 식민지 시절 들어온 바게트를 베트남 사람들이 더 가볍고 바삭하게 바꿔 만들었어요.',
+   '안에 고기, 파테(간 페이스트), 오이, 고수, 절인 무와 당근, 고추를 넣어요. 2011년에는 옥스퍼드 영어사전에 "banh mi"가 단어로 올라갔어요.'
+  ],
+  kid:'"겉은 바삭바삭, 안은 말랑말랑해. 한 입 먹어 볼래?"',
+  tips:['고수를 빼려면 "콩 라우 텀(không rau thơm)"이라고 말하세요.','고추를 빼려면 "콩 엇(không ớt)"이에요.']
+ },
+ cathedral:{
+  one:'파리 노트르담을 본떠 지은 하노이 대성당이에요.',
+  story:[
+   '성 요셉 성당(Nhà thờ Lớn)은 1886년 프랑스가 지은 네오고딕 양식 성당이에요. 파리 노트르담 대성당을 본떠 만들어서 쌍둥이 종탑이 닮았어요.',
+   '이 자리에는 원래 11세기에 세운 바오티엔(Báo Thiên)이라는 큰 불탑이 있었어요. 식민지 시절 그 절을 허물고 성당을 지었어요.',
+   '오랜 세월 비바람에 외벽이 거뭇거뭇해진 것도 이 성당의 매력이에요. 크리스마스 시즌엔 하노이 젊은이들이 다 여기 모여요.'
+  ],
+  kid:'"종탑이 두 개야. 쌍둥이 같지?"',
+  tips:['외관만 봐도 충분해요. 성당 앞 거리에서 가족사진을 찍기 좋아요.','미사 시간이 아니면 내부가 닫혀 있을 때가 많아요.']
+ },
+ cong:{
+  one:'"그 시절 베트남"을 콘셉트로 한 카페예요.',
+  story:[
+   '콩카페(Cộng Cà Phê)는 2007년 하노이에서 시작했어요. 이름의 "콩"은 공산주의(Cộng sản)에서 따왔고, 1976~1986년 배급제 시절(thời bao cấp) 분위기로 꾸몄어요. 군복색 벽, 옛날 라디오, 철제 식기가 다 그 콘셉트예요.',
+   '대표 메뉴는 코코넛 스무디에 진한 커피를 섞은 "코코넛 커피(cốt dừa cà phê)"예요.',
+   '하노이엔 "에그커피(cà phê trứng)"도 유명해요. 1946년 우유가 귀하던 때 호텔 바텐더가 달걀노른자를 거품 내서 우유 대신 넣은 게 시작이래요.'
+  ],
+  kid:'"아이는 코코넛 스무디(커피 없는 거)로 시켜 줄게."',
+  tips:['베트남 커피는 아주 진하고 달아요. 부모님께는 연하게 부탁하거나 반씩 나눠 드세요.','2층 창가 자리에서 성당이 보여요.']
+ },
+ spa:{
+  one:'부모님 효도 코스예요.',
+  story:['하노이 스파는 한국보다 훨씬 저렴해서 여행 중간에 쉬어 가기 좋아요. 마사지 강도는 "약하게"는 "녹 녜(nhẹ)", "세게"는 "망(mạnh)"이라고 말하면 돼요.'],
+  kid:'"엄마 아빠 할머니 할아버지 마사지 받는 동안 여기서 한숨 자자."',
+  tips:['팁은 1인당 5만~10만동 정도가 관례예요. 쿠폰에 팁이 포함됐는지 확인하세요.','60분 코스를 고르면 18:30 저녁에 맞출 수 있어요.']
+ },
+ c_1786946694848:{
+  one:'고급 분짜와 베트남 퓨전 코스를 맛보는 저녁이에요.',
+  story:[
+   '분짜(bún chả)는 숯불에 구운 돼지고기 완자와 삼겹살을 새콤달콤한 느억맘 소스에 담가 쌀국수와 같이 먹는 하노이 대표 음식이에요.',
+   '2016년 오바마 미국 대통령이 하노이에 왔을 때 셰프 앤서니 부르댕과 동네 분짜집에서 맥주와 함께 분짜를 먹은 게 화제가 됐어요. 그 가게는 지금도 "오바마 분짜"로 불려요.'
+  ],
+  kid:'"고기를 소스에 퐁당 담갔다가 국수랑 같이 먹는 거야."',
+  tips:['다음 날 08:00 크루즈 픽업이라 저녁 먹고 바로 숙소로 가요.']
+ },
+ cruise_pick:{
+  one:'하롱베이 가는 버스에서 들려줄 이야기예요.',
+  story:[
+   '하롱(Hạ Long)은 한자로 下龍, "용이 내려온 곳"이라는 뜻이에요.',
+   '옛날 바다 건너 적이 쳐들어왔을 때, 하늘의 옥황상제가 어미 용과 새끼 용들을 내려보냈대요. 용들이 입에서 보석과 구슬을 뿜어내자 그게 바다에 박혀 수천 개의 섬이 됐고, 섬들이 성벽처럼 막아서 적의 배가 부서졌어요.',
+   '싸움이 끝난 뒤 용들은 이곳이 너무 아름다워 하늘로 돌아가지 않고 남았대요. 어미 용이 내려온 곳이 하롱, 새끼 용들이 내려온 곳이 근처의 바이뜨롱(Bái Tử Long)이에요.',
+   '하롱베이에는 석회암 섬이 약 1,600개 있어요. 1994년 유네스코 세계자연유산이 됐어요.'
+  ],
+  kid:'"용이 구슬을 퉤퉤 뱉었더니 그게 다 섬이 됐대! 내일 섬 몇 개인지 세어 볼까?"',
+  tips:['고속도로로 2시간 반쯤 걸리고 중간에 휴게소에 한 번 들러요.','버스에서 한숨 자 두면 오후 일정이 편해요.']
+ },
+ cruise_board:{
+  one:'배 위에서 하롱베이가 시작돼요.',
+  story:['배가 출발하면 창밖으로 바다에서 솟은 섬들이 하나둘 나타나요. 섬들이 저마다 닮은 모양이 있어서 "닭싸움 바위(Hòn Gà Chọi)", "향로 바위(Hòn Lư Hương)" 같은 이름이 붙어 있어요. 승무원에게 어느 바위인지 물어보세요.'],
+  kid:'"저 바위 두 개가 닭 두 마리가 싸우는 것 같대. 그렇게 보여?"',
+  tips:['여권 실물을 꼭 챙기세요.','갑판은 바람이 세서 쌀쌀해요. 바람막이를 준비하세요.']
+ },
+ titop:{
+  one:'소련 우주비행사 이름을 딴 섬이에요.',
+  story:[
+   '1962년 호치민이 소련의 우주비행사 게르만 티토프(Gherman Titov)와 함께 이 섬에 왔어요. 티토프는 인류 두 번째로 지구 궤도를 돈 사람이에요. 호치민이 두 나라의 우정을 기념해 섬 이름을 "티톱"이라고 지었대요.',
+   '꼭대기 전망대에 오르면 하롱베이 섬들이 한눈에 내려다보여요. 하롱베이에서 가장 유명한 사진이 여기서 찍혀요.'
+  ],
+  kid:'"우주에 갔던 아저씨 이름이 붙은 섬이야! 모래놀이 하자."',
+  tips:['전망대까지 계단이 약 400개예요. 부모님은 무리하지 말고 해변에서 쉬셔도 돼요.','11월엔 물이 차가워요.']
+ },
+ luon:{
+  one:'바위 터널을 지나면 숨은 호수가 나와요.',
+  story:[
+   '루언(Luồn)은 "아래로 빠져나간다"는 뜻이에요. 섬 밑에 뚫린 낮은 동굴 터널을 작은 배로 지나가면, 사방이 절벽으로 둘러싸인 고요한 바다 호수가 나와요.',
+   '절벽에 원숭이가 살아서 운이 좋으면 볼 수 있어요.'
+  ],
+  kid:'"동굴 밑으로 배가 지나가! 원숭이 찾아보자."',
+  tips:['아이와 부모님은 사공이 노를 젓는 뱀부보트가 편해요.','원숭이에게 음식을 보이거나 주지 마세요.']
+ },
+ sungsot:{
+  one:'"깜짝 놀란" 동굴, 하롱베이에서 제일 큰 동굴이에요.',
+  story:[
+   '승솟(Sửng Sốt)은 "깜짝 놀람"이라는 뜻이에요. 1901년 프랑스인들이 발견했는데, 안이 너무 넓고 아름다워 놀랐다고 이런 이름이 붙었대요.',
+   '동굴은 두 개의 큰 방으로 나뉘어요. 첫 방을 지나 두 번째 방에 들어가면 천장이 아주 높고 넓어서 정말 "와" 소리가 나와요.',
+   '종유석이 만든 모양마다 이름이 있어요. 거북, 코끼리, 장군 같은 모양을 찾아보세요. 종유석은 1cm 자라는 데 수십 년에서 백 년 넘게 걸려요.'
+  ],
+  kid:'"동굴 안에 거북이랑 코끼리가 숨어 있대. 누가 먼저 찾나 해 보자."',
+  tips:['입구까지 계단 약 100개가 있고, 안은 완만한 길이에요.','바닥이 미끄러울 수 있어요. 운동화를 신으세요.']
+ },
+ caugo:{
+  one:'호안끼엠 호수를 내려다보며 먹는 식사예요.',
+  story:[
+   '꺼우고(Cầu Gỗ)는 "나무다리"라는 뜻의 거리 이름이에요. 이 식당은 6층에 있어서 창가에 앉으면 호안끼엠 호수와 거북탑이 한눈에 보여요.',
+   '첫날 걸었던 호수를 위에서 내려다보면서 여행을 마무리하기 좋아요. "첫날 저기 빨간 다리 건넜던 거 기억나세요?" 하고 이야기 꺼내 보세요.',
+   '대표 메뉴는 넴(스프링롤)이에요. 북부에선 "넴 란(nem rán)", 남부에선 "짜조(chả giò)"라고 불러요.'
+  ],
+  kid:'"저기 아래 호수 보여? 첫날 거북이 보러 갔던 데야!"',
+  tips:['창가 자리는 미리 예약하세요.','엘리베이터가 있어서 부모님도 편해요.']
+ },
+ tranquoc:{
+  one:'1,500년 된 하노이에서 가장 오래된 절이에요.',
+  story:[
+   '쩐꾸옥 사원(Chùa Trấn Quốc)은 6세기 중반에 처음 세워졌어요. 원래는 홍강 가에 있었는데, 강둑이 무너질 위험이 있어 1615년에 지금의 서호(Hồ Tây) 작은 섬으로 옮겨 왔어요.',
+   '가운데 높은 붉은 탑은 11층, 약 15m예요. 1998년에 세웠고 층마다 작은 아미타불상이 모셔져 있어요.',
+   '마당의 보리수는 1959년 인도 대통령이 선물했어요. 부처님이 깨달음을 얻은 인도 보드가야 보리수에서 가지를 꺾어 온 거래요.',
+   '서호는 하노이에서 가장 큰 호수예요. 둘레가 17km쯤 되고, 해 질 녘 노을이 특히 예뻐요.'
+  ],
+  kid:'"부처님이 앉아 계시던 나무의 아기 나무가 여기 있대."',
+  tips:['무릎과 어깨를 가리는 복장이어야 해요. 반바지 차림이면 입구에서 천을 두르게 할 수 있어요.','20~30분이면 충분해요. 해 질 무렵 17시쯤이 가장 예뻐요.']
+ },
+ c_1793763559963:{
+  one:'하노이 야경을 내려다보는 65층 전망대예요.',
+  story:[
+   '롯데센터 하노이는 2014년에 문을 연 65층, 272m 건물이에요. 오랫동안 하노이에서 두 번째로 높은 건물이었어요. 첫 번째는 한국 경남기업이 지은 "랜드마크 72"(336m)예요. 하노이 1·2위 고층 건물이 둘 다 한국 회사 작품이에요.',
+   '65층 전망대에는 바닥이 투명한 유리로 된 "스카이워크"가 있어요. 발밑으로 하노이 시내가 보여요.',
+   '창밖으로 오늘 다녀온 서호와 쩐꾸옥 사원 쪽도 보여요. 여행 마지막 야경을 보면서 사진 한 장 남기세요.'
+  ],
+  kid:'"발밑이 유리야! 무서우면 손잡고 같이 건너자."',
+  tips:['표는 B1 매표소에서 사요. 성인 약 23만동, 아이 약 17만동이에요.','B1 롯데마트에서 G7 커피, 말린 과일, 과자를 기념품으로 사기 좋아요.','20:00에 공항으로 출발해요.']
+ }
+};
+
 function cardEl(it, idx, color){
   const p=getPlace(it.pid);
   const el=document.createElement('div'); el.className='card'; el.dataset.uid=it.uid;
@@ -977,6 +1225,7 @@ function cardEl(it, idx, color){
       <div class="links">
         ${p.lat!=null ? `<a class="navlink" href="${esc(gdir)}" target="_blank" rel="noopener" title="지금 내 위치에서 여기까지 구글지도 길찾기">🧭 길찾기</a>` : ''}
         <a href="${esc(gmap)}" target="_blank" rel="noopener">구글지도 📍</a>
+        ${GUIDE[it.pid]?'<button class="guidebtn">📖 이야기</button>':''}
         <button class="memobtn">${it.memo?'📝 메모 수정':'📝 메모'}</button>
       </div>
     </div>
@@ -998,8 +1247,22 @@ function cardEl(it, idx, color){
   const toggle=()=>{ el.classList.toggle('open'); el.querySelector('.toggle').textContent=el.classList.contains('open')?'▴ 접기':'▾ 더보기'; };
   el.querySelector('.toggle').onclick=toggle;
   el.querySelector('.memobtn').onclick=()=>openMemo(it, dispName);
+  el.querySelector('.guidebtn') && (el.querySelector('.guidebtn').onclick=()=>openGuide(it.pid, dispName));
   el.querySelector('.quick') && (el.querySelector('.quick').onclick=toggle);
   return el;
+}
+
+function openGuide(pid, name){
+  const g=GUIDE[pid]; if(!g) return;
+  $('#guideTitle').textContent='📖 '+name;
+  $('#guideBody').innerHTML=
+    `<p class="gone">${esc(g.one)}</p>`+
+    `<h4>📢 들려줄 이야기</h4>`+g.story.map(t=>`<p>${esc(t)}</p>`).join('')+
+    (g.kid?`<h4>🧒 아이에게</h4><p class="gkid">${esc(g.kid)}</p>`:'')+
+    (g.tips&&g.tips.length?`<h4>💡 현장 팁</h4><ul>${g.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:'')+
+    `<p class="gfoot">2026년 11월 기준으로 정리했어요. 가격·운영시간은 현장에서 달라질 수 있어요.</p>`;
+  $('#guideBody').scrollTop=0;
+  guideDialog.showModal();
 }
 
 /* ============================================================ map ============================================================ */
