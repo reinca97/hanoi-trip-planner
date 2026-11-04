@@ -92,6 +92,7 @@ body.viewer #curFile{display:none}
 @media (max-width:760px){ #curFile{max-width:44vw; padding:3px 8px} #curFile span:not(.mdot){display:none} }
 #dayTabs button.on{color:#fff; background:var(--tabclr,var(--ink));}
 #dayList{flex:1; overflow-y:auto; padding:16px 20px 60px; min-height:0}
+#guideBody .guide-photo{display:block; width:160px; height:160px; object-fit:cover; border-radius:12px; margin:0 auto 16px; border:1px solid var(--line)}
 .anchor{
   display:flex; align-items:center; gap:10px; background:var(--ink); color:#fff;
   border-radius:12px; padding:10px 14px; font-size:13px; font-weight:600;
@@ -1442,14 +1443,23 @@ function cardEl(it, idx, color){
   return el;
 }
 
+const GUIDE_IMAGES = {
+  hoankiem: {author:'Jon Phillipo', source:'https://commons.wikimedia.org/wiki/File:The_Huc_Bridge,_Hanoi,_Vietnam.jpg', file:'hoankiem.jpg', alt:'호안끼엠 호수의 빨간 테훅 다리'},
+  puppet: {author:'Diego Delso', source:'https://commons.wikimedia.org/wiki/File:Hanoi_Vietnam_Thang-Long-Water-Puppet-Theatre-01.jpg', file:'puppet.jpg', alt:'베트남 수상인형극 공연'},
+  c_1786946097383: {author:'Andy Li', source:'https://commons.wikimedia.org/wiki/File:Beef_noodle_soup_(Phở_bò)_-_Pho_Hanoi_Authentic_2024-12-01.jpg', file:'c_1786946097383.jpg', alt:'하노이 소고기 쌀국수'},
+  nightmarket: {author:'Christophe95', source:'https://commons.wikimedia.org/wiki/File:Hanoi_Night_Market_3.jpg', file:'nightmarket.jpg', alt:'하노이 구시가지 야시장'}
+};
 function openGuide(pid, name){
   const g=GUIDE[pid]; if(!g) return;
   $('#guideTitle').textContent='📖 '+name;
+  const photo=GUIDE_IMAGES[pid];
   $('#guideBody').innerHTML=
+    (GUIDE_IMAGES[pid]?`<img class="guide-photo" src="./guide_images/${GUIDE_IMAGES[pid].file}" alt="${esc(GUIDE_IMAGES[pid].alt)}" width="160" height="160">`:'')+
     `<p class="gone">${esc(g.one)}</p>`+
     `<h4>📢 들려줄 이야기</h4>`+g.story.map(t=>`<p>${esc(t)}</p>`).join('')+
     (g.talk?`<h4>💬 이렇게 말 꺼내 보세요</h4><p class="gkid">${esc(g.talk)}</p>`:'')+
     (g.tips&&g.tips.length?`<h4>💡 현장 팁</h4><ul>${g.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:'')+
+    (photo?`<p class="gfoot">사진: <a href="${esc(photo.source)}" target="_blank" rel="noopener">${esc(photo.author)} · 원본·라이선스</a> · 정방형 크롭${pid==='c_1786946097383'?' · 쌀국수 참고 사진':''}</p>`:'')+
     `<p class="gfoot">2026년 11월 기준으로 정리했어요. 가격·운영시간은 현장에서 달라질 수 있어요.</p>`;
   guideDialog.showModal();
   // 닫혀 있는(display:none) 동안엔 scrollTop을 바꿔도 먹지 않아서, 연 다음에 맨 위로 되돌린다
