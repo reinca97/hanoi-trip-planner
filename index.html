@@ -1460,7 +1460,7 @@ function openGuide(pid, name){
     `<h4>📢 들려줄 이야기</h4>`+g.story.map(t=>`<p>${esc(t)}</p>`).join('')+
     (g.talk?`<h4>💬 이렇게 말 꺼내 보세요</h4><p class="gkid">${esc(g.talk)}</p>`:'')+
     (g.tips&&g.tips.length?`<h4>💡 현장 팁</h4><ul>${g.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:'')+
-    (photo?`<p class="gfoot">사진: <a href="${esc(photo.source)}" target="_blank" rel="noopener">${esc(photo.author)} · 원본·라이선스</a> · 정방형 크롭${pid==='c_1786946097383'?' · 쌀국수 참고 사진':''}</p>`:'')+
+    (photo?`<p class="gfoot">사진: <a href="${esc(photo.source)}" target="_blank" rel="noopener">${esc(photo.author)} · 원본·라이선스</a></p>`:'')+
     `<p class="gfoot">2026년 11월 기준으로 정리했어요. 가격·운영시간은 현장에서 달라질 수 있어요.</p>`;
   guideDialog.showModal();
   // 닫혀 있는(display:none) 동안엔 scrollTop을 바꿔도 먹지 않아서, 연 다음에 맨 위로 되돌린다
